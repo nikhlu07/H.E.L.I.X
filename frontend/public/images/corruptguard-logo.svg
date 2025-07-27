@@ -1,0 +1,104 @@
+<svg width="280" height="80" viewBox="0 0 280 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="40" cy="40" r="35" fill="url(#backgroundGradient)" stroke="url(#borderGradient)" stroke-width="2"/>
+  
+  <!-- Shield Icon -->
+  <g transform="translate(15, 12)">
+    <!-- Main Shield -->
+    <path d="M25 8 L35 12 L35 32 Q35 42 25 48 Q15 42 15 32 L15 12 Z" fill="url(#shieldGradient)" stroke="white" stroke-width="1" opacity="0.95"/>
+    
+    <!-- Guard Cross -->
+    <g transform="translate(25, 28)" opacity="0.9">
+      <!-- Vertical line -->
+      <line x1="0" y1="-8" x2="0" y2="8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Horizontal line -->
+      <line x1="-6" y1="0" x2="6" y2="0" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- Center dot -->
+      <circle cx="0" cy="0" r="2" fill="white"/>
+    </g>
+    
+    <!-- AI Detection Lines -->
+    <g opacity="0.7">
+      <line x1="20" y1="18" x2="30" y2="18" stroke="#FFD700" stroke-width="1"/>
+      <line x1="20" y1="22" x2="30" y2="22" stroke="#FFD700" stroke-width="1"/>
+      <line x1="20" y1="26" x2="30" y2="26" stroke="#FFD700" stroke-width="1"/>
+      <line x1="20" y1="30" x2="30" y2="30" stroke="#FFD700" stroke-width="1"/>
+    </g>
+  </g>
+  
+  <!-- Corruption Detection Radar -->
+  <g transform="translate(40, 40)" opacity="0.6">
+    <circle cx="0" cy="0" r="25" stroke="url(#radarGradient)" stroke-width="1" fill="none"/>
+    <circle cx="0" cy="0" r="30" stroke="url(#radarGradient)" stroke-width="0.5" fill="none"/>
+    <line x1="-30" y1="0" x2="30" y2="0" stroke="url(#radarGradient)" stroke-width="0.5"/>
+    <line x1="0" y1="-30" x2="0" y2="30" stroke="url(#radarGradient)" stroke-width="0.5"/>
+  </g>
+  
+  <!-- Blockchain Connection Points -->
+  <g opacity="0.8">
+    <line x1="75" y1="20" x2="100" y2="15" stroke="url(#connectionGradient)" stroke-width="2"/>
+    <line x1="75" y1="40" x2="100" y2="40" stroke="url(#connectionGradient)" stroke-width="2"/>
+    <line x1="75" y1="60" x2="100" y2="65" stroke="url(#connectionGradient)" stroke-width="2"/>
+    <circle cx="100" cy="15" r="3" fill="#EF4444"/>
+    <circle cx="100" cy="40" r="3" fill="#10B981"/>
+    <circle cx="100" cy="65" r="3" fill="#3B82F6"/>
+  </g>
+  
+  <!-- Main Text -->
+  <text x="115" y="32" font-family="Inter, sans-serif" font-size="26" font-weight="900" fill="url(#textMainGradient)">
+    CorruptGuard
+  </text>
+  <text x="115" y="50" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#6B7280">
+    AI-Powered Fraud Detection
+  </text>
+  <text x="115" y="63" font-family="Inter, sans-serif" font-size="10" font-weight="500" fill="#6B7280">
+    Protecting Taxpayer Money
+  </text>
+  
+  <!-- Warning Symbol -->
+  <g transform="translate(250, 15)">
+    <polygon points="15,5 25,20 5,20" fill="url(#warningGradient)" opacity="0.9"/>
+    <text x="15" y="17" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="white" text-anchor="middle">!</text>
+  </g>
+  
+  <!-- Gradients -->
+  <defs>
+    <linearGradient id="backgroundGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E40AF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#DC2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1F2937;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60A5FA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F87171;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10B981;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="radarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#FFA500;stop-opacity:0.4" />
+    </linearGradient>
+    
+    <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#8B5CF6;stop-opacity:0.8" />
+    </linearGradient>
+    
+    <linearGradient id="textMainGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1E40AF;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#DC2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1F2937;stop-opacity:1" />
+    </linearGradient>
+    
+    <linearGradient id="warningGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>

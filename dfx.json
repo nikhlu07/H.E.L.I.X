@@ -1,0 +1,25 @@
+{
+    "version": 1,
+    "canisters": {
+      "procurement": {
+        "type": "motoko",
+        "main": "canisters/procurement/src/main.mo"
+      },
+  "fraud_engine": {
+    "type": "custom",
+    "build": "echo 'Fraud engine is a Python service, not a canister'",
+    "candid": "canisters/fraud_engine/fraud_engine.did",
+    "wasm": "canisters/fraud_engine/fraud_engine.wasm"
+  },
+      "frontend": {
+        "type": "assets",
+        "source": ["frontend/dist"]
+      }
+    },
+    "networks": {
+      "local": {
+        "bind": "127.0.0.1:8000",
+        "type": "ephemeral"
+      }
+    }
+  }
