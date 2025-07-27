@@ -72,7 +72,6 @@ CorruptGuard is a revolutionary anti-corruption platform that combines **Artific
 ## 🏗️ System Architecture
 
 ![CorruptGuard Architecture](docs/architecture-overview.svg)
-
 ```mermaid
 graph TB
     A[Citizens] --> B[Frontend Layer]
@@ -160,6 +159,8 @@ dfx deploy
 # Get canister URLs
 dfx canister call procurement get_stats
 ```
+
+![CorruptGuard Architecture](docs/fraud-detection-flow.svg)
 
 ## 🔍 Fraud Detection Engine
 
