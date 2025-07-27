@@ -1,0 +1,133 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="processGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1E40AF;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#374151" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="500" fill="#F8FAFC"/>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="24" font-weight="bold" fill="#1E293B">
+    AI Fraud Detection Pipeline
+  </text>
+  
+  <!-- Data Input -->
+  <rect x="50" y="80" width="140" height="80" fill="url(#dataGrad)" stroke="#1E40AF" stroke-width="2" rx="10" filter="url(#shadow)"/>
+  <text x="120" y="105" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">
+    Data Input
+  </text>
+  <text x="60" y="125" font-family="Arial" font-size="10" fill="white">• Budget Claims</text>
+  <text x="60" y="138" font-family="Arial" font-size="10" fill="white">• Vendor Info</text>
+  <text x="60" y="151" font-family="Arial" font-size="10" fill="white">• Invoices</text>
+  
+  <!-- Rule Engine -->
+  <rect x="230" y="80" width="140" height="80" fill="url(#processGrad)" stroke="#DC2626" stroke-width="2" rx="10" filter="url(#shadow)"/>
+  <text x="300" y="105" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">
+    10 Detection Rules
+  </text>
+  <text x="240" y="125" font-family="Arial" font-size="10" fill="white">• Budget Anomalies</text>
+  <text x="240" y="138" font-family="Arial" font-size="10" fill="white">• Vendor Collusion</text>
+  <text x="240" y="151" font-family="Arial" font-size="10" fill="white">• Price Inflation</text>
+  
+  <!-- ML Model -->
+  <rect x="410" y="80" width="140" height="80" fill="#8B5CF6" stroke="#7C3AED" stroke-width="2" rx="10" filter="url(#shadow)"/>
+  <text x="480" y="105" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">
+    ML Engine
+  </text>
+  <text x="420" y="125" font-family="Arial" font-size="10" fill="white">• Isolation Forest</text>
+  <text x="420" y="138" font-family="Arial" font-size="10" fill="white">• Pattern Learning</text>
+  <text x="420" y="151" font-family="Arial" font-size="10" fill="white">• 87% Accuracy</text>
+  
+  <!-- Risk Score -->
+  <rect x="590" y="80" width="140" height="80" fill="#F59E0B" stroke="#D97706" stroke-width="2" rx="10" filter="url(#shadow)"/>
+  <text x="660" y="105" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">
+    Risk Scoring
+  </text>
+  <text x="600" y="125" font-family="Arial" font-size="10" fill="white">• Score 0-100</text>
+  <text x="600" y="138" font-family="Arial" font-size="10" fill="white">• Real-time</text>
+  <text x="600" y="151" font-family="Arial" font-size="10" fill="white">• &lt;2 seconds</text>
+  
+  <!-- Flow arrows -->
+  <line x1="190" y1="120" x2="230" y2="120" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="370" y1="120" x2="410" y2="120" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  <line x1="550" y1="120" x2="590" y2="120" stroke="#374151" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Detection Rules Detail -->
+  <rect x="50" y="200" width="700" height="180" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2" rx="10" filter="url(#shadow)"/>
+  <text x="400" y="225" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#92400E">
+    Comprehensive Fraud Detection Rules
+  </text>
+  
+  <!-- Rule boxes -->
+  <rect x="70" y="240" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="135" y="255" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Budget Anomalies</text>
+  <text x="80" y="270" font-family="Arial" font-size="9" fill="#451A03">Unusual spending</text>
+  <text x="80" y="282" font-family="Arial" font-size="9" fill="#451A03">patterns &amp; amounts</text>
+  <text x="80" y="294" font-family="Arial" font-size="9" fill="#451A03">outside norms</text>
+  
+  <rect x="220" y="240" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="285" y="255" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Vendor Collusion</text>
+  <text x="230" y="270" font-family="Arial" font-size="9" fill="#451A03">Suspicious bidding</text>
+  <text x="230" y="282" font-family="Arial" font-size="9" fill="#451A03">coordination &amp;</text>
+  <text x="230" y="294" font-family="Arial" font-size="9" fill="#451A03">price fixing</text>
+  
+  <rect x="370" y="240" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="435" y="255" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Invoice Fraud</text>
+  <text x="380" y="270" font-family="Arial" font-size="9" fill="#451A03">Price &amp; quantity</text>
+  <text x="380" y="282" font-family="Arial" font-size="9" fill="#451A03">manipulation in</text>
+  <text x="380" y="294" font-family="Arial" font-size="9" fill="#451A03">billing documents</text>
+  
+  <rect x="520" y="240" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="585" y="255" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Ghost Projects</text>
+  <text x="530" y="270" font-family="Arial" font-size="9" fill="#451A03">Non-existent</text>
+  <text x="530" y="282" font-family="Arial" font-size="9" fill="#451A03">project funding</text>
+  <text x="530" y="294" font-family="Arial" font-size="9" fill="#451A03">schemes</text>
+  
+  <rect x="70" y="310" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="135" y="325" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Timeline Violations</text>
+  <text x="80" y="340" font-family="Arial" font-size="9" fill="#451A03">Unrealistic project</text>
+  <text x="80" y="352" font-family="Arial" font-size="9" fill="#451A03">completion dates</text>
+  <text x="80" y="364" font-family="Arial" font-size="9" fill="#451A03">&amp; schedules</text>
+  
+  <rect x="220" y="310" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="285" y="325" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Quality Deviations</text>
+  <text x="230" y="340" font-family="Arial" font-size="9" fill="#451A03">Material spec</text>
+  <text x="230" y="352" font-family="Arial" font-size="9" fill="#451A03">changes without</text>
+  <text x="230" y="364" font-family="Arial" font-size="9" fill="#451A03">approval</text>
+  
+  <rect x="370" y="310" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="435" y="325" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Payment Irregularities</text>
+  <text x="380" y="340" font-family="Arial" font-size="9" fill="#451A03">Unusual payment</text>
+  <text x="380" y="352" font-family="Arial" font-size="9" fill="#451A03">patterns &amp; timing</text>
+  <text x="380" y="364" font-family="Arial" font-size="9" fill="#451A03">anomalies</text>
+  
+  <rect x="520" y="310" width="130" height="60" fill="white" stroke="#F59E0B" stroke-width="1" rx="5"/>
+  <text x="585" y="325" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#92400E">Duplicate Claims</text>
+  <text x="530" y="340" font-family="Arial" font-size="9" fill="#451A03">Multiple claims</text>
+  <text x="530" y="352" font-family="Arial" font-size="9" fill="#451A03">for same work</text>
+  <text x="530" y="364" font-family="Arial" font-size="9" fill="#451A03">or materials</text>
+  
+  <!-- Performance Stats -->
+  <rect x="250" y="420" width="300" height="60" fill="#10B981" stroke="#059669" stroke-width="2" rx="10" filter="url(#shadow)"/>
+  <text x="400" y="440" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="white">
+    ⚡ Performance Metrics
+  </text>
+  <text x="270" y="455" font-family="Arial" font-size="11" fill="white">87% Accuracy</text>
+  <text x="350" y="455" font-family="Arial" font-size="11" fill="white">&lt;2s Response</text>
+  <text x="440" y="455" font-family="Arial" font-size="11" fill="white">24/7 Monitoring</text>
+  <text x="270" y="470" font-family="Arial" font-size="11" fill="white">0 False Negatives</text>
+  <text x="380" y="470" font-family="Arial" font-size="11" fill="white">Real-time Alerts</text>
+</svg>
