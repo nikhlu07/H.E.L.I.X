@@ -447,8 +447,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Get in Touch
 - **GitHub**: [CorruptGuard Repository](https://github.com/nikhlu07/Corruptguard)
 - **Issues**: [Report Bug/Request Feature](https://github.com/nikhlu07/Corruptguard/issues)
-- **Discussions**: [Community Forum](https://github.com/nikhlu07/Corruptguard/discussions)
-
 
 ### Community
 - **Discord**: Join our developer community
