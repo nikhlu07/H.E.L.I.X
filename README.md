@@ -2,7 +2,7 @@
 
 **AI-Powered Government Procurement Fraud Detection System**
 
-> *"Preventing corruption before it claims innocent lives. Built in memory of the 7 children lost in Jhalawar."*
+> *"Preventing corruption before it claims innocent lives."*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
