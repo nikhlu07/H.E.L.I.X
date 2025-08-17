@@ -449,11 +449,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Issues**: [Report Bug/Request Feature](https://github.com/nikhlu07/Corruptguard/issues)
 - **Discussions**: [Community Forum](https://github.com/nikhlu07/Corruptguard/discussions)
 
-### Documentation
-- **API Documentation**: [/docs/api](docs/api.md)
-- **User Guide**: [/docs/user-guide](docs/user-guide.md)
-- **Developer Guide**: [/docs/development](docs/development.md)
-- **Deployment Guide**: [/docs/deployment](docs/deployment.md)
 
 ### Community
 - **Discord**: Join our developer community
