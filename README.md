@@ -445,7 +445,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact & Support
 
 ### Get in Touch
-- **Email**: support@corruptguard.org
 - **GitHub**: [CorruptGuard Repository](https://github.com/nikhlu07/Corruptguard)
 - **Issues**: [Report Bug/Request Feature](https://github.com/nikhlu07/Corruptguard/issues)
 - **Discussions**: [Community Forum](https://github.com/nikhlu07/Corruptguard/discussions)
@@ -493,7 +492,5 @@ CorruptGuard represents more than code—it's a movement toward a future where p
 **Join us in building a more transparent, accountable world. One transaction at a time.** 🛡️
 
 ---
-
-*Built with ❤️ by developers who believe technology can change the world.*
 
 **Latest Update**: July 2025 | **Version**: 2.0.0 | **Status**: Production Ready
