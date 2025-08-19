@@ -1,4 +1,3 @@
-import React from 'react';
 import { Shield, Lock, Eye, Zap, CheckCircle, Globe } from 'lucide-react';
 
 export function ICPSolution() {
@@ -61,7 +60,7 @@ export function ICPSolution() {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section id="transparency" className="py-20 bg-white">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
@@ -74,7 +73,7 @@ export function ICPSolution() {
             </h2>
           </div>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Built on the most advanced blockchain technology, ClearProcure makes corruption impossible to hide
+            Built on the most advanced blockchain technology, CorruptGuard makes corruption impossible to hide
           </p>
         </div>
 
@@ -115,7 +114,7 @@ export function ICPSolution() {
         {/* How It Works */}
         <div className="mb-20">
           <h3 className="text-3xl font-bold text-slate-900 text-center mb-12">
-            How ClearProcure Prevents Corruption
+            How CorruptGuard Prevents Corruption
           </h3>
           <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {howItWorks.map((item, index) => {

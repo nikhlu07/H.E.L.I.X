@@ -8,58 +8,27 @@ import { DeputyDashboard } from './components/Dashboard/DeputyDashboard';
 import { CitizenDashboard } from './components/Dashboard/CitizenDashboard';
 import { VendorDashboard } from './components/Dashboard/VendorDashboard';
 import { SubSupplierDashboard } from './components/Dashboard/SubSupplierDashboard';
+import { useAuth } from './contexts/AuthContext';
 
-// Simple mock user state (without complex AuthContext)
-interface User {
-  role: string;
-  name: string;
-  principal_id: string;
-}
+// App uses global AuthContext; no local user state.
 
 function App() {
   const [currentView, setCurrentView] = useState<'landing' | 'login' | 'dashboard'>('landing');
-  const [user, setUser] = useState<User | null>(null);
+  const { user, login } = useAuth();
 
   const handleGetStarted = () => {
     setCurrentView('login');
   };
 
   const handleLogin = (role: string) => {
-    // Mock login - create user based on role
-    const mockUser: User = {
-      role: role,
-      name: getRoleName(role),
-      principal_id: `demo-${role}-${Math.random().toString(36).substr(2, 8)}`
-    };
-    setUser(mockUser);
-    setCurrentView('dashboard');
-  };
-
-  const handleLogout = async () => {
-    // Try to logout from Internet Identity if available
-    try {
-      const { authService } = await import('./services/authService');
-      await authService.logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-    setUser(null);
-    setCurrentView('landing');
+    // Use global AuthContext login in demo mode
+    login('demo', role)
+      .then(() => setCurrentView('dashboard'))
+      .catch((e) => console.error('Login failed:', e));
   };
 
   const handleBackToLanding = () => {
     setCurrentView('landing');
-  };
-
-  const getRoleName = (role: string): string => {
-    switch (role) {
-      case 'main_government': return 'Government Official';
-      case 'state_head': return 'State Head';
-      case 'deputy': return 'Deputy Officer';
-      case 'vendor': return 'Vendor/Contractor';
-      case 'citizen': return 'Citizen Observer';
-      default: return 'User';
-    }
   };
 
   const renderDashboard = () => {
@@ -102,7 +71,7 @@ function App() {
   if (currentView === 'dashboard' && user) {
     return (
       <div className="min-h-screen bg-slate-50">
-        <Header user={user} onLogout={handleLogout} />
+        <Header />
         {renderDashboard()}
       </div>
     );

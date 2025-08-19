@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AlertTriangle, FileX, Users, Building, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 
 export function CorruptionCases() {
@@ -82,7 +82,7 @@ export function CorruptionCases() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 mb-4">
-            Why We Built ClearProcure
+            Why We Built CorruptGuard
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             These aren't just headlines—they're symptoms of a broken system where opacity enables corruption.
@@ -169,7 +169,7 @@ export function CorruptionCases() {
                       <div>
                         <h4 className="font-semibold text-slate-900 mb-2 flex items-center space-x-2">
                           <Building className="h-4 w-4 text-emerald-500" />
-                          <span>ClearProcure Solution</span>
+                          <span>CorruptGuard Solution</span>
                         </h4>
                         <p className="text-sm text-emerald-700 font-medium">{case_.details.clearProcureHelps}</p>
                       </div>
@@ -221,11 +221,11 @@ export function CorruptionCases() {
         {/* Call to Action */}
         <div className="text-center mt-12">
           <p className="text-lg text-slate-600 mb-6">
-            ClearProcure stops this pattern by making every approval, every payment, and every decision 
+            CorruptGuard stops this pattern by making every approval, every payment, and every decision
             <span className="text-emerald-600 font-semibold"> publicly visible and immutable</span>.
           </p>
           <a
-            href="#"
+            href="#transparency"
             className="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors"
           >
             <span>See How Transparency Works</span>
