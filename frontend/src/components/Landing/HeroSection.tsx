@@ -1,6 +1,4 @@
-import React from 'react';
 import { Shield, AlertTriangle, ArrowRight } from 'lucide-react';
-import { CorruptGuardLogo } from '../common/CorruptGuardLogo';
 
 interface HeroSectionProps {
   onGetStarted: () => void;
@@ -142,10 +140,10 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </button>
             
-            <button className="group bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/30 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2">
+            <a href="#transparency" className="group bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/30 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center justify-center space-x-2">
               <Shield className="h-5 w-5" />
               <span>Explore Transparency</span>
-            </button>
+            </a>
           </div>
 
           {/* ICP Power */}
