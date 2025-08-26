@@ -3,7 +3,7 @@ from fastapi import Request, HTTPException, status, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from typing import Optional, List
 import logging
-# from .principal_auth import principal_auth_service
+from .prinicipal_auth import principal_auth_service
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +22,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
             return parse_demo_token(token)
         
         # Handle real ICP tokens
-        # user_data = await principal_auth_service.verify_token(token)
-        # return user_data
-        
-        # For now, fallback to demo parsing for all tokens during development
-        return parse_demo_token(token)
+        user_data = await principal_auth_service.verify_token(token)
+        return user_data
         
     except HTTPException:
         raise

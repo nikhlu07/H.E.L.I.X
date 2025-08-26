@@ -16,7 +16,7 @@ export const corruptionAlerts: CorruptionAlert[] = [
     severity: 'critical',
     amount: 2000000,
     description: '$2M road contract blocked - Shell company detected',
-    location: 'Maharashtra',
+    location: 'Region Alpha',
     timestamp: new Date(Date.now() - 1000 * 60 * 5),
     status: 'blocked'
   },
@@ -26,7 +26,7 @@ export const corruptionAlerts: CorruptionAlert[] = [
     severity: 'high',
     amount: 850000,
     description: '$850K school supplies flagged - 40% price inflation',
-    location: 'Karnataka',
+    location: 'Region Beta',
     timestamp: new Date(Date.now() - 1000 * 60 * 12),
     status: 'investigating'
   },
@@ -36,7 +36,7 @@ export const corruptionAlerts: CorruptionAlert[] = [
     severity: 'high',
     amount: 1500000,
     description: '$1.5M hospital equipment - Citizen challenge filed',
-    location: 'Tamil Nadu',
+    location: 'Region Gamma',
     timestamp: new Date(Date.now() - 1000 * 60 * 18),
     status: 'investigating'
   },
@@ -46,7 +46,7 @@ export const corruptionAlerts: CorruptionAlert[] = [
     severity: 'low',
     amount: 45000,
     description: '$45K IT purchase approved - All integrity checks passed',
-    location: 'Delhi',
+    location: 'Region Delta',
     timestamp: new Date(Date.now() - 1000 * 60 * 25),
     status: 'resolved'
   },
@@ -56,7 +56,7 @@ export const corruptionAlerts: CorruptionAlert[] = [
     severity: 'critical',
     amount: 3000000,
     description: '$3M bridge project - Bid rigging pattern detected',
-    location: 'Gujarat',
+    location: 'Region Epsilon',
     timestamp: new Date(Date.now() - 1000 * 60 * 32),
     status: 'blocked'
   },
@@ -66,7 +66,7 @@ export const corruptionAlerts: CorruptionAlert[] = [
     severity: 'medium',
     amount: 120000,
     description: '$120K office supplies - Phantom vendor identified',
-    location: 'Rajasthan',
+    location: 'Region Zeta',
     timestamp: new Date(Date.now() - 1000 * 60 * 45),
     status: 'investigating'
   }
@@ -136,7 +136,7 @@ export const successStories = [
     amount: 1200000,
     description: 'Vendor claimed road construction completion. Citizens reported no road exists. CorruptGuard investigation confirmed fraud.',
     status: 'prevented',
-    location: 'Maharashtra',
+    location: 'Region Alpha',
     method: 'citizen-reporting'
   },
   {
@@ -145,7 +145,7 @@ export const successStories = [
     amount: 340000,
     description: 'School supplies quoted 60% above market rate. AI detected price manipulation pattern.',
     status: 'prevented',
-    location: 'Karnataka',
+    location: 'Region Beta',
     method: 'ai-detection'
   },
   {
@@ -154,7 +154,7 @@ export const successStories = [
     amount: 890000,
     description: 'Main contractor claimed payments to 5 sub-contractors. Blockchain analysis revealed 3 were shell companies.',
     status: 'prevented',
-    location: 'Tamil Nadu',
+    location: 'Region Gamma',
     method: 'blockchain-analysis'
   }
 ];
@@ -229,13 +229,13 @@ export const mockVendors: Vendor[] = [
   {
     id: 'vendor-001',
     name: 'TechBuild Construction Ltd',
-    principal: 'rujvh-nqaaa-aaaah-qcq3c-cai',
+    principal: 'vendor-principal-001',
     status: 'approved',
     registrationDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 365),
     completedProjects: 47,
     averageRating: 4.6,
     riskScore: 15,
-    address: '123 Industrial Area, Mumbai',
+    address: '123 Industrial Zone, Metropolis A',
     contactEmail: 'contracts@techbuild.com',
     businessType: 'Construction'
   },
@@ -255,13 +255,13 @@ export const mockVendors: Vendor[] = [
   {
     id: 'vendor-003',
     name: 'EduTech Supplies Co',
-    principal: 'ret45-hqaaa-aaaah-qcq3f-cai',
+    principal: 'vendor-principal-003',
     status: 'approved',
     registrationDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 180),
     completedProjects: 23,
     averageRating: 4.2,
     riskScore: 28,
-    address: '456 Business Park, Bangalore',
+    address: '456 Business Park, City B',
     contactEmail: 'orders@edutech.com',
     businessType: 'Educational Equipment'
   }
@@ -280,7 +280,7 @@ export const mockChallenges: Challenge[] = [
     location: {
       lat: 19.0760,
       lng: 72.8777,
-      address: 'Claimed Highway Extension, Mumbai'
+      address: 'Claimed Highway Extension, Metropolis A'
     }
   },
   {
@@ -295,7 +295,7 @@ export const mockChallenges: Challenge[] = [
     location: {
       lat: 12.9716,
       lng: 77.5946,
-      address: 'Government Primary School, Bangalore'
+      address: 'Government Primary School, City B'
     }
   }
 ];

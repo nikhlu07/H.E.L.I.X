@@ -1,0 +1,30 @@
+# Minimal requirements for CorruptGuard Backend
+# Install with: pip install -r requirements-minimal.txt
+
+# Core FastAPI dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# Internet Computer Protocol (essential)
+ic-py==2.5.0
+
+# Database
+sqlalchemy==2.0.23
+aiosqlite==0.19.0
+
+# JWT and security
+PyJWT==2.8.0
+cryptography==41.0.8
+
+# HTTP and networking
+httpx==0.25.2
+requests==2.31.0
+
+# Environment and utilities
+python-dotenv==1.0.0
+python-multipart==0.0.6
+
+# Development (optional)
+python-dateutil==2.8.2

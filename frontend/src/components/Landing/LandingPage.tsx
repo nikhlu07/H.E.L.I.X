@@ -1,4 +1,5 @@
 import { HeroSection } from './HeroSection';
+import { SectorShowcase } from './SectorShowcase';
 import { CorruptionCases } from './CorruptionCases';
 import { ICPSolution } from './ICPSolution';
 import { StatsDashboard } from './StatsDashboard';
@@ -14,8 +15,8 @@ export function LandingPage({ onGetStarted }: LandingPageProps) {
       <HeroSection onGetStarted={onGetStarted} />
       <CorruptionCases />
       <ICPSolution />
+      <SectorShowcase />
       <StatsDashboard />
-      <SystemStatus />
     </div>
   );
 }

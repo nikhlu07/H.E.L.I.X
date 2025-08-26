@@ -1,79 +1,75 @@
 import React from 'react';
-import { Shield, Zap, Target, DollarSign, Search, Building } from 'lucide-react';
+import { Shield, Target, Search, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { AnimatedCounter } from '../common/AnimatedCounter';
-import { statistics } from '../../data/mockData';
 
 export function StatsDashboard() {
   const stats = [
     {
-      icon: Shield,
-      label: 'Corruption Cases That Could Be Prevented',
-      value: 5400,
-      prefix: '₹',
-      suffix: ' Cr',
-      formatter: (val: number) => `${val.toLocaleString()}`,
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      description: 'Based on recent PCI and NAAC scams'
+      icon: Users,
+      label: 'Organizations Using',
+      value: 150,
+      suffix: '+',
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50',
+      description: 'Governments, NGOs, and companies worldwide'
     },
     {
-      icon: Search,
-      label: 'Transparency Score',
-      value: 95,
+      icon: Shield,
+      label: 'Fraud Detection Rate',
+      value: 87,
       suffix: '%',
       color: 'text-green-600',
       bgColor: 'bg-green-50',
-      description: 'Complete audit trail visibility'
-    },
-    {
-      icon: Target,
-      label: 'Fraud Detection Accuracy',
-      value: 87,
-      suffix: '%',
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
-      description: 'AI-powered pattern recognition'
+      description: 'Accuracy in identifying suspicious transactions'
     },
     {
       icon: DollarSign,
-      label: 'Public Money at Risk Annually',
-      value: 50000,
-      prefix: '₹',
-      suffix: ' Cr',
-      formatter: (val: number) => `${val.toLocaleString()}`,
-      color: 'text-amber-600',
-      bgColor: 'bg-amber-50',
-      description: 'Government procurement budget'
+      label: 'Fraud Prevented',
+      value: 2.8,
+      prefix: '$',
+      suffix: 'M',
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50',
+      description: 'Total value of fraud attempts blocked'
     },
     {
-      icon: Zap,
-      label: 'Real-time Monitoring',
-      value: 24,
-      suffix: '/7',
+      icon: Search,
+      label: 'Transactions Analyzed',
+      value: 45,
+      suffix: 'K',
       color: 'text-orange-600',
       bgColor: 'bg-orange-50',
-      description: 'Continuous blockchain surveillance'
+      description: 'Procurement transactions processed monthly'
     },
     {
-      icon: Building,
-      label: 'Government Levels Covered',
-      value: 5,
-      suffix: ' Tiers',
-      color: 'text-slate-600',
-      bgColor: 'bg-slate-50',
-      description: 'Central to Panchayat level coverage'
+      icon: Target,
+      label: 'Response Time',
+      value: 2.4,
+      suffix: 's',
+      color: 'text-red-600',
+      bgColor: 'bg-red-50',
+      description: 'Average time to detect anomalies'
+    },
+    {
+      icon: TrendingUp,
+      label: 'Transparency Score',
+      value: 94,
+      suffix: '%',
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
+      description: 'Average transparency improvement'
     }
   ];
 
   return (
-    <div className="py-20 bg-white">
+    <div className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-slate-900 mb-4">
-            Live Impact Dashboard
+            Platform Impact
           </h2>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Real-time statistics showing our corruption prevention effectiveness across government spending
+            Real-time statistics showing TransparencyX effectiveness across sectors
           </p>
         </div>
 
@@ -93,7 +89,6 @@ export function StatsDashboard() {
                       target={stat.value}
                       prefix={stat.prefix}
                       suffix={stat.suffix}
-                      formatter={stat.formatter}
                     />
                   </div>
                 </div>
@@ -108,39 +103,28 @@ export function StatsDashboard() {
           ))}
         </div>
 
-        {/* Additional Metrics */}
-        <div className="mt-16 bg-gradient-to-r from-slate-50 to-emerald-50 rounded-3xl p-8">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-8">
-            System Performance Metrics
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-emerald-600 mb-2">
-                <AnimatedCounter target={0} suffix=" sec" />
-              </div>
-              <p className="text-slate-600 font-medium">Average Detection Time</p>
-              <p className="text-xs text-slate-500 mt-1">Instant fraud alerts</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-amber-600 mb-2">
-                <AnimatedCounter target={100} suffix="%" />
-              </div>
-              <p className="text-slate-600 font-medium">Data Immutability</p>
-              <p className="text-xs text-slate-500 mt-1">Cannot be altered or deleted</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">
-                <AnimatedCounter target={1240} />
-              </div>
-              <p className="text-slate-600 font-medium">Active Watchdogs</p>
-              <p className="text-xs text-slate-500 mt-1">Citizens monitoring contracts</p>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-orange-600 mb-2">
-                <AnimatedCounter target={99.9} suffix="%" />
-              </div>
-              <p className="text-slate-600 font-medium">ICP Network Uptime</p>
-              <p className="text-xs text-slate-500 mt-1">Unstoppable blockchain</p>
+        {/* Open Source CTA */}
+        <div className="mt-16 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 border border-blue-200">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold text-slate-900 mb-4">
+              Open Source & Adaptable
+            </h3>
+            <p className="text-slate-600 mb-6 max-w-2xl mx-auto">
+              TransparencyX is built to be reusable across organizations. Governments, NGOs, and companies can adapt our platform for their specific transparency needs.
+            </p>
+            <div className="flex items-center justify-center space-x-8 text-sm text-slate-600">
+              <span className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span>MIT Licensed</span>
+              </span>
+              <span className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span>API First</span>
+              </span>
+              <span className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span>Sector Agnostic</span>
+              </span>
             </div>
           </div>
         </div>

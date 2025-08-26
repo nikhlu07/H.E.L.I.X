@@ -62,6 +62,7 @@ const idlFactory = ({ IDL }: any) => {
     updateFraudScore: IDL.Func([IDL.Nat, IDL.Nat], [Result(IDL.Null)], []),
     approveClaimByAI: IDL.Func([IDL.Nat, IDL.Bool, IDL.Text], [Result(IDL.Null)], []),
     addFraudAlert: IDL.Func([IDL.Nat, IDL.Text, IDL.Text, IDL.Text], [Result(IDL.Null)], []),
+    calculateFraudScore: IDL.Func([IDL.Nat], [IDL.Nat], ['query']),
     
     // Challenge system
     stakeChallenge: IDL.Func([IDL.Text, IDL.Text, IDL.Text], [Result(IDL.Null)], []),
@@ -307,6 +308,12 @@ class ICPCanisterService {
     return this.handleResult(result);
   }
 
+  async calculateFraudScore(claimId: number): Promise<number> {
+    await this.ensureActor();
+    const result = await this.actor.calculateFraudScore(BigInt(claimId));
+    return Number(result);
+  }
+
   // Challenge System
   async stakeChallenge(invoiceHash: string, reason: string, evidence: string): Promise<void> {
     await this.ensureActor();
@@ -402,6 +409,7 @@ export const useICP = () => {
     updateFraudScore: icpCanisterService.updateFraudScore.bind(icpCanisterService),
     approveClaimByAI: icpCanisterService.approveClaimByAI.bind(icpCanisterService),
     addFraudAlert: icpCanisterService.addFraudAlert.bind(icpCanisterService),
+    calculateFraudScore: icpCanisterService.calculateFraudScore.bind(icpCanisterService),
     
     // Challenge system
     stakeChallenge: icpCanisterService.stakeChallenge.bind(icpCanisterService),

@@ -1,0 +1,33 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Background -->
+  <path d="M60 10L100 30V60C100 82.0914 82.0914 100 60 100C37.9086 100 20 82.0914 20 60V30L60 10Z" fill="#1E40AF" stroke="#1E3A8A" stroke-width="3"/>
+  
+  <!-- Blockchain Nodes -->
+  <circle cx="40" cy="50" r="6" fill="#10B981"/>
+  <circle cx="60" cy="40" r="6" fill="#10B981"/>
+  <circle cx="80" cy="50" r="6" fill="#10B981"/>
+  <circle cx="50" cy="70" r="6" fill="#10B981"/>
+  <circle cx="70" cy="70" r="6" fill="#10B981"/>
+  
+  <!-- Connection Lines -->
+  <path d="M46 50L54 40" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  <path d="M66 40L74 50" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 70L40 50" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  <path d="M80 50L70 70" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  <path d="M50 70L70 70" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- Shield Badge -->
+  <circle cx="60" cy="60" r="12" fill="#EF4444"/>
+  <path d="M55 60L60 65L65 55" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Glow Effect -->
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+</svg>

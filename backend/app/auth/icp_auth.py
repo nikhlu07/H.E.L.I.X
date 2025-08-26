@@ -11,10 +11,9 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime, timedelta
 
 from ic.principal import Principal
-from ic.identity import Identity
 
 from app.config.settings import get_settings
-from app.utils.logging import get_logger, log_security_event
+from app.utils.logging import get_logger, log_user_action as log_security_event
 from app.utils.exceptions import AuthenticationError, ValidationError
 
 logger = get_logger(__name__)
@@ -90,7 +89,7 @@ class InternetIdentityAuth:
             raise AuthenticationError(f"Authentication failed: {str(e)}")
     
     async def validate_delegation_chain(self, delegation_chain: List[Dict],
-                                       expected_principal: str) -> bool:
+                                       expected_principal: str, domain: Optional[str] = None) -> bool:
         """
         Validate Internet Identity delegation chain
         
@@ -122,6 +121,14 @@ class InternetIdentityAuth:
             if not self.validate_delegation_expiry(delegation_chain):
                 logger.warning("❌ Delegation chain expired")
                 return False
+
+            # Optional: validate domain/targets to prevent phishing (origin check)
+            if domain:
+                root = delegation_chain[0].get('delegation', {})
+                targets = root.get('targets') or []
+                if targets and domain not in json.dumps(targets):
+                    logger.warning("❌ Delegation chain targets do not include expected domain")
+                    return False
             
             logger.info("✅ Delegation chain validation successful")
             return True
@@ -205,14 +212,11 @@ class InternetIdentityAuth:
     
     def derive_principal_from_pubkey(self, public_key: bytes) -> str:
         """
-        Derive principal from public key (simplified implementation)
+        Derive self-authenticating principal from a public key using IC spec.
         """
         try:
-            # This is a simplified version. In production, use proper IC derivation
-            principal_hash = hashlib.sha224(public_key).digest()
-            principal = Principal(principal_hash[:29])  # IC principals are 29 bytes
+            principal = Principal.self_authenticating(public_key)
             return str(principal)
-            
         except Exception as e:
             logger.error(f"❌ Principal derivation error: {str(e)}")
             return ""
@@ -427,5 +431,3 @@ async def authenticate_user(delegation_chain: List[Dict],
     """
     return await ii_auth.authenticate_with_internet_identity(delegation_chain, client_principal)
 
-
-def verify

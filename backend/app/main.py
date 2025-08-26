@@ -28,7 +28,11 @@ from app.config.settings import get_settings
 from app.utils.logging import setup_logging
 from app.utils.exceptions import CorruptGuardException, ValidationError, AuthenticationError
 from app.auth.middleware import AuthenticationMiddleware, get_current_user, require_main_government
+from app.database import Base, engine, get_db
+from sqlalchemy.orm import Session
+from app.schemas import FraudResult, FraudAuditLog
 from app.icp.canister_calls import canister_service
+from app.auth.prinicipal_auth import principal_auth_service
 
 # Setup
 setup_logging()
@@ -517,6 +521,11 @@ async def lifespan(app: FastAPI):
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Fraud Detection: {'Enabled' if settings.FRAUD_DETECTION_ENABLED else 'Disabled'}")
     logger.info("✅ CorruptGuard Backend Started Successfully")
+    try:
+        Base.metadata.create_all(bind=engine)
+        logger.info("📦 Database tables ensured")
+    except Exception as e:
+        logger.error(f"DB init failed: {e}")
     
     yield
     
@@ -563,9 +572,9 @@ app.add_middleware(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
-    allow_headers=["*"],
+    allow_credentials=settings.cors_allow_credentials,
+    allow_methods=settings.cors_allow_methods,
+    allow_headers=settings.cors_allow_headers,
 )
 
 app.add_middleware(AuthenticationMiddleware)
@@ -574,6 +583,24 @@ app.add_middleware(AuthenticationMiddleware)
 @app.middleware("http")
 async def add_process_time_header(request: Request, call_next):
     start_time = time.time()
+    # Simple IP-based rate limiting
+    try:
+        if settings.rate_limit_enabled:
+            ip = request.client.host if request.client else "unknown"
+            if not hasattr(app.state, "rate_buckets"):
+                app.state.rate_buckets = {}
+            bucket = app.state.rate_buckets
+            now = time.time()
+            window = settings.rate_limit_window
+            max_req = settings.rate_limit_requests
+            data = bucket.get(ip)
+            if not data or now - data["start"] > window:
+                bucket[ip] = {"start": now, "count": 0}
+            bucket[ip]["count"] += 1
+            if bucket[ip]["count"] > max_req:
+                return JSONResponse(status_code=429, content={"error": "Rate limit exceeded"})
+    except Exception:
+        pass
     response = await call_next(request)
     process_time = time.time() - start_time
     response.headers["X-Process-Time"] = f"{process_time:.4f}"
@@ -582,6 +609,41 @@ async def add_process_time_header(request: Request, call_next):
 # ================================================================================
 # CORE API ENDPOINTS
 # ================================================================================
+# ================================================================================
+# AUTHENTICATION (Internet Identity)
+# ================================================================================
+
+class IIAuthRequest(BaseModel):
+    principal_id: str
+    delegation_chain: list
+    domain: str | None = None
+
+
+@app.post("/auth/ii/login", tags=["Authentication"])
+async def ii_login(payload: IIAuthRequest):
+    """Authenticate via Internet Identity and issue JWT for API access"""
+    try:
+        # Validate delegation chain using II helper then mint JWT via principal service
+        from app.auth.icp_auth import ii_auth
+        valid = await ii_auth.validate_delegation_chain(payload.delegation_chain, payload.principal_id, payload.domain)
+        if not valid:
+            raise HTTPException(status_code=401, detail="Invalid Internet Identity delegation")
+        
+        # Authenticate user and get role from canister
+        auth_result = await principal_auth_service.authenticate_user(
+            principal_id=payload.principal_id,
+            delegation_chain=payload.delegation_chain,
+            domain=payload.domain
+        )
+        
+        return auth_result
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Internet Identity login failed: {e}")
+        raise HTTPException(status_code=500, detail="Authentication service error")
+
 
 @app.get("/", tags=["System"])
 async def root():
@@ -636,7 +698,8 @@ async def health_check():
 async def analyze_claim_endpoint(
     claim_data: ClaimData, 
     background_tasks: BackgroundTasks,
-    current_user: dict = Depends(get_current_user)
+    current_user: dict = Depends(get_current_user),
+    db: Session = Depends(get_db)
 ):
     """
     Analyze a claim for fraud indicators using advanced ML + rules
@@ -649,6 +712,21 @@ async def analyze_claim_endpoint(
         # Add to historical data for future analysis
         fraud_service.rules_engine.historical_claims.append(claim_data)
         
+        # Persist result
+        try:
+            db_result = FraudResult(
+                claim_id=fraud_score.claim_id,
+                score=fraud_score.score,
+                risk_level=fraud_score.risk_level,
+                flags=",".join(fraud_score.flags),
+                reasoning=fraud_score.reasoning,
+                confidence=fraud_score.confidence,
+            )
+            db.add(db_result)
+            db.commit()
+        except Exception as e:
+            logger.warning(f"Failed to persist FraudResult: {e}")
+
         return {
             "success": True,
             "fraud_analysis": {
@@ -713,7 +791,7 @@ async def get_claim_fraud_score(
         raise HTTPException(status_code=500, detail="Failed to retrieve fraud score")
 
 @app.get("/api/v1/fraud/alerts/active", tags=["Fraud Detection"])
-async def get_active_fraud_alerts(current_user: dict = Depends(get_current_user)):
+async def get_active_fraud_alerts(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get all active fraud alerts across the system"""
     try:
         # Get high-risk claims
@@ -742,6 +820,18 @@ async def get_active_fraud_alerts(current_user: dict = Depends(get_current_user)
         # Sort by urgency and fraud score
         active_alerts.sort(key=lambda x: (x["urgency"], x["fraud_score"]), reverse=True)
         
+        # Audit log snapshot
+        try:
+            db.add(FraudAuditLog(
+                event_type="FETCH_ACTIVE_ALERTS",
+                description=f"User {current_user['principal_id']} fetched active alerts",
+                user_principal=current_user['principal_id'],
+                severity="low",
+            ))
+            db.commit()
+        except Exception:
+            pass
+
         return {
             "success": True,
             "active_alerts": active_alerts,
@@ -757,7 +847,7 @@ async def get_active_fraud_alerts(current_user: dict = Depends(get_current_user)
         raise HTTPException(status_code=500, detail="Failed to retrieve active alerts")
 
 @app.get("/api/v1/fraud/stats", tags=["Fraud Detection"])
-async def get_fraud_detection_stats(current_user: dict = Depends(get_current_user)):
+async def get_fraud_detection_stats(current_user: dict = Depends(get_current_user), db: Session = Depends(get_db)):
     """Get comprehensive fraud detection statistics"""
     try:
         # Get system stats from canister
@@ -772,6 +862,18 @@ async def get_fraud_detection_stats(current_user: dict = Depends(get_current_use
             if any(rule_score > 0.7 for rule_score in [0.8, 0.6, 0.9])  # Simulated prevention
         )
         
+        # Optional: log stats access
+        try:
+            db.add(FraudAuditLog(
+                event_type="FETCH_FRAUD_STATS",
+                description=f"User {current_user['principal_id']} fetched fraud stats",
+                user_principal=current_user['principal_id'],
+                severity="low",
+            ))
+            db.commit()
+        except Exception:
+            pass
+
         return {
             "success": True,
             "fraud_statistics": {
@@ -1276,8 +1378,13 @@ async def demo_login(role: str):
         user_data = demo_users[role]
         principal_id = f"demo-principal-{role}-{hash(role) % 10000:04d}"
         
+        # Issue real JWT for demo users so protected endpoints work
+        access_token = principal_auth_service.create_access_token({
+            "principal_id": principal_id,
+            "role": role,
+        })
         return {
-            "access_token": f"demo_token_{role}_{int(time.time())}",
+            "access_token": access_token,
             "token_type": "Bearer",
             "principal_id": principal_id,
             "role": role,

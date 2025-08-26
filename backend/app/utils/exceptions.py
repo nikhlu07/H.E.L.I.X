@@ -112,3 +112,14 @@ class RateLimitError(CorruptGuardException):
             detail=detail,
             error_code="RATE_LIMIT_ERROR"
         )
+
+
+class ConfigurationError(CorruptGuardException):
+    """Configuration and setup errors"""
+    
+    def __init__(self, detail: str):
+        super().__init__(
+            status_code=500,
+            detail=detail,
+            error_code="CONFIGURATION_ERROR"
+        )

@@ -1,25 +1,49 @@
 {
-    "version": 1,
-    "canisters": {
-      "procurement": {
-        "type": "motoko",
-        "main": "canisters/procurement/src/main.mo"
-      },
-  "fraud_engine": {
-    "type": "custom",
-    "build": "echo 'Fraud engine is a Python service, not a canister'",
-    "candid": "canisters/fraud_engine/fraud_engine.did",
-    "wasm": "canisters/fraud_engine/fraud_engine.wasm"
-  },
+  "canisters": {
+    "corruptguard_backend": {
+      "type": "rust",
+      "package": "corruptguard_backend",
+      "candid": "canisters/backend/src/corruptguard_backend.did"
+    },
+    "corruptguard_frontend": {
+      "type": "assets",
+      "source": ["frontend/dist"],
       "frontend": {
-        "type": "assets",
-        "source": ["frontend/dist"]
+        "entrypoint": "frontend/dist/index.html"
       }
     },
-    "networks": {
-      "local": {
-        "bind": "127.0.0.1:8000",
-        "type": "ephemeral"
+    "internet_identity": {
+      "type": "custom",
+      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.wasm",
+      "remote": {
+        "id": {
+          "ic": "rdmx6-jaaaa-aaaah-qcaiq-cai"
+        }
       }
     }
-  }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "",
+      "args": ""
+    },
+    "canister_http": {
+      "enabled": false
+    },
+    "proguard": {
+      "enabled": false
+    }
+  },
+  "dfx": "0.15.0",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://ic0.app"]
+    }
+  },
+  "version": 1
+}

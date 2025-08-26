@@ -134,9 +134,15 @@ class Settings(BaseSettings):
     escrow_duration: int = 86_400  # 24 hours
     
     # Demo Mode
-    demo_mode: bool = True
+    demo_mode: bool = False
     demo_auto_approve: bool = True
     demo_skip_verification: bool = True
+
+    # ICP Agent Config
+    ICP_NETWORK_URL: str = "http://127.0.0.1:4943"
+    ICP_CANISTER_ID: str = "rdmx6-jaaaa-aaaah-qcaiq-cai"
+    ICP_IDENTITY_PEM_PATH: Optional[str] = None
+    ICP_FETCH_ROOT_KEY: bool = True
     
     class Config:
         env_file = ".env"

@@ -9,14 +9,24 @@ from typing import Dict, Any, Optional, List, Union
 from dataclasses import dataclass
 from datetime import datetime
 
-from ic.client import Client
-from ic.identity import Identity
-from ic.agent import Agent
-from ic.principal import Principal
-from ic.candid import encode, decode, Types
+# Import from ic-py package (optional at import time)
+# We guard these imports so the backend can start in environments
+# where ic-py isn't installed (e.g., demo mode or during setup).
+try:
+    from ic.agent import Agent
+    from ic.identity import Identity
+    from ic.principal import Principal
+    from ic.candid import encode, decode
+    IC_AVAILABLE = True
+    _IC_IMPORT_ERROR = None
+except Exception as _e:  # ImportError or other issues under Py 3.13
+    Agent = Identity = Principal = None  # type: ignore
+    encode = decode = None  # type: ignore
+    IC_AVAILABLE = False
+    _IC_IMPORT_ERROR = _e
 
 from app.config.settings import get_settings
-from app.utils.logging import get_logger, log_icp_transaction
+from app.utils.logging import get_logger
 from app.utils.exceptions import ICPError, ConfigurationError
 
 logger = get_logger(__name__)
@@ -38,7 +48,6 @@ class ICPAgent:
     
     def __init__(self, config: ICPConfig):
         self.config = config
-        self.client: Optional[Client] = None
         self.agent: Optional[Agent] = None
         self.identity: Optional[Identity] = None
         self.canister_principal: Optional[Principal] = None
@@ -49,10 +58,13 @@ class ICPAgent:
         Initialize ICP agent and connections
         """
         try:
+            if not IC_AVAILABLE:
+                raise ConfigurationError(
+                    "ic-py is not available. Install dependencies (pip install -r backend/requirements.txt) "
+                    "or run in demo mode to avoid ICP initialization. Underlying error: "
+                    f"{_IC_IMPORT_ERROR}"
+                )
             logger.info(f"🔗 Initializing ICP agent for network: {self.config.network_url}")
-            
-            # Create client
-            self.client = Client(url=self.config.network_url)
             
             # Setup identity
             if self.config.identity_pem_path:
@@ -64,7 +76,7 @@ class ICPAgent:
                 logger.info("⚠️  Using anonymous identity")
             
             # Create agent
-            self.agent = Agent(self.identity, self.client)
+            self.agent = Agent(self.identity, host=self.config.network_url)
             
             # Fetch root key for local development
             if self.config.fetch_root_key:
@@ -191,32 +203,13 @@ class ICPAgent:
             logger.info(f"✅ Update successful: {method_name}")
             
             # Log transaction
-            log_icp_transaction(
-                transaction_type="UPDATE",
-                canister_id=self.config.canister_id,
-                method_name=method_name,
-                user_principal=caller_principal or "anonymous",
-                success=True,
-                transaction_id=transaction_id
-            )
+            logger.info(f"Transaction: {method_name} - Success: {success} - ID: {transaction_id}")
             
             return decoded_response or response
             
         except Exception as e:
             error_msg = f"Update failed for {method_name}: {str(e)}"
             logger.error(f"❌ {error_msg}")
-            
-            # Log failed transaction
-            log_icp_transaction(
-                transaction_type="UPDATE",
-                canister_id=self.config.canister_id,
-                method_name=method_name,
-                user_principal=caller_principal or "anonymous",
-                success=False,
-                transaction_id=transaction_id,
-                error_message=str(e)
-            )
-            
             raise ICPError(error_msg)
     
     async def call_with_retry(self, method_name: str, args: List[Any], 
@@ -295,10 +288,6 @@ class ICPAgent:
         Close agent connections and cleanup
         """
         try:
-            if self.client:
-                # Close client connections if needed
-                pass
-            
             self._initialized = False
             logger.info("🔌 ICP agent connections closed")
             
@@ -509,3 +498,11 @@ def bytes_to_principal(principal_bytes: bytes) -> str:
         return str(principal)
     except Exception as e:
         raise ICPError(f"Invalid Principal bytes: {str(e)}")
+
+
+# Alias for backward compatibility
+async def get_icp_agent():
+    """
+    Get the default ICP agent (alias for get_default_agent)
+    """
+    return await get_default_agent()
