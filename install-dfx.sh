@@ -1,534 +1,85 @@
-#!/usr/bin/env sh
+<!doctype html>
+<html lang="en" dir="ltr" class="plugin-pages plugin-id-default" data-hero-theme="dark" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v2.4.3">
+<title data-rh="true">World Computer | Internet Computer</title><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://internetcomputer.org/img/share.webp"><meta data-rh="true" name="twitter:image" content="https://internetcomputer.org/img/share.webp"><meta data-rh="true" property="og:url" content="https://internetcomputer.org/"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docusaurus_tag" content="default"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docsearch:docusaurus_tag" content="default"><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5"><meta data-rh="true" property="og:title" content="World Computer | Internet Computer"><meta data-rh="true" name="description" content="The Internet Computer hosts secure, network-resident code and data. Build web apps without Big Tech and current IT. Applications are immune to cyber attacks and unstoppable, capable of processing tokens, and can run under exclusive DAO control. Build web3 social media, games, DeFi, multichain apps, secure front-ends, ledgers, enterprise apps, and AI models. TCP/IP connected software. Now ICP hosts software."><meta data-rh="true" property="og:description" content="The Internet Computer hosts secure, network-resident code and data. Build web apps without Big Tech and current IT. Applications are immune to cyber attacks and unstoppable, capable of processing tokens, and can run under exclusive DAO control. Build web3 social media, games, DeFi, multichain apps, secure front-ends, ledgers, enterprise apps, and AI models. TCP/IP connected software. Now ICP hosts software."><link data-rh="true" rel="icon" href="/img/favicon-32x32.png"><link data-rh="true" rel="canonical" href="https://internetcomputer.org/"><link data-rh="true" rel="alternate" href="https://internetcomputer.org/" hreflang="en"><link data-rh="true" rel="alternate" href="https://internetcomputer.org/" hreflang="x-default"><script data-rh="true">function maybeInsertBanner(){window.__DOCUSAURUS_INSERT_BASEURL_BANNER&&insertBanner()}function insertBanner(){var n=document.getElementById("__docusaurus-base-url-issue-banner-container");if(n){n.innerHTML='\n<div id="__docusaurus-base-url-issue-banner" style="border: thick solid red; background-color: rgb(255, 230, 179); margin: 20px; padding: 20px; font-size: 20px;">\n   <p style="font-weight: bold; font-size: 30px;">Your Docusaurus site did not load properly.</p>\n   <p>A very common reason is a wrong site <a href="https://docusaurus.io/docs/docusaurus.config.js/#baseUrl" style="font-weight: bold;">baseUrl configuration</a>.</p>\n   <p>Current configured baseUrl = <span style="font-weight: bold; color: red;">/</span>  (default value)</p>\n   <p>We suggest trying baseUrl = <span id="__docusaurus-base-url-issue-banner-suggestion-container" style="font-weight: bold; color: green;"></span></p>\n</div>\n';var e=document.getElementById("__docusaurus-base-url-issue-banner-suggestion-container"),s=window.location.pathname,r="/"===s.substr(-1)?s:s+"/";e.innerHTML=r}}window.__DOCUSAURUS_INSERT_BASEURL_BANNER=!0,document.addEventListener("DOMContentLoaded",maybeInsertBanner)</script><link rel="alternate" type="application/rss+xml" href="/blog/rss.xml" title="Internet Computer RSS Feed">
+<link rel="alternate" type="application/atom+xml" href="/blog/atom.xml" title="Internet Computer Atom Feed">
 
-##
-## Borrowed from rustup (https://sh.rustup.rs)
-##
-## This is just a little script that can be downloaded from the internet to
-## install dfx. It just does platform detection, downloads the installer
-## and runs it.
-##
-## You are NOT AUTHORIZED to remove any license agreements or prompts from the following script.
-##
-set -u
 
-# A newline separated list of boolean flags. See the read_flags function to see how it's parsed.
-DFX_BOOL_FLAGS=""
 
-# Make a BOOLEAN flag and its description.
-#
-# Arguments:
-#   $1 - The long name of the boolean. This will be used on the command line. The name of the
-#        environment variable will be `flag_NAME` where NAME is this argument, capitalized.
-#        The value of this argument is empty string if not specified, and "1" if it is.
-#   $2 - A description of the flag. This is not currently used but will be when we have enough
-#        flags to implement help.
-define_flag_BOOL() {
-    local VARNAME
-    VARNAME="flag_$(echo "$1" | tr /a-z/ /A-Z)"
-    eval "$VARNAME=\${$VARNAME:-}"
-    DFX_BOOL_FLAGS="${DFX_BOOL_FLAGS}--${1} $VARNAME $2"
+
+
+
+
+
+
+
+
+
+
+
+
+<script>var _paq=window._paq=window._paq||[];_paq.push(["disableCookies"]),_paq.push(["enableLinkTracking"]),function(){_paq.push(["setTrackerUrl","https://internetcomputer.matomo.cloud/matomo.php"]),_paq.push(["setSiteId","1"]);var e=document,t=e.createElement("script"),a=e.getElementsByTagName("script")[0];t.async=!0,t.src="//cdn.matomo.cloud/internetcomputer.matomo.cloud/matomo.js",a.parentNode.insertBefore(t,a)}()</script>
+
+
+
+
+
+
+
+
+
+
+<script src="https://widget.kapa.ai/kapa-widget.bundle.js" data-website-id="08910249-851f-465b-b60f-238d84e1afc1" data-bot-protection-mechanism="hcaptcha" data-project-name="Internet Computer" data-project-color="#172234" data-project-logo="https://s3.coinmarketcap.com/static-gravity/image/2fb1bc84c1494178beef0822179d137d.png" data-modal-override-open-class="ask-ai-widget-trigger" data-modal-ask-ai-input-placeholder="Ask me a question about the Internet Computer Protocol" data-modal-example-questions="What is the ICP token?, How is the Internet Computer governed?, How do I start building fully onchain Web3?" data-modal-disclaimer=" This LLM provides responses are generated automatically and may be inaccurate or outdated. Please take care to verify or validate any responses before making any critical decisions." data-user-analytics-fingerprint-enabled="true" data-modal-z-index="1001" async data-button-hide="true"></script><link rel="stylesheet" href="/assets/css/styles.6ec878d7.css">
+<link rel="preload" href="/assets/js/runtime~main.035beb33.js" as="script">
+<link rel="preload" href="/assets/js/main.f8583089.js" as="script">
+</head>
+<body class="navigation-with-keyboard">
+<script>!function(){function e(e){document.documentElement.setAttribute("data-theme",e)}var t=function(){var e=null;try{e=new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(e){}return e}()||function(){var e=null;try{e=localStorage.getItem("theme")}catch(e){}return e}();null!==t?e(t):window.matchMedia("(prefers-color-scheme: dark)").matches?e("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,e("light"))}()</script><div id="__docusaurus">
+<div id="__docusaurus-base-url-issue-banner-container"></div><div role="region" aria-label="Skip to main content"><a class="skipToContent_fXgn" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav class="marketing-navbar z-[1000] !px-0 pt-6 pb-4 md:px-12 md:pt-11 md:pb-5 text-black bg-page dark-hero:bg-transparent dark-hero:backdrop-blur-sm sticky top-[var(--custom-banner-height)] transition-transform"><div class="container-12 w-full flex items-center justify-between"><a class="self-center flex items-center" href="/"><img src="/img/IC_logo_horizontal_white.svg" alt="" class="h-8 md:h-10 hidden dark-hero:block"><img src="/img/IC_logo_horizontal.svg" alt="" class="h-8 md:h-10 dark-hero:hidden"></a><div class="hidden md:flex gap-0 items-center"><div class="active:outline active:outline-1 active:outline-white text-black dark-hero:text-white m-0 tw-heading-7 group cursor-pointer" tabindex="0"><div class="rounded-full px-8 py-[2px] group-hover:bg-[#6E52AA] group-hover:text-white">Learn</div><div class="absolute z-[1000] top-[4.84rem] left-1/2 -translate-x-1/2 p-4 opacity-0 pointer-events-none cursor-default invisible group-hover:opacity-100 group-hover:pointer-events-auto group-hover:visible"><div class="shadow-2xl translate-y-[calc(var(--custom-banner-height,0)*0.30)] dark-hero:shadow-none bg-white rounded-3xl overflow-hidden hidden md:flex flex-col"><div class="flex-1 flex"><div class="flex lex-1 pl-6 pr-6 py-6 bg-white min-w-[705px]"><div class="pr-8"><a style="background-image:url(/img/nav/featured-chainfusion.webp)" class="bg-cover bg-center aspect-video rounded-xl flex w-[300px] p-6 group/featured hover:no-underline" href="/chainfusion"><span class="tw-heading-5 text-white flex-[3] group-hover/featured:-translate-y-2 transition-transform">Chain Fusion</span><span class="flex-1 text-right"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="group-hover/featured:-translate-y-2 transition-transform"><path d="M13.5008 12L6.50044 4.99969L8.50012 3L17.5001 12L8.50012 21L6.50044 19.0003L13.5008 12Z" fill="white"></path></svg></span></a></div><div class="flex-1 grid grid-rows-4 grid-flow-col gap-5 gap-x-15 min-w-[256px] pr-6"><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/what-is-the-ic"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">What is ICP</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Get to know </span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/capabilities"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Capabilities</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Transforming the internet</span></a><a href="https://learn.internetcomputer.org" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Learn Hub<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Expand your ICP knowledge</span></a><a href="https://dashboard.internetcomputer.org/" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">ICP Dashboard<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Track key metrics</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/roadmap"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">ICP Roadmap</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Highlighting upcoming milestones</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/capabilities/sustainability"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Sustainability</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Building green, efficient tech</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/library"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Library</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Resources to get you started</span></a></div></div></div><div class="py-6 pl-[1.8rem] pr-5 flex gap-9 items-center border-solid border-b-transparent border-l-transparent border-r-transparent border-t-grey-200 border-t"><ul class="relative list-none p-0 flex flex-col gap-3 mt-0 mb-0 py-5 md:border-t md:border-solid md:border-grey-300 md:contents"><li><a href="https://www.youtube.com/dfinity" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Videos on youtube<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://wiki.internetcomputer.org/" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">ICP Wiki<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://internetcomputer.org/whitepapers/The%20Internet%20Computer%20for%20Geeks.pdf" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">White paper<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://wiki.internetcomputer.org/wiki/History" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">History of ICP<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li></ul><div class="flex-1"></div><div class="flex gap-7 items-center"><a href="https://github.com/dfinity" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/github.svg" alt="Github"></a><a href="https://discord.internetcomputer.org" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/discord.svg" alt="Discord"></a><a href="https://twitter.com/dfinitydev" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/twitter.svg" alt="X"></a><a href="https://forum.dfinity.org/" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/forum.svg" alt="Forum"></a></div></div></div></div></div><div class="active:outline active:outline-1 active:outline-white text-black dark-hero:text-white m-0 tw-heading-7 group cursor-pointer" tabindex="0"><div class="rounded-full px-8 py-[2px] group-hover:bg-[#6E52AA] group-hover:text-white">Use</div><div class="absolute z-[1000] top-[4.84rem] left-1/2 -translate-x-1/2 p-4 opacity-0 pointer-events-none cursor-default invisible group-hover:opacity-100 group-hover:pointer-events-auto group-hover:visible"><div class="shadow-2xl translate-y-[calc(var(--custom-banner-height,0)*0.30)] dark-hero:shadow-none bg-white rounded-3xl overflow-hidden hidden md:flex flex-col"><div class="flex-1 flex"><div class="flex lex-1 pl-6 pr-6 py-6 bg-white min-w-[705px]"><div class="pr-8"><a style="background-image:url(/img/nav/featured-ai.webp)" class="bg-cover bg-center aspect-video rounded-xl flex w-[300px] p-6 group/featured hover:no-underline" href="/ai"><span class="tw-heading-5 text-white flex-[3] group-hover/featured:-translate-y-2 transition-transform">Run AI models as real smart contracts</span><span class="flex-1 text-right"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="group-hover/featured:-translate-y-2 transition-transform"><path d="M13.5008 12L6.50044 4.99969L8.50012 3L17.5001 12L8.50012 21L6.50044 19.0003L13.5008 12Z" fill="white"></path></svg></span></a></div><div class="flex-1 grid grid-rows-4 grid-flow-col gap-5 gap-x-15 min-w-[256px] pr-6"><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/ecosystem"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Explore dApps</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Jump into the ICP Ecosystem</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/use-cases"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Use cases</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Built for the real world</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/icp-tokens"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">ICP Token</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">How to buy native Utility Token</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/internet-identity"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Internet Identity</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Web3 authentication</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/nns"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Staking &amp; Governance</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Govern and get rewards</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/ai"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">AI on ICP</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Run AI models as real smart contracts</span></a></div></div></div><div class="py-6 pl-[1.8rem] pr-5 flex gap-9 items-center border-solid border-b-transparent border-l-transparent border-r-transparent border-t-grey-200 border-t"><ul class="relative list-none p-0 flex flex-col gap-3 mt-0 mb-0 py-5 md:border-t md:border-solid md:border-grey-300 md:contents"><li><a href="https://identity.ic0.app/" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Create an internet identity<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://nns.ic0.app/" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">NNS and Staking<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li></ul><div class="flex-1"></div><div class="flex gap-7 items-center"><a href="https://github.com/dfinity" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/github.svg" alt="Github"></a><a href="https://discord.internetcomputer.org" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/discord.svg" alt="Discord"></a><a href="https://twitter.com/dfinitydev" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/twitter.svg" alt="X"></a><a href="https://forum.dfinity.org/" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/forum.svg" alt="Forum"></a></div></div></div></div></div><div class="active:outline active:outline-1 active:outline-white text-black dark-hero:text-white m-0 tw-heading-7 group cursor-pointer" tabindex="0"><div class="rounded-full px-8 py-[2px] group-hover:bg-[#6E52AA] group-hover:text-white">Develop</div><div class="absolute z-[1000] top-[4.84rem] left-1/2 -translate-x-1/2 p-4 opacity-0 pointer-events-none cursor-default invisible group-hover:opacity-100 group-hover:pointer-events-auto group-hover:visible"><div class="shadow-2xl translate-y-[calc(var(--custom-banner-height,0)*0.30)] dark-hero:shadow-none bg-white rounded-3xl overflow-hidden hidden md:flex flex-col"><div class="flex-1 flex"><div class="flex lex-1 pl-6 pr-6 py-6 bg-white min-w-[705px]"><div class="pr-8"><a style="background-image:url(/img/nav/featured-building.webp)" class="bg-cover bg-center aspect-video rounded-xl flex w-[300px] p-6 group/featured hover:no-underline" href="/docs/home"><span class="tw-heading-5 text-white flex-[3] group-hover/featured:-translate-y-2 transition-transform">Developer Docs</span><span class="flex-1 text-right"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="group-hover/featured:-translate-y-2 transition-transform"><path d="M13.5008 12L6.50044 4.99969L8.50012 3L17.5001 12L8.50012 21L6.50044 19.0003L13.5008 12Z" fill="white"></path></svg></span></a></div><div class="flex-1 grid grid-rows-4 grid-flow-col gap-5 gap-x-15 min-w-[256px] pr-6"><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/docs/home"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Developer Docs</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Find the resources you need quickly</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/samples"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Sample code</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Get inspired by existing projects</span></a><a href="https://icp.ninja" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Web IDE<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Deploy your first dapp with ICP.Ninja</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/docs/building-apps/essentials/canisters"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Programming languages</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">ICP supports multiple languages</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/bitcoin"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Build on BTC</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Leveraging Chain Fusion Technology</span></a><a href="https://dfinity.org/hackathons" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Hackathons<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Join like-minded hackers</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/education-hub"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Education Hub</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Comprehensive Learning Resources</span></a><a href="https://forum.dfinity.org/" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Developer Forum<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Join discussions</span></a></div></div></div><div class="py-6 pl-[1.8rem] pr-5 flex gap-9 items-center border-solid border-b-transparent border-l-transparent border-r-transparent border-t-grey-200 border-t"><ul class="relative list-none p-0 flex flex-col gap-3 mt-0 mb-0 py-5 md:border-t md:border-solid md:border-grey-300 md:contents"><li><a href="https://dx.internetcomputer.org/" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Feedback Board<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://dfinity.org/grants" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Developer grants<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap" href="/docs/building-apps/getting-started/tokens-and-cycles">Using cycles</a></li></ul><div class="flex-1"></div><div class="flex gap-7 items-center"><a href="https://github.com/dfinity" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/github.svg" alt="Github"></a><a href="https://discord.internetcomputer.org" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/discord.svg" alt="Discord"></a><a href="https://twitter.com/dfinitydev" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/twitter.svg" alt="X"></a><a href="https://forum.dfinity.org/" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/forum.svg" alt="Forum"></a></div></div></div></div></div><div class="active:outline active:outline-1 active:outline-white text-black dark-hero:text-white m-0 tw-heading-7 group cursor-pointer" tabindex="0"><div class="rounded-full px-8 py-[2px] group-hover:bg-[#6E52AA] group-hover:text-white">Participate</div><div class="absolute z-[1000] top-[4.84rem] left-1/2 -translate-x-1/2 p-4 opacity-0 pointer-events-none cursor-default invisible group-hover:opacity-100 group-hover:pointer-events-auto group-hover:visible"><div class="shadow-2xl translate-y-[calc(var(--custom-banner-height,0)*0.30)] dark-hero:shadow-none bg-white rounded-3xl overflow-hidden hidden md:flex flex-col"><div class="flex-1 flex"><div class="flex lex-1 pl-6 pr-6 py-6 bg-white min-w-[705px]"><div class="pr-8"><a href="https://dfinity.org/alliance" target="_blank" rel="noopener noreferrer" style="background-image:url(/img/nav/featured-alliance.webp)" class="bg-cover bg-center aspect-video rounded-xl flex w-[300px] p-6 group/featured hover:no-underline"><span class="tw-heading-5 text-white flex-[3] group-hover/featured:-translate-y-2 transition-transform">ICP Alliance<h6 class="tw-heading-7 leading-6 mt-2 text-white flex-[2] group-hover/featured:-translate-y-2 transition-transform">Lead the Next Web</h6></span><span class="flex-1 text-right"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="group-hover/featured:-translate-y-2 transition-transform"><path d="M13.5008 12L6.50044 4.99969L8.50012 3L17.5001 12L8.50012 21L6.50044 19.0003L13.5008 12Z" fill="white"></path></svg></span></a></div><div class="flex-1 grid grid-rows-4 grid-flow-col gap-5 gap-x-15 min-w-[256px] pr-6"><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/node-providers"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Sovereign network</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Become a Node Provider</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/events"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Events</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Meet fellow Web3 enthusiasts</span></a><a class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52" href="/news"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">News</span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Stay up to date</span></a><a href="https://linktr.ee/icp_hubs_network" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">ICP community<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Join the global community</span></a><a href="https://medium.com/dfinity" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">Community Blog<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Keep up to date</span></a><a href="https://dfinity.org/alliance" target="_blank" rel="noopener noreferrer" class="text-black hover:no-underline group/item hover:text-infinite flex flex-col min-w-52"><span class="tw-heading-7 inline-flex gap-2 items-center whitespace-nowrap">ICP Alliance<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px] h-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></span><span class="text-black/60 tw-title-navigation-on-page group-hover/item:text-infinite whitespace-nowrap">Lead the Next Web</span></a></div></div></div><div class="py-6 pl-[1.8rem] pr-5 flex gap-9 items-center border-solid border-b-transparent border-l-transparent border-r-transparent border-t-grey-200 border-t"><ul class="relative list-none p-0 flex flex-col gap-3 mt-0 mb-0 py-5 md:border-t md:border-solid md:border-grey-300 md:contents"><li><a href="https://dfinity.org/community-grants/" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Community grants<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://support.dfinity.org/hc/en-us" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Help &amp; Support<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li></ul><div class="flex-1"></div><div class="flex gap-7 items-center"><a href="https://github.com/dfinity" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/github.svg" alt="Github"></a><a href="https://discord.internetcomputer.org" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/discord.svg" alt="Discord"></a><a href="https://twitter.com/dfinitydev" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/twitter.svg" alt="X"></a><a href="https://forum.dfinity.org/" target="_blank" rel="noopener noreferrer" class="w-5 h-5"><img src="/img/svgIcons/purple/forum.svg" alt="Forum"></a></div></div></div></div></div></div><div class="flex gap-4 items-center"> <style>
+.ai-spark {
+  position: absolute;
+  background: white;
+  width: 10%;
+  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  animation: sprkle calc(var(--rnd) * 3s) infinite linear;
+  animation-delay: calc(var(--i) * -3s);
+  transition: background .3s;
 }
 
-# Get the flag name of a line in the flag description.
-get_flag_name() {
-    echo "$1"
+.button-fancy-ai:hover .ai-spark {
+  background: pink;
 }
 
-# Get the variable name of a line in the flag description.
-get_var_name() {
-    echo "$2"
+@keyframes sprkle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(calc(var(--a) * 360deg)) translateY(calc(var(--r) * 0rem)) scale(calc(var(--rnd) * 0));
+  }
+  30% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(calc(var(--a) * 360deg)) translateY(calc(var(--r) * 1rem)) scale(calc(var(--rnd) * .3));
+  }
+  70% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(calc(var(--a) * 360deg)) translateY(calc(var(--r) * 2rem)) scale(calc(var(--rnd) * .7));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(calc(var(--a) * 360deg)) translateY(calc(var(--r) * 3rem)) scale(calc(var(--rnd) * 1));
+  }
 }
-
-# Read all the command line flags and set the flag_XXXX environment variables.
-#
-# Arguments:
-#   $* - Flags to parse.
-# Side Effects:
-#   Environment variables are set according to flags defined and flags.
-read_flags() {
-    # Set values from command line.
-    # shellcheck disable=SC2199
-    # https://github.com/koalaman/shellcheck/wiki/SC2199
-    while [ -n "$*" ]; do
-        local ARG="$1"
-        shift
-
-        OLD_IFS="$IFS"
-        IFS=$'\n'
-        for line in ${DFX_BOOL_FLAGS}; do
-            [ "$line" ] || break
-
-            IFS="$OLD_IFS"
-            FLAG="$(get_flag_name "$line")"
-            VARNAME="$(get_var_name "$line")"
-
-            if [ "$ARG" == "$FLAG" ]; then
-                eval "$VARNAME=1"
-            fi
-        done
-    done
-}
-
-log() {
-    if "$_ansi_escapes_are_valid"; then
-        printf "\33[1minfo:\33[0m %s\n" "$1" 1>&2
-    else
-        printf '%s\n' "$1" 1>&2
-    fi
-}
-
-say() {
-    printf 'dfinity-sdk: %s\n' "$1"
-}
-
-warn() {
-    if $_ansi_escapes_are_valid; then
-        printf "\33[1mwarn:\33[0m %s\n" "$1" 1>&2
-    else
-        printf '%s\n' "$1" 1>&2
-    fi
-}
-
-err() {
-    say "$1" >&2
-    exit 1
-}
-
-need_cmd() {
-    if ! check_cmd "$1"; then
-        err "need '$1' (command not found)"
-    fi
-}
-
-check_cmd() {
-    command -v "$1" >/dev/null 2>&1
-}
-
-assert_nz() {
-    if [ -z "$1" ]; then err "assert_nz $2"; fi
-}
-
-# Run a command that should never fail. If the command fails execution
-# will immediately terminate with an error showing the failing
-# command.
-ensure() {
-    if ! "$@"; then err "command failed: $*"; fi
-}
-
-# This is just for indicating that commands' results are being
-# intentionally ignored. Usually, because it's being executed
-# as part of error handling.
-ignore() {
-    "$@"
-}
-
-define_flag_BOOL "insecure" "Allows downloading from insecure URLs, either using HTTP or TLS 1.2 or less."
-
-check_help_for() {
-    local _arch
-    local _cmd
-    local _arg
-    _arch="$1"
-    shift
-    _cmd="$1"
-    shift
-
-    local _category
-    if "$_cmd" --help | grep -q 'For all options use the manual or "--help all".'; then
-        _category="all"
-    else
-        _category=""
-    fi
-
-    case "$_arch" in
-
-        *darwin*)
-            if check_cmd sw_vers; then
-                case $(sw_vers -productVersion) in
-                    10.*)
-                        # If we're running on macOS, older than 10.13, then we always
-                        # fail to find these options to force fallback
-                        if [ "$(sw_vers -productVersion | cut -d. -f2)" -lt 13 ]; then
-                            # Older than 10.13
-                            echo "Warning: Detected macOS platform older than 10.13"
-                            return 1
-                        fi
-                        ;;
-
-                        # We assume these will be OK for now
-                    11.*) ;; # Big Sur
-                    12.*) ;; # Monterey
-                    13.*) ;; # Ventura
-                    14.*) ;; # Sonoma
-
-                    *)
-                        # Unknown product version, warn and continue
-                        echo "Warning: Detected unknown macOS major version: $(sw_vers -productVersion)"
-                        echo "Warning TLS capabilities detection may fail"
-                        ;;
-                esac
-            fi
-            ;;
-
-    esac
-
-    for _arg in "$@"; do
-        if ! "$_cmd" --help "$_category" | grep -q -- "$_arg"; then
-            return 1
-        fi
-    done
-
-    true # not strictly needed
-}
-
-is_zsh() {
-    [ -n "${ZSH_VERSION-}" ]
-}
-
-# This wraps curl or wget. Try curl first, if not installed,
-# use wget instead.
-# Arguments:
-#   $1 - URL to download.
-#   $2 - Path to output the download. Use - to output to stdout.
-#   $3 - The architecture, used to determine TLS capabilities.
-downloader() {
-    # zsh does not split words by default, Required for curl retry arguments below.
-    is_zsh && setopt local_options shwordsplit
-
-    local _dld
-    local _ciphersuites
-    local _err
-    local _status
-    local _retry
-    if check_cmd curl; then
-        _dld=curl
-    elif check_cmd wget; then
-        _dld=wget
-    else
-        _dld='curl or wget' # to be used in error message of need_cmd
-    fi
-
-    if [ "$1" = --check ]; then
-        need_cmd "$_dld"
-    elif [ "$_dld" = curl ]; then
-        check_curl_for_retry_support
-        _retry="$RETVAL"
-        get_ciphersuites_for_curl
-        _ciphersuites="$RETVAL"
-        if [ -n "$_ciphersuites" ]; then
-            # shellcheck disable=SC2086 # $retry is intentionally split
-            _err=$(curl $_retry --proto '=https' --tlsv1.2 --ciphers "$_ciphersuites" --silent --show-error --fail --location "$1" --output "$2" 2>&1)
-            _status=$?
-        else
-            echo "Warning: Not enforcing strong cipher suites for TLS, this is potentially less secure"
-            if ! check_help_for "$3" curl --proto --tlsv1.2; then
-                echo "Warning: Not enforcing TLS v1.2, this is potentially less secure"
-                # shellcheck disable=SC2086 # $retry is intentionally split
-                _err=$(curl $_retry --silent --show-error --fail --location "$1" --output "$2" 2>&1)
-                _status=$?
-            else
-                # shellcheck disable=SC2086 # $retry is intentionally split
-                _err=$(curl $_retry --proto '=https' --tlsv1.2 --silent --show-error --fail --location "$1" --output "$2" 2>&1)
-                _status=$?
-            fi
-        fi
-        if [ -n "$_err" ]; then
-            echo "$_err" >&2
-            if echo "$_err" | grep -q 404$; then
-                err "installer for platform '$3' not found, this may be unsupported"
-            fi
-        fi
-        return $_status
-    elif [ "$_dld" = wget ]; then
-        if [ "$(wget -V 2>&1 | head -2 | tail -1 | cut -f1 -d" ")" = "BusyBox" ]; then
-            echo "Warning: using the BusyBox version of wget.  Not enforcing strong cipher suites for TLS or TLS v1.2, this is potentially less secure"
-            _err=$(wget "$1" -O "$2" 2>&1)
-            _status=$?
-        else
-            get_ciphersuites_for_wget
-            _ciphersuites="$RETVAL"
-            if [ -n "$_ciphersuites" ]; then
-                _err=$(wget --https-only --secure-protocol=TLSv1_2 --ciphers "$_ciphersuites" "$1" -O "$2" 2>&1)
-                _status=$?
-            else
-                echo "Warning: Not enforcing strong cipher suites for TLS, this is potentially less secure"
-                if ! check_help_for "$3" wget --https-only --secure-protocol; then
-                    echo "Warning: Not enforcing TLS v1.2, this is potentially less secure"
-                    _err=$(wget "$1" -O "$2" 2>&1)
-                    _status=$?
-                else
-                    _err=$(wget --https-only --secure-protocol=TLSv1_2 "$1" -O "$2" 2>&1)
-                    _status=$?
-                fi
-            fi
-        fi
-        if [ -n "$_err" ]; then
-            echo "$_err" >&2
-            if echo "$_err" | grep -q ' 404 Not Found$'; then
-                err "installer for platform '$3' not found, this may be unsupported"
-            fi
-        fi
-        return $_status
-    else
-        err "Unknown downloader" # should not reach here
-    fi
-}
-
-# Check if curl supports the --retry flag, then pass it to the curl invocation.
-check_curl_for_retry_support() {
-    local _retry_supported=""
-    # "unspecified" is for arch, allows for possibility old OS using macports, homebrew, etc.
-    if check_help_for "notspecified" "curl" "--retry"; then
-        _retry_supported="--retry 3"
-        if check_help_for "notspecified" "curl" "--continue-at"; then
-            # "-C -" tells curl to automatically find where to resume the download when retrying.
-            _retry_supported="--retry 3 -C -"
-        fi
-    fi
-
-    RETVAL="$_retry_supported"
-}
-
-# Return cipher suite string specified by user, otherwise return strong TLS 1.2-1.3 cipher suites
-# if support by local tools is detected. Detection currently supports these curl backends:
-# GnuTLS and OpenSSL (possibly also LibreSSL and BoringSSL). Return value can be empty.
-get_ciphersuites_for_curl() {
-    if [ -n "${RUSTUP_TLS_CIPHERSUITES-}" ]; then
-        # user specified custom cipher suites, assume they know what they're doing
-        RETVAL="$RUSTUP_TLS_CIPHERSUITES"
-        return
-    fi
-
-    local _openssl_syntax="no"
-    local _gnutls_syntax="no"
-    local _backend_supported="yes"
-    if curl -V | grep -q ' OpenSSL/'; then
-        _openssl_syntax="yes"
-    elif curl -V | grep -iq ' LibreSSL/'; then
-        _openssl_syntax="yes"
-    elif curl -V | grep -iq ' BoringSSL/'; then
-        _openssl_syntax="yes"
-    elif curl -V | grep -iq ' GnuTLS/'; then
-        _gnutls_syntax="yes"
-    else
-        _backend_supported="no"
-    fi
-
-    local _args_supported="no"
-    if [ "$_backend_supported" = "yes" ]; then
-        # "unspecified" is for arch, allows for possibility old OS using macports, homebrew, etc.
-        if check_help_for "notspecified" "curl" "--tlsv1.2" "--ciphers" "--proto"; then
-            _args_supported="yes"
-        fi
-    fi
-
-    local _cs=""
-    if [ "$_args_supported" = "yes" ]; then
-        if [ "$_openssl_syntax" = "yes" ]; then
-            _cs=$(get_strong_ciphersuites_for "openssl")
-        elif [ "$_gnutls_syntax" = "yes" ]; then
-            _cs=$(get_strong_ciphersuites_for "gnutls")
-        fi
-    fi
-
-    RETVAL="$_cs"
-}
-
-# Return cipher suite string specified by user, otherwise return strong TLS 1.2-1.3 cipher suites
-# if support by local tools is detected. Detection currently supports these wget backends:
-# GnuTLS and OpenSSL (possibly also LibreSSL and BoringSSL). Return value can be empty.
-get_ciphersuites_for_wget() {
-    if [ -n "${RUSTUP_TLS_CIPHERSUITES-}" ]; then
-        # user specified custom cipher suites, assume they know what they're doing
-        RETVAL="$RUSTUP_TLS_CIPHERSUITES"
-        return
-    fi
-
-    local _cs=""
-    if wget -V | grep -q '\-DHAVE_LIBSSL'; then
-        # "unspecified" is for arch, allows for possibility old OS using macports, homebrew, etc.
-        if check_help_for "notspecified" "wget" "TLSv1_2" "--ciphers" "--https-only" "--secure-protocol"; then
-            _cs=$(get_strong_ciphersuites_for "openssl")
-        fi
-    elif wget -V | grep -q '\-DHAVE_LIBGNUTLS'; then
-        # "unspecified" is for arch, allows for possibility old OS using macports, homebrew, etc.
-        if check_help_for "notspecified" "wget" "TLSv1_2" "--ciphers" "--https-only" "--secure-protocol"; then
-            _cs=$(get_strong_ciphersuites_for "gnutls")
-        fi
-    fi
-
-    RETVAL="$_cs"
-}
-
-# Return strong TLS 1.2-1.3 cipher suites in OpenSSL or GnuTLS syntax. TLS 1.2
-# excludes non-ECDHE and non-AEAD cipher suites. DHE is excluded due to bad
-# DH params often found on servers (see RFC 7919). Sequence matches or is
-# similar to Firefox 68 ESR with weak cipher suites disabled via about:config.
-# $1 must be openssl or gnutls.
-get_strong_ciphersuites_for() {
-    if [ "$1" = "openssl" ]; then
-        # OpenSSL is forgiving of unknown values, no problems with TLS 1.3 values on versions that don't support it yet.
-        echo "TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384"
-    elif [ "$1" = "gnutls" ]; then
-        # GnuTLS isn't forgiving of unknown values, so this may require a GnuTLS version that supports TLS 1.3 even if wget doesn't.
-        # Begin with SECURE128 (and higher) then remove/add to build cipher suites. Produces same 9 cipher suites as OpenSSL but in slightly different order.
-        echo "SECURE128:-VERS-SSL3.0:-VERS-TLS1.0:-VERS-TLS1.1:-VERS-DTLS-ALL:-CIPHER-ALL:-MAC-ALL:-KX-ALL:+AEAD:+ECDHE-ECDSA:+ECDHE-RSA:+AES-128-GCM:+CHACHA20-POLY1305:+AES-256-GCM"
-    fi
-}
-
-DFXVM_GITHUB_LATEST_RELEASE_ROOT="${DFXVM_GITHUB_LATEST_RELEASE_ROOT:-https://github.com/dfinity/dfxvm/releases/latest/download}"
-DFX_VERSION="${DFX_VERSION-}"
-DFXVM_INIT_YES="${DFXVM_INIT_YES-}"
-
-# The SHA and the time of the last commit that touched this file.
-SCRIPT_COMMIT_DESC="3e4dedf83bd5720c485f7da6129d63af1ded67dc"
-
-download_and_install() {
-    SHASUM="$1"
-
-    get_architecture || return 1
-    local _arch="$RETVAL"
-    assert_nz "$_arch" "arch"
-
-    local _archive="dfxvm-${_arch}"
-    local _tarball_filename="${_archive}.tar.gz"
-    local _tarball_url="${DFXVM_GITHUB_LATEST_RELEASE_ROOT}/${_tarball_filename}"
-    local _sha256_filename="${_tarball_filename}.sha256"
-    local _sha256_url="${_tarball_url}.sha256"
-
-    log "Downloading latest release..."
-    ensure downloader "$_tarball_url" "${_tarball_filename}" "$_arch"
-    ensure downloader "$_sha256_url" "${_sha256_filename}" "$_arch"
-
-    log "Checking integrity of tarball..."
-    ensure "$SHASUM" -c "${_sha256_filename}"
-
-    ensure tar -xzf "${_tarball_filename}" --strip-components=1 "${_archive}/dfxvm"
-    ensure chmod u+x dfxvm
-    ensure mv dfxvm dfxvm-init
-
-    command="./dfxvm-init"
-
-    if [ -n "${DFX_VERSION}" ]; then
-        command="${command} --dfx-version \"${DFX_VERSION}\""
-    fi
-
-    if [ -n "${DFXVM_INIT_YES}" ]; then
-        command="${command} --yes"
-    fi
-
-    eval "${command}"
-}
-
-main() {
-    _ansi_escapes_are_valid=false
-    if [ -t 2 ]; then
-        if [ "${TERM+set}" = 'set' ]; then
-            case "$TERM" in
-                xterm* | rxvt* | urxvt* | linux* | vt*)
-                    _ansi_escapes_are_valid=true
-                    ;;
-            esac
-        fi
-    fi
-
-    # Read flags.
-    read_flags "$@"
-
-    log "Executing dfxvm install script, commit: $SCRIPT_COMMIT_DESC"
-
-    downloader --check
-    need_cmd uname
-    need_cmd mktemp
-    need_cmd chmod
-    need_cmd mkdir
-    if check_cmd sha256sum; then
-        SHASUM=sha256sum
-    elif check_cmd shasum; then
-        SHASUM=shasum
-    else
-        err "need 'shasum' or 'sha256sum' (neither command found)"
-    fi
-    need_cmd rm
-    need_cmd tar
-    need_cmd gzip
-    need_cmd touch
-
-    local _dir
-
-    if ! _dir="$(mktemp -d 2>/dev/null)"; then
-        if ! _dir="$(mktemp -d -t dfinity-dfxvm)"; then
-            err "failed to create temporary directory"
-        fi
-    fi
-
-    ensure mkdir -p "${_dir}"
-
-    (
-        ensure cd "${_dir}" >/dev/null
-        download_and_install "$SHASUM"
-    )
-    local _subshell_exit_code=$?
-
-    ignore rm "${_dir}"/dfxvm*
-    ignore rmdir "${_dir}"
-
-    exit $_subshell_exit_code
-}
-
-## output is one of the following, which correspond to part of the release asset filenames:
-##    aarch64-apple-darwin
-##    x86_64-apple-darwin
-##    aarch64-unknown-linux-gnu
-##    x86_64-unknown-linux-gnu
-
-get_architecture() {
-    local _ostype _cputype _arch
-    _ostype="$(uname -s)"
-    _cputype="$(uname -m)"
-
-    if [ "$_ostype" = Darwin ] && [ "$_cputype" = i386 ]; then
-        # Darwin `uname -m` lies
-        if sysctl hw.optional.x86_64 | grep -q ': 1'; then
-            _cputype=x86_64
-        fi
-    fi
-
-    case "$_cputype" in
-
-        x86_64 | x86-64 | x64 | amd64)
-            _cputype=x86_64
-            ;;
-
-        arm64 | aarch64)
-            _cputype=aarch64
-            ;;
-
-        *)
-            err "unknown CPU type: $_cputype"
-            ;;
-
-    esac
-
-    case "$_ostype" in
-
-        Linux)
-            _ostype=unknown-linux-gnu
-            ;;
-
-        Darwin)
-            _ostype=apple-darwin
-            ;;
-
-        *)
-            err "unrecognized OS type: $_ostype"
-            ;;
-
-    esac
-
-    _arch="${_cputype}-${_ostype}"
-
-    RETVAL="$_arch"
-}
-
-main "$@" || exit $?
+</style><button class="relative ask-ai-widget-trigger button-white button-fancy-ai border-none transition-all bg-[radial-gradient(67.52%_167.71%_at_50.38%_-41.67%,#EA2B7B_0%,#3B00B9_100%)] hover:text-white/80 stat-fade-in button-small md:button-small font-bold mr-9 md:mr-0 w-10 md:w-12 h-8 md:h-10" style="display:flex;align-items:center;justify-content:center"><span class="flex-1 flex flex-col items-center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="md:text-white scale-75 md:scale-100"><path d="M12 10.096v6.32a4.337 4.337 0 1 1-8.658-.365c-.903-.967-1.473-2.865-1.473-4.447 0-2.156 1.059-4.252 2.574-5.077a3.789 3.789 0 0 1 6.212-3.304" stroke="currentColor" stroke-width="1.714" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.445 9.102c-.557-.127-1.816-.955-2.006-2.566M4.502 13.778c-.567.448-1.02 1.46-1.164 2.272M12 16.416a4.337 4.337 0 1 0 8.658-.365c.903-.97 1.47-2.865 1.47-4.447 0-.691-.107-1.376-.305-2.014" stroke="currentColor" stroke-width="1.714" stroke-linecap="round" stroke-linejoin="round"></path><path d="M19.498 13.778c.567.448 1.019 1.46 1.164 2.272M12.119 6.713c-.557-.099-.557-.9 0-.997a5.056 5.056 0 0 0 4.073-3.9l.032-.154c.123-.553.908-.557 1.035-.005l.04.18a5.082 5.082 0 0 0 4.085 3.876c.56.097.56.904 0 1.003a5.082 5.082 0 0 0-4.085 3.876l-.041.178c-.126.551-.911.548-1.032-.005l-.034-.152a5.055 5.055 0 0 0-4.073-3.9Z" stroke="currentColor" stroke-width="1.714" stroke-linecap="round" stroke-linejoin="round"></path></svg> </span><span class="hidden md:block font-bold"></span><i class="ai-spark" style="--i:0;--rnd:0.9075619517336464;--r:0.6114640023691532;--a:0.23347746324987506"></i><i class="ai-spark" style="--i:0.03333333333333333;--rnd:0.7291658783769785;--r:0.9751940635354218;--a:0.5570481752450775"></i><i class="ai-spark" style="--i:0.06666666666666667;--rnd:0.7000148067636631;--r:0.7871404696875988;--a:0.149811032421304"></i><i class="ai-spark" style="--i:0.1;--rnd:0.29128360739515835;--r:0.8341828453865149;--a:0.4684357151283769"></i><i class="ai-spark" style="--i:0.13333333333333333;--rnd:0.8228522605922481;--r:0.839347901043104;--a:0.4358363228597535"></i><i class="ai-spark" style="--i:0.16666666666666666;--rnd:0.4746585766236129;--r:0.6727459613210941;--a:0.754528388777123"></i><i class="ai-spark" style="--i:0.2;--rnd:0.14446923026354397;--r:0.6501653588358104;--a:0.9019555519319991"></i><i class="ai-spark" style="--i:0.23333333333333334;--rnd:0.49600432300667907;--r:0.8487157920808419;--a:0.18626426340715452"></i><i class="ai-spark" style="--i:0.26666666666666666;--rnd:0.2459665107635678;--r:0.9294814343414817;--a:0.2540698815603202"></i><i class="ai-spark" style="--i:0.3;--rnd:0.8567037888551086;--r:0.9517233662939338;--a:0.5282445825354161"></i><i class="ai-spark" style="--i:0.3333333333333333;--rnd:0.21761457239136361;--r:0.7418220516691392;--a:0.38539256844659975"></i><i class="ai-spark" style="--i:0.36666666666666664;--rnd:0.5487229325810308;--r:0.6634288275350118;--a:0.26827831355403897"></i><i class="ai-spark" style="--i:0.4;--rnd:0.5634955797580035;--r:0.726326325687968;--a:0.885987997725078"></i><i class="ai-spark" style="--i:0.43333333333333335;--rnd:0.43030571895698744;--r:0.9180043551572906;--a:0.21626026157287326"></i><i class="ai-spark" style="--i:0.4666666666666667;--rnd:0.7533877052011013;--r:0.9603264993468221;--a:0.6984588623741443"></i><i class="ai-spark" style="--i:0.5;--rnd:0.3872050319299367;--r:0.7682490554929764;--a:0.011807192723722881"></i><i class="ai-spark" style="--i:0.5333333333333333;--rnd:0.8308172667785736;--r:0.9923639399084465;--a:0.7274093118325853"></i><i class="ai-spark" style="--i:0.5666666666666667;--rnd:0.6981322712248899;--r:0.5199016339022244;--a:0.4672190915219985"></i><i class="ai-spark" style="--i:0.6;--rnd:0.2529900359967112;--r:0.7378799788996603;--a:0.8842724721995217"></i><i class="ai-spark" style="--i:0.6333333333333333;--rnd:0.9691808687216001;--r:0.6560576757522838;--a:0.4070736019918131"></i><i class="ai-spark" style="--i:0.6666666666666666;--rnd:0.639646949444397;--r:0.8390980600563351;--a:0.5359522733297832"></i><i class="ai-spark" style="--i:0.7;--rnd:0.8259222469166072;--r:0.6719607716228068;--a:0.46669673738818807"></i><i class="ai-spark" style="--i:0.7333333333333333;--rnd:0.8344165063137414;--r:0.6625926461658503;--a:0.7016995199989056"></i><i class="ai-spark" style="--i:0.7666666666666667;--rnd:0.9196196850125629;--r:0.509596488474353;--a:0.17156502810802632"></i><i class="ai-spark" style="--i:0.8;--rnd:0.8738989758816966;--r:0.6997423512153891;--a:0.08571906947058117"></i><i class="ai-spark" style="--i:0.8333333333333334;--rnd:0.22354963913627435;--r:0.896421068868699;--a:0.5334691383689607"></i><i class="ai-spark" style="--i:0.8666666666666667;--rnd:0.7621071941676487;--r:0.8153796743002311;--a:0.05359166108265656"></i><i class="ai-spark" style="--i:0.9;--rnd:0.6257020295289197;--r:0.511643508536826;--a:0.7943389930328484"></i><i class="ai-spark" style="--i:0.9333333333333333;--rnd:0.4191730794871491;--r:0.5918185448005268;--a:0.5637912545799382"></i><i class="ai-spark" style="--i:0.9666666666666667;--rnd:0.36332200576132556;--r:0.7842886664076133;--a:0.39831050181811833"></i></button><button class="navbar__search-button group border-none md:border-2 md:border-solid md:border-infinite/50 md:rounded-xl md:docs:border-black bg-transparent px-2 md:px-5 py-1 md:py-2 font-circular md:text-infinite md:docs:text-black flex gap-2 items-center md:order-last outline-offset-2 absolute right-[64px] md:static text-black dark-hero:text-white dark-hero:border-white/50 md:hover:bg-infinite md:hover:text-white md:docs:hover:bg-black md:docs:hover:text-white md:hover:dark-hero:text-infinite md:hover:dark-hero:bg-white md:hover:dark-hero:border-white" aria-label="Search"><svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 md:w-4 md:h-4"><path d="M11.7668 11.024L14.6221 13.8786L13.6788 14.822L10.8241 11.9666C9.76193 12.8181 8.44077 13.2812 7.07944 13.2793C3.76744 13.2793 1.07944 10.5913 1.07944 7.2793C1.07944 3.9673 3.76744 1.2793 7.07944 1.2793C10.3914 1.2793 13.0794 3.9673 13.0794 7.2793C13.0814 8.64063 12.6183 9.96179 11.7668 11.024ZM10.4294 10.5293C11.2755 9.65922 11.748 8.49292 11.7461 7.2793C11.7461 4.70063 9.65744 2.61263 7.07944 2.61263C4.50077 2.61263 2.41277 4.70063 2.41277 7.2793C2.41277 9.8573 4.50077 11.946 7.07944 11.946C8.29306 11.9479 9.45936 11.4754 10.3294 10.6293L10.4294 10.5293V10.5293Z" fill="currentColor" stroke="currentColor" stroke-width="0.5"></path></svg><span class="tw-title-navigation text-infinite dark-hero:text-white md:group-hover:text-white md:dark-hero:group-hover:text-infinite hidden md:block docs:text-black">Search</span><span class="hidden md:block min-w-[53px] text-right text-infinite/70 dark-hero:text-white/70 md:dark-hero:group-hover:text-infinite docs:text-black/50 md:group-hover:text-white"></span></button><input style="display:none;position:fixed;top:0;left:0;right:0;opacity:0;height:100px;font-size:30px" id="ios-tmp-input"><button class="md:hidden flex flex-col gap-[6px] border-none bg-transparent px-[4px] h-8 w-8 p-0 justify-center"><span class="bg-black dark-hero:bg-white h-[2px] w-full shrink-0"></span><span class="bg-black dark-hero:bg-white h-[2px] w-full shrink-0"></span><span class="bg-black dark-hero:bg-white h-[2px] w-full shrink-0"></span></button></div></div></nav><div class="md:hidden overflow-auto fixed inset-0 bg-white z-[1000] px-6 pt-4 pb-12 transition-transform -translate-x-full pointer-events-none"><div class="flex items-center justify-between mt-[var(--custom-banner-height)]"><a class="flex items-center" href="/"><img src="/img/logo-notext.svg" alt="" class="h-5"></a><button class="appearance-none border-none bg-transparent w-10 h-10 -mr-2"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2L18 18" stroke="black" stroke-width="2" stroke-linecap="square"></path><path d="M18.5 2L2.5 18" stroke="black" stroke-width="2" stroke-linecap="square"></path></svg></button></div><ul class="list-none p-0 flex flex-col gap-6 mt-8 mb-6"><li class="p-0"><button class="border-none bg-transparent p-0 text-infinite m-0 font-circular tw-heading-4">Learn</button></li><li class="p-0"><button class="border-none bg-transparent p-0 text-infinite m-0 font-circular tw-heading-4">Use</button></li><li class="p-0"><button class="border-none bg-transparent p-0 text-infinite m-0 font-circular tw-heading-4">Develop</button></li><li class="p-0"><button class="border-none bg-transparent p-0 text-infinite m-0 font-circular tw-heading-4">Participate</button></li></ul><ul class="relative list-none p-0 flex flex-col gap-3 mt-0 mb-0 py-5 md:border-t md:border-solid md:border-grey-300 md:contents"><li><a href="https://dashboard.internetcomputer.org/" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">ICP Dashboard<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://dfinity.org/grants" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Developer Grants<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li><li><a href="https://support.dfinity.org/hc/en-us" target="_blank" rel="noopener noreferrer" class="text-infinite tw-button-sm md:tw-button-xs inline-flex md:flex gap-2 items-center hover:no-underline hover:text-black md:whitespace-nowrap">Help &amp; Support<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[14px]"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></li></ul></div><div class="md:hidden overflow-auto fixed inset-0 bg-white z-[1000] px-6 py-4 transition-transform -translate-x-full pointer-events-none"></div><div class="main-wrapper mainWrapper_eExm"><div class="bg-[#1B025A]"><section class="bg-[#1B025A]" id="home"><style>
+            /* Set the navbar background color */
+            nav.marketing-navbar {
+              background-color: transparent !important;
+            }
+          </style><div class="pt-[152px] pb-40 md:pt-52 md:pb-64 md:grid relative mt-[-72px] md:mt-[-111px] text-white -mb-20"><div class="absolute inset-0 overflow-clip"><span class="absolute block bottom-0 left-0 right-0 h-24 bg-[linear-gradient(transparent,#1B025A)]"></span></div><div class="container-8"><div class="relative mx-auto px-0 md:pl-16 md:pr-8"><h1 class="animate-fade-up uppercase tracking-[-0.03em] leading-none text-[50px] sm:text-[76px] md:text-[100px] lg:text-[110px] text-white grid mb-0 mx-auto" style="animation-play-state:paused"><span class="block sm:text-left">WORLD</span><span class="block md:ml-48">COMPUTER</span></h1><div class="md:ml-48"><p class="tw-paragraph md:tw-lead-sm mt-6 md:w-full">The Internet Computer hosts secure, network-resident code and data. Build web apps without Big Tech and current IT. Applications are immune to cyber attacks and unstoppable, capable of processing tokens, and can run under exclusive DAO control. Build web3 social media, games, DeFi, multichain apps, secure front-ends, ledgers, enterprise apps, and AI models. TCP/IP connected software. ICP hosts software.</p><div class="flex flex-row flex-wrap gap-8 mt-8 md:mt-6 items-center"><a class="button-white w-max" href="/docs/home">DEVELOP</a><a class="link-primary link-with-icon !text-white hover:text-white hover:opacity-80 duration-200 ease-in-out" href="/library"><svg width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.172 11L10.808 5.63605L12.222 4.22205L20 12L12.222 19.778L10.808 18.364L16.172 13H4V11H16.172Z" fill="currentColor"></path></svg> <span>Guides, decks and papers</span></a></div></div><aside aria-label="Various stats" class="block md:absolute mt-8 md:mt-0 bottom-0 -left-[min(10vw,20rem)] backdrop-blur-lg"><div class="hover:no-underline text-white"><div class="bg-black/20 p-2 px-0 rounded-t-xl relative overflow-hidden min-w-[18rem]" style="opacity:0"><div class="rounded-xl text-current py-3 px-6" style="font-size:24px;font-weight:500;opacity:0"><figure class="m-0 gap-3 block"><div class="inline-grid relative static inline"> </div><figcaption class="tw-paragraph-sm tw-paragraph text-current opacity-50 flex items-center gap-1">Cycles burned/s</figcaption></figure></div><div class="rounded-xl text-current py-3 px-6" style="font-size:24px;font-weight:500;opacity:0"><figure class="m-0 gap- block"><div class="inline-grid relative static inline"> </div><figcaption class="tw-paragraph-sm tw-paragraph text-current opacity-50 flex items-center gap-1">Ethereum TX/s (equiv.)</figcaption></figure></div><div class="rounded-xl text-current py-3 px-6" style="font-size:24px;font-weight:500;opacity:0"><figure class="m-0"><div class="text-2xl font-medium"> </div><figcaption class="tw-paragraph-sm text-current opacity-50 flex items-center gap-1">Blocks processed</figcaption></figure></div><hr class="absolute -bottom-8 left-6 right-6 h-px my-8 border-0 opacity-20"></div></div><div class="bg-black/20 p-2 px-0 rounded-b-xl relative overflow-hidden min-w-[18rem] hover:bg-white trabsition-all hover:!text-black hover:no-underline text-white duration-100" style="opacity:0"><a href="https://dashboard.internetcomputer.org/" target="_blank" rel="noopener noreferrer" class="py-3 px-6 link-primary link-with-icon !text-white hover:!text-black hover:opacity-80 duration-200 ease-in-out text-[14px]">dashboard.internetcomputer.org<!-- --> <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></div></aside></div></div></div><div class="relative"></div></section><section class="container-12 pt-20 md:pt-40" style="opacity:0"><div class="grid grid-cols-1 md:grid-cols-3 gap-5"><a href="https://www.youtube.com/watch?v=GN_JleruySc" target="_blank" rel="noopener noreferrer" class="h-full link-primary link-with-icon no-underline cursor-pointer hover:-translate-y-2 transition-transform text-black"><article class="rounded-xl overflow-hidden flex flex-col w-full h-full bg-[#0C0025]"><img class="w-full h-[200px] object-center object-cover" src="/img/home/news-cards/caffeine-demo.webp" alt="Caffeine demo @ WCS25"><div class="px-6 pt-8 pb-6 flex justify-between flex-col flex-1 text-white"><div><h3 class="tw-heading-5 mb-1 undefined">Caffeine demo @ WCS25</h3></div><a href="https://www.youtube.com/watch?v=GN_JleruySc" target="_blank" rel="noopener noreferrer" class="link-with-icon text-white hover:text-white/80"></a></div></article></a><a href="https://acumenstories.com/the-self-writing-sovereign-internet-paradig/" target="_blank" rel="noopener noreferrer" class="h-full link-primary link-with-icon no-underline cursor-pointer hover:-translate-y-2 transition-transform text-black"><article class="rounded-xl overflow-hidden flex flex-col w-full h-full bg-[#0C0025]"><img class="w-full h-[200px] object-center object-cover" src="/img/home/news-cards/news-2.webp" alt="The Self-Writing &amp; Sovereign Internet Paradigm: AI on ICP"><div class="px-6 pt-8 pb-6 flex justify-between flex-col flex-1 text-white"><div><h3 class="tw-heading-5 mb-1 undefined">The Self-Writing &amp; Sovereign Internet Paradigm: AI on ICP</h3></div><a href="https://acumenstories.com/the-self-writing-sovereign-internet-paradig/" target="_blank" rel="noopener noreferrer" class="link-with-icon text-white hover:text-white/80"></a></div></article></a><a href="https://www.undp.org/policy-centre/singapore/press-releases/undp-partners-dfinity-foundation-enhance-financial-inclusion-msmes" target="_blank" rel="noopener noreferrer" class="h-full link-primary link-with-icon no-underline cursor-pointer hover:-translate-y-2 transition-transform text-black"><article class="rounded-xl overflow-hidden flex flex-col w-full h-full bg-[#0C0025]"><img class="w-full h-[200px] object-center object-cover" src="/img/home/news-cards/news-3.webp" alt="UNDP Partnership: Universal Trusted Credentials"><div class="px-6 pt-8 pb-6 flex justify-between flex-col flex-1 text-white"><div><h3 class="tw-heading-5 mb-1 undefined">UNDP Partnership: Universal Trusted Credentials</h3></div><a href="https://www.undp.org/policy-centre/singapore/press-releases/undp-partners-dfinity-foundation-enhance-financial-inclusion-msmes" target="_blank" rel="noopener noreferrer" class="link-with-icon text-white hover:text-white/80"></a></div></article></a></div></section><div class="container-12 mt-30" style="opacity:0"><article class="bg-black rounded-[32px] text-white overflow-clip mt-6 md:min-h-[544px] flex flex-col justify-around"><div class="flex flex-col items-stretch"><div class="p-1/10 md:py-1/12 pt-[15%] text-left md:text-center"><img src="/img/home/caffeine.svg" alt="Caffeine" class="w-[80%] md:w-[50%] mx-auto mb-8 md:mb-0"><p class="tw-paragraph md:tw-lead-sm mt-6 md:mt-10 mb-0 md:w-4/10 mx-auto">Apply for early alpha access and be among the first to experience the decentralized internet.</p><a href="https://join.caffeine.ai/" target="_blank" rel="noopener noreferrer" class="button-outline-white-30 mt-6">Apply for early access</a></div></div></article><article class="overflow-clip relative bg-[radial-gradient(circle_at_50%,#000,#3B00B9,#1E005D)] rounded-[32px] text-white mt-6 md:min-h-[544px] flex flex-col justify-around"><img loading="lazy" src="img/home/alliance-bg.webp" class="md:object-cover size-full absolute pointer-events-none"><div class="relative flex flex-col md:flex-row items-stretch md:min-h-[34rem]"><div class="basis-1/2 flex items-center pt-[2%]"><img src="/img/home/alliance.webp" alt="ICP Alliance" class="w-6/10 md:translate-x-1/3 md:translate-y-0 translate-y-1/2"></div><div class="basis-1/2 p-1/10 flex items-center"><div><div class="tw-paragraph md:tw-lead-sm mt-12 md:mt-6 mb-0">Become the go-to partner for clients racing towards data sovereignty and self-writing apps. ICP Alliance offers leads, solution blueprints, early tech access, and engineering support for faster delivery.</div><a href="https://dfinity.org/alliance" target="_blank" rel="noopener noreferrer" class="button-outline-white-30 mt-4">Join the ICP alliance</a></div></div></div></article><article aria-label="powered by chain fusion" class="overflow-clip relative bg-[radial-gradient(circle_at_50%,#000,#3B00B9,#1E005D)] rounded-[32px] text-white mt-6"><img loading="lazy" src="img/home/chainfusion.webp" class="md:object-cover size-full absolute pointer-events-none"><div class="flex flex-col md:flex-row items-stretch md:min-h-[34rem]"><div class="basis-1/2 flex items-center"><svg viewBox="0 0 660 179" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-[75%] m-auto mt-20 md:m-auto md:mr-0"><g clip-path="url(#clip0_15756_192538)"><path d="M86.857 177.418C86.6963 177.418 86.5557 177.277 86.5557 177.117V102.045C86.5557 101.884 86.6963 101.743 86.857 101.743H178.402C178.563 101.743 178.703 101.884 178.703 102.045V125.83C178.703 125.99 178.563 126.131 178.402 126.131H116.408V134.689H171.07C171.23 134.689 171.371 134.83 171.371 134.99V156.947C171.371 157.108 171.23 157.249 171.07 157.249H116.408V177.117C116.408 177.277 116.267 177.418 116.106 177.418H86.8369H86.857Z" fill="white"></path><path d="M86.857 177.418C86.6963 177.418 86.5557 177.277 86.5557 177.117V102.045C86.5557 101.884 86.6963 101.743 86.857 101.743H178.402C178.563 101.743 178.703 101.884 178.703 102.045V125.83C178.703 125.99 178.563 126.131 178.402 126.131H116.408V134.689H171.07C171.23 134.689 171.371 134.83 171.371 134.99V156.947C171.371 157.108 171.23 157.249 171.07 157.249H116.408V177.117C116.408 177.277 116.267 177.418 116.106 177.418H86.8369H86.857Z" fill="white"></path><path d="M238.186 179.146C218.138 179.106 203.754 174.847 195.457 166.51C189.551 160.564 186.558 152.408 186.598 142.263V101.924C186.598 101.764 186.739 101.623 186.899 101.623H216.169C216.33 101.623 216.47 101.764 216.47 101.924V140.415C216.35 152.749 226.836 154.597 238.186 154.758C249.536 154.597 260.003 152.749 259.842 140.415V101.924C259.842 101.764 259.983 101.623 260.143 101.623H289.473C289.634 101.623 289.775 101.764 289.775 101.924V142.263C289.815 152.408 286.842 160.564 280.915 166.51C272.619 174.847 258.255 179.106 238.186 179.146Z" fill="white"></path><path d="M238.186 179.146C218.138 179.106 203.754 174.847 195.457 166.51C189.551 160.564 186.558 152.408 186.598 142.263V101.924C186.598 101.764 186.739 101.623 186.899 101.623H216.169C216.33 101.623 216.47 101.764 216.47 101.924V140.415C216.35 152.749 226.836 154.597 238.186 154.758C249.536 154.597 260.003 152.749 259.842 140.415V101.924C259.842 101.764 259.983 101.623 260.143 101.623H289.473C289.634 101.623 289.775 101.764 289.775 101.924V142.263C289.815 152.408 286.842 160.564 280.915 166.51C272.619 174.847 258.255 179.106 238.186 179.146Z" fill="white"></path><path d="M348.733 179.146C324.426 179.085 300.46 176.976 297.507 152.347C297.507 152.267 297.507 152.186 297.587 152.106C297.668 152.026 297.728 152.005 297.808 152.005H328.484C328.584 152.005 328.685 152.066 328.745 152.146C331.578 157.028 337.926 159.318 348.774 159.318C353.454 159.318 368.762 158.816 368.762 152.287C368.762 149.193 358.758 148.731 348.151 148.229C326.696 147.144 297.487 145.657 297.547 126.653C297.547 108.573 314.301 99.7744 348.794 99.7744C373.121 99.9351 397.107 102.125 400.02 126.633C400.02 126.714 400.02 126.794 399.94 126.874C399.88 126.935 399.799 126.975 399.719 126.975H369.043C368.943 126.975 368.842 126.914 368.782 126.814C365.186 120.466 356.186 119.642 348.774 119.642C341.361 119.642 328.785 120.546 328.785 126.673C328.785 129.707 338.327 130.149 349.396 130.671C370.851 131.756 400.061 133.242 400 152.307C400 170.367 383.246 179.146 348.754 179.146H348.733Z" fill="white"></path><path d="M348.733 179.146C324.426 179.085 300.46 176.976 297.507 152.347C297.507 152.267 297.507 152.186 297.587 152.106C297.668 152.026 297.728 152.005 297.808 152.005H328.484C328.584 152.005 328.685 152.066 328.745 152.146C331.578 157.028 337.926 159.318 348.774 159.318C353.454 159.318 368.762 158.816 368.762 152.287C368.762 149.193 358.758 148.731 348.151 148.229C326.696 147.144 297.487 145.657 297.547 126.653C297.547 108.573 314.301 99.7744 348.794 99.7744C373.121 99.9351 397.107 102.125 400.02 126.633C400.02 126.714 400.02 126.794 399.94 126.874C399.88 126.935 399.799 126.975 399.719 126.975H369.043C368.943 126.975 368.842 126.914 368.782 126.814C365.186 120.466 356.186 119.642 348.774 119.642C341.361 119.642 328.785 120.546 328.785 126.673C328.785 129.707 338.327 130.149 349.396 130.671C370.851 131.756 400.061 133.242 400 152.307C400 170.367 383.246 179.146 348.754 179.146H348.733Z" fill="white"></path><path d="M436.766 101.643H407.497C407.33 101.643 407.195 101.777 407.195 101.944V177.016C407.195 177.182 407.33 177.317 407.497 177.317H436.766C436.933 177.317 437.067 177.182 437.067 177.016V101.944C437.067 101.777 436.933 101.643 436.766 101.643Z" fill="white"></path><path d="M436.766 101.643H407.497C407.33 101.643 407.195 101.777 407.195 101.944V177.016C407.195 177.182 407.33 177.317 407.497 177.317H436.766C436.933 177.317 437.067 177.182 437.067 177.016V101.944C437.067 101.777 436.933 101.643 436.766 101.643Z" fill="white"></path><path d="M496.65 179.146C476.601 179.106 462.237 174.867 453.941 166.531C448.014 160.564 445.041 152.388 445.081 142.223V136.759C445.041 126.574 448.014 118.378 453.941 112.411C462.338 103.974 476.3 99.8556 496.65 99.8154C530.841 99.8154 548.178 112.25 548.178 136.759V142.243C548.218 152.428 545.245 160.604 539.318 166.571C531.042 174.908 516.678 179.146 496.67 179.187L496.65 179.146ZM496.65 124.183C485.279 124.344 474.773 126.192 474.934 138.527V140.375C474.773 152.75 485.279 154.618 496.65 154.779C508 154.618 518.466 152.77 518.305 140.395V138.547C518.466 126.212 508 124.364 496.65 124.203V124.183Z" fill="white"></path><path d="M496.65 179.146C476.601 179.106 462.237 174.867 453.941 166.531C448.014 160.564 445.041 152.388 445.081 142.223V136.759C445.041 126.574 448.014 118.378 453.941 112.411C462.338 103.974 476.3 99.8556 496.65 99.8154C530.841 99.8154 548.178 112.25 548.178 136.759V142.243C548.218 152.428 545.245 160.604 539.318 166.571C531.042 174.908 516.678 179.146 496.67 179.187L496.65 179.146ZM496.65 124.183C485.279 124.344 474.773 126.192 474.934 138.527V140.375C474.773 152.75 485.279 154.618 496.65 154.779C508 154.618 518.466 152.77 518.305 140.395V138.547C518.466 126.212 508 124.364 496.65 124.203V124.183Z" fill="white"></path><path d="M626.121 177.317C626.121 177.317 625.96 177.277 625.9 177.217L586.084 131.937V177.016C586.084 177.177 585.943 177.317 585.783 177.317H556.513C556.353 177.317 556.212 177.177 556.212 177.016V101.944C556.212 101.783 556.353 101.643 556.513 101.643H596.791C596.791 101.643 596.972 101.683 597.012 101.743L629.436 140.876V101.924C629.436 101.763 629.576 101.623 629.737 101.623H659.067C659.228 101.623 659.368 101.763 659.368 101.924V176.996C659.368 177.157 659.228 177.297 659.067 177.297H626.101L626.121 177.317Z" fill="white"></path><path d="M626.121 177.317C626.121 177.317 625.96 177.277 625.9 177.217L586.084 131.937V177.016C586.084 177.177 585.943 177.317 585.783 177.317H556.513C556.353 177.317 556.212 177.177 556.212 177.016V101.944C556.212 101.783 556.353 101.643 556.513 101.643H596.791C596.791 101.643 596.972 101.683 597.012 101.743L629.436 140.876V101.924C629.436 101.763 629.576 101.623 629.737 101.623H659.067C659.228 101.623 659.368 101.763 659.368 101.924V176.996C659.368 177.157 659.228 177.297 659.067 177.297H626.101L626.121 177.317Z" fill="white"></path><path d="M230.141 79.9463C210.092 79.9061 195.729 75.6472 187.432 67.3104C181.506 61.344 178.533 53.1678 178.573 43.0028V37.5387C178.472 13.1708 195.829 0.735837 230.141 0.595215C262.645 0.655481 279.941 11.845 281.548 33.8222C281.548 33.9026 281.528 33.9829 281.468 34.0432C281.408 34.1035 281.327 34.1436 281.247 34.1436H251.254C251.134 34.1436 251.013 34.0633 250.973 33.9427C248.04 26.0478 238.297 25.0233 230.141 25.0233C218.791 25.184 208.324 27.0322 208.485 39.3667V41.2149C208.324 53.5495 218.791 55.3977 230.141 55.5584C242.295 55.5584 248.723 52.7861 250.973 46.5987C251.013 46.4782 251.134 46.3978 251.254 46.3978H281.247C281.247 46.3978 281.408 46.438 281.468 46.4983C281.528 46.5586 281.548 46.6389 281.548 46.7193C279.941 68.7768 262.645 79.9463 230.141 79.9463Z" fill="white"></path><path d="M230.141 79.9463C210.092 79.9061 195.729 75.6472 187.432 67.3104C181.506 61.344 178.533 53.1678 178.573 43.0028V37.5387C178.472 13.1708 195.829 0.735837 230.141 0.595215C262.645 0.655481 279.941 11.845 281.548 33.8222C281.548 33.9026 281.528 33.9829 281.468 34.0432C281.408 34.1035 281.327 34.1436 281.247 34.1436H251.254C251.134 34.1436 251.013 34.0633 250.973 33.9427C248.04 26.0478 238.297 25.0233 230.141 25.0233C218.791 25.184 208.324 27.0322 208.485 39.3667V41.2149C208.324 53.5495 218.791 55.3977 230.141 55.5584C242.295 55.5584 248.723 52.7861 250.973 46.5987C251.013 46.4782 251.134 46.3978 251.254 46.3978H281.247C281.247 46.3978 281.408 46.438 281.468 46.4983C281.528 46.5586 281.548 46.6389 281.548 46.7193C279.941 68.7768 262.645 79.9463 230.141 79.9463Z" fill="white"></path><path d="M363.187 78.0976C363.026 78.0976 362.886 77.957 362.886 77.7963V52.4441H319.514V77.7963C319.514 77.957 319.373 78.0976 319.212 78.0976H289.943C289.782 78.0976 289.642 77.957 289.642 77.7963V2.72418C289.642 2.56347 289.782 2.42285 289.943 2.42285H319.212C319.373 2.42285 319.514 2.56347 319.514 2.72418V28.0763H362.886V2.72418C362.886 2.56347 363.026 2.42285 363.187 2.42285H392.517C392.677 2.42285 392.818 2.56347 392.818 2.72418V77.7963C392.818 77.957 392.677 78.0976 392.517 78.0976H363.187Z" fill="white"></path><path d="M363.187 78.0976C363.026 78.0976 362.886 77.957 362.886 77.7963V52.4441H319.514V77.7963C319.514 77.957 319.373 78.0976 319.212 78.0976H289.943C289.782 78.0976 289.642 77.957 289.642 77.7963V2.72418C289.642 2.56347 289.782 2.42285 289.943 2.42285H319.212C319.373 2.42285 319.514 2.56347 319.514 2.72418V28.0763H362.886V2.72418C362.886 2.56347 363.026 2.42285 363.187 2.42285H392.517C392.677 2.42285 392.818 2.56347 392.818 2.72418V77.7963C392.818 77.957 392.677 78.0976 392.517 78.0976H363.187Z" fill="white"></path><path d="M477.152 78.2187C477.031 78.2187 476.931 78.1585 476.891 78.0379L471.045 65.3619H433.84L427.994 78.0379C427.954 78.1384 427.834 78.2187 427.733 78.2187H394.767C394.667 78.2187 394.566 78.1585 394.506 78.0781C394.446 77.9977 394.446 77.8772 394.506 77.7969L434.764 2.70466C434.764 2.70466 434.925 2.54395 435.025 2.54395H469.819C469.92 2.54395 470.02 2.60421 470.08 2.70466L510.359 77.7768C510.359 77.7768 510.399 77.9777 510.359 78.058C510.298 78.1384 510.198 78.1986 510.097 78.1986H477.132L477.152 78.2187ZM462.266 46.4582L452.442 25.2845L442.579 46.4582H462.266Z" fill="white"></path><path d="M477.152 78.2187C477.031 78.2187 476.931 78.1585 476.891 78.0379L471.045 65.3619H433.84L427.994 78.0379C427.954 78.1384 427.834 78.2187 427.733 78.2187H394.767C394.667 78.2187 394.566 78.1585 394.506 78.0781C394.446 77.9977 394.446 77.8772 394.506 77.7969L434.764 2.70466C434.764 2.70466 434.925 2.54395 435.025 2.54395H469.819C469.92 2.54395 470.02 2.60421 470.08 2.70466L510.359 77.7768C510.359 77.7768 510.399 77.9777 510.359 78.058C510.298 78.1384 510.198 78.1986 510.097 78.1986H477.132L477.152 78.2187ZM462.266 46.4582L452.442 25.2845L442.579 46.4582H462.266Z" fill="white"></path><path d="M541.618 2.44336H512.348C512.182 2.44336 512.047 2.57827 512.047 2.74469V77.8168C512.047 77.9832 512.182 78.1181 512.348 78.1181H541.618C541.784 78.1181 541.919 77.9832 541.919 77.8168V2.74469C541.919 2.57827 541.784 2.44336 541.618 2.44336Z" fill="white"></path><path d="M541.618 2.44336H512.348C512.182 2.44336 512.047 2.57827 512.047 2.74469V77.8168C512.047 77.9832 512.182 78.1181 512.348 78.1181H541.618C541.784 78.1181 541.919 77.9832 541.919 77.8168V2.74469C541.919 2.57827 541.784 2.44336 541.618 2.44336Z" fill="white"></path><path d="M626.735 78.0981C626.735 78.0981 626.574 78.0579 626.514 77.9977L586.697 32.7174V77.7968C586.697 77.9575 586.557 78.0981 586.396 78.0981H557.127C556.966 78.0981 556.825 77.9575 556.825 77.7968V2.72467C556.825 2.56396 556.966 2.42334 557.127 2.42334H597.405C597.405 2.42334 597.586 2.46352 597.626 2.52378L630.049 41.6569V2.72467C630.049 2.56396 630.19 2.42334 630.35 2.42334H659.68C659.841 2.42334 659.982 2.56396 659.982 2.72467V77.7968C659.982 77.9575 659.841 78.0981 659.68 78.0981H626.714H626.735Z" fill="white"></path><path d="M626.735 78.0981C626.735 78.0981 626.574 78.0579 626.514 77.9977L586.697 32.7174V77.7968C586.697 77.9575 586.557 78.0981 586.396 78.0981H557.127C556.966 78.0981 556.825 77.9575 556.825 77.7968V2.72467C556.825 2.56396 556.966 2.42334 557.127 2.42334H597.405C597.405 2.42334 597.586 2.46352 597.626 2.52378L630.049 41.6569V2.72467C630.049 2.56396 630.19 2.42334 630.35 2.42334H659.68C659.841 2.42334 659.982 2.56396 659.982 2.72467V77.7968C659.982 77.9575 659.841 78.0981 659.68 78.0981H626.714H626.735Z" fill="white"></path><path d="M123.267 79.6439C116.256 79.6439 108.602 76.731 100.507 70.9655C94.7411 66.8674 88.7144 61.3229 82.0851 54.0306C78.1879 58.4501 74.3107 62.3675 70.5742 65.642C65.3511 70.2222 60.128 73.7378 55.0656 76.0882C49.9831 78.4386 45.0211 79.6439 40.3605 79.6439C29.633 79.6439 19.5484 75.5659 11.995 68.1531C4.4416 60.7604 0.283203 50.8967 0.283203 40.4103C0.283203 37.3769 0.644803 34.3234 1.368 31.3703C1.368 31.3302 1.42827 31.1494 1.44836 31.0891C5.74738 13.7926 22.2403 1.17676 40.6217 1.17676C47.6327 1.17676 55.2865 4.08965 63.3824 9.85515C69.1479 13.9533 75.1745 19.4978 81.8039 26.7901C85.7011 22.3504 89.5782 18.4532 93.3148 15.1787C103.922 5.89764 113.986 1.17676 123.267 1.17676C145.526 1.17676 163.626 18.7746 163.626 40.4103C163.626 43.4839 163.244 46.5374 162.521 49.5307C158.202 66.9879 141.709 79.6439 123.287 79.6439H123.267ZM24.7916 19.1764C19.227 20 14.5664 22.1295 10.9303 25.5044C7.37458 28.8191 6.08889 32.2141 5.94827 32.5958C5.32551 35.127 5.02418 37.7787 5.02418 40.4103C5.02418 49.611 8.68035 58.2493 15.3097 64.7581C21.9792 71.2869 30.8585 74.8829 40.3404 74.8829C48.4965 74.8829 57.8579 70.4432 67.4202 62.0661C70.8755 59.0327 74.4714 55.4167 78.1075 51.3387L78.8307 50.515L73.0451 44.3277L72.5027 44.9705C68.7059 49.3499 65.11 53.0061 61.5543 56.1198C53.4986 63.171 46.4675 66.7469 40.6217 66.7469C25.7559 66.7469 13.6825 54.9346 13.6825 40.4103C13.6825 32.1337 17.9212 24.0982 24.8117 19.1563L24.7916 19.1764ZM94.1183 39.9885C99.8236 45.995 103.882 50.1133 106.192 52.2226C107.779 53.669 113.605 58.6711 121.941 61.8653C122.363 61.9255 122.845 61.9858 123.267 61.9858C135.501 61.9054 145.445 52.2427 145.445 40.4103C145.445 28.578 135.501 18.8349 123.267 18.8349C120.073 18.8349 114.388 20.4822 105.489 28.2967C101.832 31.4909 98.116 35.3279 94.1384 39.9885H94.1183ZM40.6217 18.855C28.3875 18.9353 18.4435 28.5981 18.4435 40.4304C18.4435 52.2628 28.3875 62.0059 40.6217 62.0059C43.8158 62.0059 49.5009 60.3586 58.4003 52.544C62.0766 49.3298 65.793 45.4928 69.7505 40.8523C64.0453 34.8457 59.9873 30.7275 57.6771 28.6182C56.0901 27.1718 50.2643 22.1696 41.9274 18.9755C41.5056 18.9152 41.0234 18.8751 40.6016 18.8751L40.6217 18.855ZM123.267 14.0939C138.133 14.0939 150.206 25.9062 150.206 40.4304C150.206 48.707 145.968 56.7426 139.077 61.6845C144.642 60.8608 149.302 58.7314 152.939 55.3565C156.514 52.0217 157.78 48.6468 157.921 48.2651C158.543 45.7339 158.845 43.1022 158.845 40.4505C158.845 21.4464 142.874 5.978 123.247 5.978C115.151 5.978 106.131 10.2971 96.4486 18.7947C92.9933 21.8281 89.3974 25.4441 85.7614 29.5423L85.0181 30.3458L90.8238 36.5533L91.3862 35.9104C95.183 31.531 98.7789 27.8749 102.335 24.7611C110.39 17.7099 117.421 14.1341 123.267 14.1341V14.0939Z" fill="white"></path><path d="M123.266 1.45842C145.364 1.45842 163.344 18.9357 163.344 40.4107C163.344 43.4643 162.982 46.4977 162.239 49.4507C157.96 66.7874 141.567 79.3631 123.266 79.3631C116.316 79.3631 108.722 76.4502 100.666 70.7249C94.8607 66.5865 88.7737 60.9818 82.0841 53.6091C78.1266 58.1291 74.1892 62.1067 70.3924 65.4415C65.1894 70.0017 59.9864 73.4971 54.9441 75.8475C49.8817 78.1979 44.98 79.3832 40.3394 79.3832C29.6722 79.3832 19.668 75.3252 12.1748 67.9727C4.68168 60.6001 0.543376 50.8168 0.543376 40.4107C0.543376 37.3974 0.904976 34.3841 1.62818 31.4511C1.62818 31.4109 1.66835 31.2703 1.68844 31.2301C5.98746 13.9939 22.3599 1.45842 40.6207 1.45842C47.5714 1.45842 55.165 4.3713 63.2207 10.0966C69.0264 14.2349 75.1133 19.8397 81.8029 27.2124C85.7604 22.6924 89.6978 18.7148 93.4946 15.4001C104.041 6.13912 114.066 1.45842 123.266 1.45842ZM90.8429 36.9153L91.5862 36.0515C95.383 31.6922 98.9588 28.036 102.515 24.9222C110.51 17.9112 117.501 14.3555 123.266 14.3555C137.971 14.3555 149.944 26.0472 149.944 40.4107C149.944 49.069 145.404 57.2653 137.991 62.0666C144.119 61.3835 149.221 59.1738 153.139 55.5176C156.755 52.1426 158.06 48.7075 158.181 48.3258C158.804 45.7544 159.125 43.0826 159.125 40.4107C159.125 21.246 143.034 5.65699 123.266 5.65699C115.11 5.65699 106.03 9.99619 96.287 18.534C92.8116 21.5875 89.1956 25.2035 85.5796 29.3016L84.6756 30.286L90.863 36.8952M123.266 62.2674C135.641 62.1871 145.726 52.4038 145.726 40.4308C145.726 28.4579 135.641 18.5942 123.266 18.5942C120.032 18.5942 114.287 20.2415 105.307 28.1164C101.59 31.3708 97.8137 35.268 93.7558 40.0291C99.5414 46.1361 103.68 50.3146 106.01 52.444C107.597 53.9105 113.463 58.9126 121.84 62.1469C122.322 62.2273 122.824 62.2674 123.266 62.2674ZM40.6207 62.2674C43.855 62.2674 49.6004 60.6202 58.5801 52.7453C62.2966 49.4708 66.0934 45.5736 70.1312 40.8326C64.3456 34.7256 60.2073 30.5471 57.877 28.4177C56.29 26.9512 50.4241 21.9491 42.047 18.7148C41.5649 18.6344 41.0626 18.5942 40.6207 18.5942C28.2459 18.6746 18.1613 28.4579 18.1613 40.4308C18.1613 52.4038 28.2459 62.2674 40.6207 62.2674ZM25.8955 18.7549C19.7684 19.438 14.6659 21.6477 10.7485 25.3039C7.13253 28.6788 5.84684 32.114 5.70622 32.4957C5.08346 35.0671 4.76204 37.7389 4.76204 40.4107C4.76204 49.6717 8.43831 58.3903 15.1279 64.9393C21.8376 71.5284 30.7972 75.1444 40.3595 75.1444C48.5759 75.1444 58.0177 70.6847 67.6201 62.2674C71.0955 59.2139 74.6914 55.5979 78.3275 51.4998L79.2114 50.4954L73.0441 43.9062L72.3008 44.77C68.5041 49.1494 64.9282 52.7855 61.3725 55.8993C53.3771 62.9103 46.3862 66.466 40.6207 66.466C25.9156 66.466 13.9427 54.7743 13.9427 40.4107C13.9427 31.7524 18.4827 23.5562 25.8955 18.7549ZM123.266 0.916016C113.925 0.916016 103.78 5.65699 93.133 14.9782C89.4367 18.2125 85.6399 22.0495 81.8029 26.3887C75.2338 19.1969 69.2674 13.7126 63.5421 9.65468C55.4061 3.84899 47.692 0.916016 40.6207 0.916016C22.1389 0.916016 5.54551 13.5921 1.16613 31.0493C1.12595 31.1297 1.10586 31.2502 1.08578 31.3507C0.362576 34.3037 0.000976562 37.3572 0.000976562 40.4107C0.000976562 50.9775 4.17946 60.8813 11.7931 68.3544C19.4068 75.8274 29.5517 79.9256 40.3595 79.9256C45.0804 79.9256 50.0625 78.7202 55.1851 76.3497C60.2877 73.9793 65.5309 70.4637 70.7741 65.8633C74.4704 62.629 78.2873 58.7921 82.1042 54.4529C88.6733 61.6447 94.6598 67.1289 100.365 71.1869C108.501 76.9926 116.215 79.9256 123.266 79.9256C141.808 79.9256 158.422 67.1691 162.781 49.5914C163.524 46.5981 163.906 43.5044 163.906 40.4107C163.886 18.6344 145.665 0.916016 123.266 0.916016ZM85.3988 30.306L85.9613 29.6833C89.5773 25.6052 93.1732 21.9892 96.6285 18.9558C106.271 10.4984 115.231 6.21948 123.246 6.21948C142.712 6.21948 158.562 21.5674 158.562 40.4107C158.562 43.0424 158.241 45.6539 157.638 48.1851C157.518 48.5066 156.272 51.8212 152.757 55.1158C149.402 58.2497 145.183 60.2786 140.141 61.2027C146.569 56.1805 150.467 48.4061 150.467 40.4107C150.467 25.7459 138.253 13.8131 123.246 13.8131C117.34 13.8131 110.249 17.409 102.153 24.5204C98.5771 27.6543 94.9812 31.3105 91.1643 35.7099L90.8027 36.1117L85.3787 30.306H85.3988ZM94.4991 39.9889C98.4164 35.4287 102.073 31.6721 105.668 28.5181C114.508 20.7638 120.132 19.1366 123.266 19.1366C135.34 19.1366 145.183 28.6989 145.183 40.4308C145.183 52.1627 135.36 61.6447 123.266 61.725C122.885 61.725 122.443 61.6849 121.981 61.6045C113.724 58.4104 107.959 53.4685 106.372 52.0221C104.102 49.9329 100.104 45.895 94.479 39.9889H94.4991ZM40.6207 61.705C28.5473 61.705 18.7037 52.1426 18.7037 40.4107C18.7037 28.6788 28.5272 19.1969 40.6207 19.1165C41.0024 19.1165 41.4443 19.1567 41.9064 19.2371C50.1629 22.4312 55.9284 27.3731 57.5154 28.8195C59.8056 30.9087 63.7832 34.9667 69.4081 40.8527C65.5108 45.4129 61.8546 49.1695 58.2386 52.3435C49.3995 60.0978 43.7746 61.725 40.6408 61.725L40.6207 61.705ZM40.3394 74.6221C30.9378 74.6221 22.1188 71.0463 15.4895 64.5576C8.92044 58.109 5.28435 49.5311 5.28435 40.4107C5.28435 37.7791 5.60577 35.1675 6.20844 32.6363C6.32897 32.3149 7.59457 28.9802 11.09 25.7057C14.4449 22.5919 18.6635 20.5428 23.7059 19.6188C17.2774 24.641 13.3802 32.4154 13.3802 40.4107C13.3802 55.0756 25.5942 67.0084 40.6006 67.0084C46.5067 67.0084 53.5981 63.4125 61.714 56.301C65.2898 53.1672 68.8857 49.511 72.7026 45.1115L73.0642 44.7098L78.4681 50.4954L77.9056 51.1382C74.2896 55.2162 70.6937 58.8322 67.2384 61.8456C57.7163 70.1825 48.4152 74.602 40.3394 74.602V74.6221Z" fill="white"></path></g><defs><clipPath id="clip0_15756_192538"><rect width="660" height="179" fill="white"></rect></clipPath></defs></svg></div><div class="basis-1/2 p-1/10 flex items-center"><div><div class="tw-paragraph md:tw-lead-sm mt-6 mb-0">Create smart contracts that can trustlessly interact with, and coordinate, multiple blockchains. Process any token. Interact with any smart contract.</div><a class="button-outline-white-30 mt-4" href="/chainfusion">Find out more</a></div></div></div></article><article class="bg-[linear-gradient(48deg,#4DEDD3_-32.7%,#31A782_33.06%,#3B00B9_129.51%)] rounded-[32px] text-white overflow-clip mt-6"><div class="flex flex-col md:flex-row items-stretch"><div class="basis-1/2 p-1/10 md:py-1/12 md:order-2"><h4 class="tw-heading-4 md:tw-heading-60">Make AI immune to cyber attacks</h4><p class="tw-paragraph md:tw-lead-sm mt-4 md:mt-6 mb-0">Decentralize Al to make it tamperproof and unstoppable, and autonomous if needed</p><a class="button-outline-white-30 mt-4" href="/ai">Find out more</a></div><div class="basis-1/2 relative md:order-1 -mt-[5%] md:mt-0 overflow-hidden"><img loading="lazy" src="img/home/ai.webp" class="md:absolute bottom-0 left-0 w-full -mb-10 md:mb-0"></div></div></article><article class="bg-[linear-gradient(#3B00B9,#9D80DC)] rounded-[32px] text-white overflow-clip mt-6"><div class="flex flex-col md:flex-row items-stretch"><div class="basis-1/2 relative"><img loading="lazy" src="img/home/icp-hubs.webp" class="w-full hidden md:block"><img loading="lazy" src="img/home/icp-hubs-network-image.webp" class="w-full md:hidden"></div><div class="basis-1/2 p-1/10 md:py-1/12"><img loading="lazy" src="img/home/hbs1.png" class="w-72 ml-0 mb-4"><h4 class="tw-heading-4 md:tw-heading-60">Helping the global Web3 ecosystem grow</h4><a href="https://linktr.ee/icp_hubs_network" target="_blank" rel="noopener noreferrer" class="button-outline-white-30 link-with-icon mt-6 flex gap-2 w-max max-w-full"><span>Join Communities</span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.2429 8.34285L3.65709 8.34285L3.65709 6.34315H14.6568V17.3429L12.6571 17.3429L12.6571 9.75706L4.05024 18.364L2.63603 16.9498L11.2429 8.34285Z" fill="currentColor"></path></svg></a></div></div></article><div class="block md:flex gap-4"><article class="basis-1/2 bg-black rounded-[32px] text-white overflow-clip mt-6"><div class="md:flex-row items-stretch	relative z-1"><div class="p-1/10 md:p-2/10 py-1/10 pb-64 md:pb-96"><h5 class="tw-heading-4">Real World Use Cases</h5><p class="tw-paragraph md:tw-lead-sm mt-6">Experience full stack decentralization: from DAOs and crypto cloud services to games, NFTs, and social media, the Internet Computer has something for everyone.</p><a class="button-outline-white-30 mt-4" href="/use-cases">See for yourself</a></div><div class="absolute z-0 bottom-0 pointer-events-none"><img src="img/home/dapps-bg.webp" class="object-cover size-full"></div></div></article><article class="basis-1/2 bg-black rounded-[32px] text-white overflow-clip mt-6"><div class="md:flex-row items-stretch	relative z-1"><div class="p-1/10 md:p-2/10 py-1/10 pb-64 md:pb-96"><h5 class="tw-heading-4">ICP ROADMAP</h5><p class="tw-paragraph md:tw-lead-sm mt-6">Explore the ICP Roadmap, focussing on contributions by the DFINITY Foundation. The roadmap is split into nine themes, each highlighting upcoming milestones.</p><a class="button-outline-white-30 mt-4" href="/roadmap">get into it</a></div><div class="absolute z-0 bottom-0 translate-x-[43%] w-[70%] pointer-events-none"><img src="img/home/roadmap-viz.svg" class="object-cover size-full"></div></div></article></div></div><div class="container-10 pt-20" id="news" style="opacity:0"><div class="flex justify-between mb-8 items-center" style="opacity:0;transform:translateY(30px) translateZ(0)"><h2 class="tw-heading-5 md:tw-heading-4 mb-0 text-white">Latest Global Press</h2><div class="hidden sm:block"><a class="link-white link-with-icon" href="/news"><svg width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.172 11L10.808 5.63605L12.222 4.22205L20 12L12.222 19.778L10.808 18.364L16.172 13H4V11H16.172Z" fill="currentColor"></path></svg> More News</a></div></div><div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 sm:-mx-6"><a href="https://siliconangle.com/2025/07/16/self-writing-internet-dfinitys-caffeine-ai-wakeup-call-application-developers/" target="_blank" rel="noopener noreferrer" class="text-white hover:no-underline hover:text-white/60 hidden [&amp;:nth-child(1)]:block [&amp;:nth-child(2)]:block md:block border-0 border-t sm:border-t-0 first:border-t-0 first:pt-0 first:mt-0 pt-6 mt-6 sm:pt-0 sm:mt-0 sm:px-6 sm:border-r border-white/30 border-solid last:sm:border-0" style="opacity:0;transform:translateY(30px) translateZ(0)"><h4 class="tw-heading-6 md:tw-heading-5 mb-2">The Self-Writing Internet: Is Dfinity’s Caffeine AI a Wakeup Call for Application Developers?</h4><p class="tw-paragraph-sm md:tw-lead-sm mb-0 text-white/30">Jul 16, 2025</p></a><a href="https://apnews.com/press-release/business-wire/dfinity-opens-early-access-to-caffeine-a-tool-for-anyone-to-build-fully-customized-and-secure-apps-dad532e40acf4add952eb3dff03ecc13" target="_blank" rel="noopener noreferrer" class="text-white hover:no-underline hover:text-white/60 hidden [&amp;:nth-child(1)]:block [&amp;:nth-child(2)]:block md:block border-0 border-t sm:border-t-0 first:border-t-0 first:pt-0 first:mt-0 pt-6 mt-6 sm:pt-0 sm:mt-0 sm:px-6 sm:border-r border-white/30 border-solid last:sm:border-0" style="opacity:0;transform:translateY(30px) translateZ(0)"><h4 class="tw-heading-6 md:tw-heading-5 mb-2">DFINITY Opens Early Access to Caffeine: A Tool For Anyone to Build Fully Customized and Secure Apps</h4><p class="tw-paragraph-sm md:tw-lead-sm mb-0 text-white/30">Jul 15, 2025</p></a><a href="https://thedefiant.io/news/blockchains/dfinity-foundation-announces-solana-integration-on-internet-computer-protocol" target="_blank" rel="noopener noreferrer" class="text-white hover:no-underline hover:text-white/60 hidden [&amp;:nth-child(1)]:block [&amp;:nth-child(2)]:block md:block border-0 border-t sm:border-t-0 first:border-t-0 first:pt-0 first:mt-0 pt-6 mt-6 sm:pt-0 sm:mt-0 sm:px-6 sm:border-r border-white/30 border-solid last:sm:border-0" style="opacity:0;transform:translateY(30px) translateZ(0)"><h4 class="tw-heading-6 md:tw-heading-5 mb-2">DFINITY Foundation Announces Solana Integration on Internet Computer Protocol</h4><p class="tw-paragraph-sm md:tw-lead-sm mb-0 text-white/30">Jun 18, 2025</p></a><a href="https://www.ccn.com/education/crypto/ai-self-writing-apps-blockchain-web3-dominic-williams/" target="_blank" rel="noopener noreferrer" class="text-white hover:no-underline hover:text-white/60 hidden [&amp;:nth-child(1)]:block [&amp;:nth-child(2)]:block md:block border-0 border-t sm:border-t-0 first:border-t-0 first:pt-0 first:mt-0 pt-6 mt-6 sm:pt-0 sm:mt-0 sm:px-6 sm:border-r border-white/30 border-solid last:sm:border-0" style="opacity:0;transform:translateY(30px) translateZ(0)"><h4 class="tw-heading-6 md:tw-heading-5 mb-2">AI Can Empower Billions of Smartphone Users to Build Apps Without Coding or Middlemen – Dominic Williams</h4><p class="tw-paragraph-sm md:tw-lead-sm mb-0 text-white/30">Mar 28, 2025</p></a></div><div class="sm:hidden mt-6" style="opacity:0;transform:translateY(30px) translateZ(0)"><a class="link-white link-with-icon" href="/news"><svg width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.172 11L10.808 5.63605L12.222 4.22205L20 12L12.222 19.778L10.808 18.364L16.172 13H4V11H16.172Z" fill="currentColor"></path></svg> More News</a></div></div></div><main class="w-full relative bg-[#1B025A] z-[0]"><div class="overflow-hidden"><section id="subscribe"><div class="container-12 mt-20 mb-20 md:mt-30 md:mb-30" style="opacity:0;transform:translateY(30px) translateZ(0)"><div class="bg-gradient-100 from-[#3B00B9] to-[#2586B6DE] rounded-xl md:rounded-[32px] overflow-hidden relative"><div class="pl-6 md:pl-0 md:absolute right-0 top-0 bottom-0 flex ml-auto justify-end"><img src="/img/home/newsletter-home.webp" alt="Subscribe to newsletter" loading="lazy" class="object-contain object-right"></div><div class="container-10 flex items-center w-full"><div class="relative mt-6 md:max-w-[600px] mr-auto mb-10 md:my-20"><h2 class="text-white tw-heading-5 md:tw-heading-4 mb-6 md:mb-8 md:pr-10">Sign up for email updates<!-- --> <span class="text-white-60">to keep up to date with the Internet Computer</span></h2><form method="post" action="https://dfinity.us16.list-manage.com/subscribe/post?u=33c727489e01ff5b6e1fb6cc6&amp;id=7e9469a315&amp;f_id=00bac2e1f0"><input placeholder="Email" class="input-text input-text-white w-full mb-3" name="EMAIL" required=""><button class="button-white">Get updates</button></form></div></div></div></div></section></div></main></div><div class="container_pcGX"><footer class="footer"><div class="editButtonContainer_OU6K"><a href="https://github.com/dfinity/portal/edit/master/src/pages/index.tsx" target="_blank" rel="noopener noreferrer" class="absolute -top-8 right-0 text-white hover:text-white-60 hover:no-underline tw-title-navigation-on-page rounded-full py-1 px-3 bg-black-60 backdrop-blur-2xl -translate-y-1/2 inline-flex items-center gap-1"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_1207_35889)"><path d="M4.56518 12.4973L12.1856 4.87684L11.1232 3.8144L3.50274 11.4348V12.4973H4.56518ZM5.18807 14H2V10.8119L10.5919 2.21999C10.7328 2.07913 10.9239 2 11.1232 2C11.3224 2 11.5135 2.07913 11.6544 2.21999L13.78 4.34562C13.9209 4.48653 14 4.67761 14 4.87684C14 5.07608 13.9209 5.26716 13.78 5.40806L5.18807 14Z" fill="currentColor"></path></g><defs><clipPath id="clip0_1207_35889"><rect width="16" height="16" fill="currentColor"></rect></clipPath></defs></svg>Edit this page</a></div><div class="footerLinksContainer_LuNH"><div class="footerLinkCol_Pfs5"><p class="footerLink_Dz86"><a href="https://lbbne-haaaa-aaaam-absda-cai.icp0.io/" target="_blank" rel="noopener noreferrer" class="footer__link-item" style="color:white;font-weight:bold"><span class="lg:inline-flex items-center gap-1">Internet Computer Association<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_tdhU" viewBox="0 -2 12 10" xmlns="http://www.w3.org/2000/svg"><path d="M6.49513 2.56192L1.4379 2.56192L1.4379 1.22879H8.77107V8.56196L7.43794 8.56196L7.43794 3.50473L1.7 9.24266L0.757192 8.29986L6.49513 2.56192Z" fill="currentColor"></path></svg></span></a></p><p class="footerLink_Dz86"><a href="https://wiki.internetcomputer.org/" target="_blank" rel="noopener noreferrer" class="footer__link-item" style="color:white;font-weight:bold"><span class="lg:inline-flex items-center gap-1">Wiki<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_tdhU" viewBox="0 -2 12 10" xmlns="http://www.w3.org/2000/svg"><path d="M6.49513 2.56192L1.4379 2.56192L1.4379 1.22879H8.77107V8.56196L7.43794 8.56196L7.43794 3.50473L1.7 9.24266L0.757192 8.29986L6.49513 2.56192Z" fill="currentColor"></path></svg></span></a></p><p class="footerLink_Dz86"><a target="_self" class="footer__link-item" style="color:white;font-weight:bold" href="/node-providers">Node Providers</a></p><p class="footerLink_Dz86"><a href="https://dashboard.internetcomputer.org/" target="_blank" rel="noopener noreferrer" class="footer__link-item" style="color:white;font-weight:bold"><span class="lg:inline-flex items-center gap-1">Dashboard<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_tdhU" viewBox="0 -2 12 10" xmlns="http://www.w3.org/2000/svg"><path d="M6.49513 2.56192L1.4379 2.56192L1.4379 1.22879H8.77107V8.56196L7.43794 8.56196L7.43794 3.50473L1.7 9.24266L0.757192 8.29986L6.49513 2.56192Z" fill="currentColor"></path></svg></span></a></p></div><div class="footerLinkCol_Pfs5"><p class="footerLink_Dz86"><a href="https://dfinity.org/grants" target="_blank" rel="noopener noreferrer" class="footer__link-item" style="color:white;font-weight:bold"><span class="lg:inline-flex items-center gap-1">Developer Grants<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_tdhU" viewBox="0 -2 12 10" xmlns="http://www.w3.org/2000/svg"><path d="M6.49513 2.56192L1.4379 2.56192L1.4379 1.22879H8.77107V8.56196L7.43794 8.56196L7.43794 3.50473L1.7 9.24266L0.757192 8.29986L6.49513 2.56192Z" fill="currentColor"></path></svg></span></a></p><p class="footerLink_Dz86"><a href="https://support.dfinity.org/hc/en-us" target="_blank" rel="noopener noreferrer" class="footer__link-item" style="color:white;font-weight:bold"><span class="lg:inline-flex items-center gap-1">Support &amp; Feedback<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_tdhU" viewBox="0 -2 12 10" xmlns="http://www.w3.org/2000/svg"><path d="M6.49513 2.56192L1.4379 2.56192L1.4379 1.22879H8.77107V8.56196L7.43794 8.56196L7.43794 3.50473L1.7 9.24266L0.757192 8.29986L6.49513 2.56192Z" fill="currentColor"></path></svg></span></a></p><p class="footerLink_Dz86"><a href="https://dfinity.frontify.com/d/pD7yZhsmpqos" target="_blank" rel="noopener noreferrer" class="footer__link-item" style="color:white;font-weight:bold"><span class="lg:inline-flex items-center gap-1">Brand Materials<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_tdhU" viewBox="0 -2 12 10" xmlns="http://www.w3.org/2000/svg"><path d="M6.49513 2.56192L1.4379 2.56192L1.4379 1.22879H8.77107V8.56196L7.43794 8.56196L7.43794 3.50473L1.7 9.24266L0.757192 8.29986L6.49513 2.56192Z" fill="currentColor"></path></svg></span></a></p><p class="footerLink_Dz86"><a href="https://dfinity.frontify.com/d/pD7yZhsmpqos/press-kit" target="_blank" rel="noopener noreferrer" class="footer__link-item" style="color:white;font-weight:bold"><span class="lg:inline-flex items-center gap-1">Press Kit<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_tdhU" viewBox="0 -2 12 10" xmlns="http://www.w3.org/2000/svg"><path d="M6.49513 2.56192L1.4379 2.56192L1.4379 1.22879H8.77107V8.56196L7.43794 8.56196L7.43794 3.50473L1.7 9.24266L0.757192 8.29986L6.49513 2.56192Z" fill="currentColor"></path></svg></span></a></p></div><div class="text-white md:max-w-[40%] md:ml-auto md:mt-0 flex flex-col items-start"><div class="mediaLinksContainer_NPBq"><div class="mediaLinks_IgUQ"><a href="https://twitter.com/dfinity" target="_blank" rel="noopener noreferrer" aria-label="Go to X"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIKICB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZpZXdCb3g9IjAgMCAzMDAgMzAwLjMiIHhtbDpzcGFjZT0icHJlc2VydmUiPgogIDxwYXRoIGQ9Ik0xNzEuNCwxMzIuOUwyNTUsMzcuN2gtMTkuOGwtNzIuNyw4Mi43bC01OC04Mi43SDM3LjdsODcuNywxMjVsLTg3LjcsOTkuOGgxOS44bDc2LjctODcuM2w2MS4zLDg3LjNoNjYuOSBNNjQuNiw1Mi4zaDMwLjQKCWwxNDAuMSwxOTYuM2gtMzAuNSIgZmlsbD0id2hpdGUiIC8+Cjwvc3ZnPgo=" alt="X" loading="lazy"></a></div><div class="mediaLinks_IgUQ"><a href="https://t.me/+m8tiEFaaNR8xNjNl" target="_blank" rel="noopener noreferrer" aria-label="Go to Telegram"><img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzEwNzFfMTk4MTM3KSI+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMjQgMTJDMjQgMTguNjI3NCAxOC42Mjc0IDI0IDEyIDI0QzUuMzcyNTggMjQgMCAxOC42Mjc0IDAgMTJDMCA1LjM3MjU4IDUuMzcyNTggMCAxMiAwQzE4LjYyNzQgMCAyNCA1LjM3MjU4IDI0IDEyWk0xMi40MzAxIDguODU3NTlDMTEuMjYzIDkuMzQzMDYgOC45MzAyNiAxMC4zNDc5IDUuNDMyMDEgMTEuODcyQzQuODYzOTUgMTIuMDk3OSA0LjU2NjM4IDEyLjMxODkgNC41MzkyOSAxMi41MzVDNC40OTM1MSAxMi45MDAyIDQuOTUwODQgMTMuMDQ0IDUuNTczNiAxMy4yMzk4QzUuNjU4MzEgMTMuMjY2NCA1Ljc0NjA4IDEzLjI5NCA1LjgzNjA2IDEzLjMyMzNDNi40NDg3NiAxMy41MjI0IDcuMjcyOTUgMTMuNzU1NCA3LjcwMTQxIDEzLjc2NDdDOC4wOTAwNyAxMy43NzMxIDguNTIzODUgMTMuNjEyOSA5LjAwMjc2IDEzLjI4NEMxMi4yNzEzIDExLjA3NzcgMTMuOTU4NSA5Ljk2MjQ3IDE0LjA2NDQgOS45Mzg0M0MxNC4xMzkyIDkuOTIxNDcgMTQuMjQyNyA5LjkwMDE0IDE0LjMxMjkgOS45NjI1MUMxNC4zODMxIDEwLjAyNDkgMTQuMzc2MiAxMC4xNDMgMTQuMzY4NyAxMC4xNzQ3QzE0LjMyMzQgMTAuMzY3OCAxMi41MjgyIDEyLjAzNjggMTEuNTk5MiAxMi45MDA0QzExLjMwOTYgMTMuMTY5NyAxMS4xMDQyIDEzLjM2MDcgMTEuMDYyMiAxMy40MDQzQzEwLjk2ODEgMTMuNTAyIDEwLjg3MjIgMTMuNTk0NCAxMC43ODAxIDEzLjY4MzNDMTAuMjEwOSAxNC4yMzIgOS43ODQwMyAxNC42NDM1IDEwLjgwMzcgMTUuMzE1NUMxMS4yOTM4IDE1LjYzODQgMTEuNjg1OSAxNS45MDU0IDEyLjA3NzEgMTYuMTcxOEMxMi41MDQzIDE2LjQ2MjcgMTIuOTMwNCAxNi43NTI5IDEzLjQ4MTcgMTcuMTE0M0MxMy42MjIyIDE3LjIwNjQgMTMuNzU2MyAxNy4zMDIgMTMuODg3IDE3LjM5NTJDMTQuMzg0MiAxNy43NDk2IDE0LjgzMDkgMTguMDY4MSAxNS4zODI3IDE4LjAxNzNDMTUuNzAzNCAxNy45ODc4IDE2LjAzNDYgMTcuNjg2MyAxNi4yMDI4IDE2Ljc4N0MxNi42MDAzIDE0LjY2MTggMTcuMzgxNyAxMC4wNTcxIDE3LjU2MjMgOC4xNTk2M0MxNy41NzgyIDcuOTkzMzkgMTcuNTU4MyA3Ljc4MDYzIDE3LjU0MjMgNy42ODcyM0MxNy41MjYzIDcuNTkzODQgMTcuNDkyOSA3LjQ2MDc3IDE3LjM3MTUgNy4zNjIyNkMxNy4yMjc3IDcuMjQ1NTkgMTcuMDA1OCA3LjIyMDk5IDE2LjkwNjUgNy4yMjI3NEMxNi40NTUxIDcuMjMwNjkgMTUuNzYyNyA3LjQ3MTQ3IDEyLjQzMDEgOC44NTc1OVoiIGZpbGw9IndoaXRlIi8+CjwvZz4KPGRlZnM+CjxjbGlwUGF0aCBpZD0iY2xpcDBfMTA3MV8xOTgxMzciPgo8cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==" alt="Telegram" loading="lazy"></a></div><div class="mediaLinks_IgUQ"><a href="https://medium.com/dfinity" target="_blank" rel="noopener noreferrer" aria-label="Go to Medium"><img src="data:image/svg+xml,%3Csvg width=&#x27;24px&#x27; height=&#x27;24px&#x27; viewBox=&#x27;0 0 24 24&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27;%3E%3Cpath fill=&#x27;white&#x27; d=&#x27;m24 24h-24v-24h24zm-8.986-15.006v7.326c0 .198 0 .234-.127.362l-1.302 1.264v.27h6.32v-.27l-1.257-1.234c-.091-.07-.148-.178-.148-.3 0-.022.002-.043.005-.064v.002-9.07c-.003-.019-.005-.04-.005-.062 0-.121.058-.229.148-.298l.001-.001 1.286-1.234v-.27h-4.456l-3.176 7.924-3.609-7.924h-4.675v.271l1.502 1.813c.127.115.207.281.207.466 0 .022-.001.043-.003.064v-.003 7.126c.007.041.011.088.011.136 0 .222-.088.423-.231.571l-1.69 2.054v.27h4.8v-.27l-1.691-2.054c-.149-.154-.241-.363-.241-.595 0-.04.003-.079.008-.117v.004-6.16l4.215 9.195h.49z&#x27;/%3E%3C/svg%3E" alt="Medium" loading="lazy"></a></div><div class="mediaLinks_IgUQ"><a href="https://www.youtube.com/dfinity" target="_blank" rel="noopener noreferrer" aria-label="Go to Youtube"><img src="data:image/svg+xml,%3C%3Fxml version=&#x27;1.0&#x27; encoding=&#x27;iso-8859-1&#x27;%3F%3E%3C!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0) --%3E%3Csvg version=&#x27;1.1&#x27; id=&#x27;Layer_1&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27; xmlns:xlink=&#x27;http://www.w3.org/1999/xlink&#x27; x=&#x27;0px&#x27; y=&#x27;0px&#x27; width=&#x27;24&#x27; height=&#x27;24&#x27; viewBox=&#x27;0 0 310 310&#x27; style=&#x27;enable-background:new 0 0 310 310;&#x27; xml:space=&#x27;preserve&#x27;%3E%3Cg id=&#x27;XMLID_822_&#x27;%3E%3Cpath id=&#x27;XMLID_823_&#x27; fill=&#x27;white&#x27; d=&#x27;M297.917,64.645c-11.19-13.302-31.85-18.728-71.306-18.728H83.386c-40.359,0-61.369,5.776-72.517,19.938 C0,79.663,0,100.008,0,128.166v53.669c0,54.551,12.896,82.248,83.386,82.248h143.226c34.216,0,53.176-4.788,65.442-16.527 C304.633,235.518,310,215.863,310,181.835v-53.669C310,98.471,309.159,78.006,297.917,64.645z M199.021,162.41l-65.038,33.991 c-1.454,0.76-3.044,1.137-4.632,1.137c-1.798,0-3.592-0.484-5.181-1.446c-2.992-1.813-4.819-5.056-4.819-8.554v-67.764 c0-3.492,1.822-6.732,4.808-8.546c2.987-1.814,6.702-1.938,9.801-0.328l65.038,33.772c3.309,1.718,5.387,5.134,5.392,8.861 C204.394,157.263,202.325,160.684,199.021,162.41z&#x27;/%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3Cg%3E%3C/g%3E%3C/svg%3E%0A" alt="Youtube" loading="lazy"></a></div><div class="mediaLinks_IgUQ"><a href="https://www.reddit.com/r/dfinity/" target="_blank" rel="noopener noreferrer" aria-label="Go to Reddit"><img src="data:image/svg+xml,%3Csvg width=&#x27;24px&#x27; height=&#x27;24px&#x27; viewBox=&#x27;0 0 24 24&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27;%3E%3Cg%3E%3Cpath fill=&#x27;none&#x27; d=&#x27;M0 0h24v24H0z&#x27;/%3E%3Cpath fill-rule=&#x27;nonzero&#x27; fill=&#x27;white&#x27; d=&#x27;M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm6.67-10a1.46 1.46 0 0 0-2.47-1 7.12 7.12 0 0 0-3.85-1.23L13 6.65l2.14.45a1 1 0 1 0 .13-.61L12.82 6a.31.31 0 0 0-.37.24l-.74 3.47a7.14 7.14 0 0 0-3.9 1.23 1.46 1.46 0 1 0-1.61 2.39 2.87 2.87 0 0 0 0 .44c0 2.24 2.61 4.06 5.83 4.06s5.83-1.82 5.83-4.06a2.87 2.87 0 0 0 0-.44 1.46 1.46 0 0 0 .81-1.33zm-10 1a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm5.81 2.75a3.84 3.84 0 0 1-2.47.77 3.84 3.84 0 0 1-2.47-.77.27.27 0 0 1 .38-.38A3.27 3.27 0 0 0 12 16a3.28 3.28 0 0 0 2.09-.61.28.28 0 1 1 .39.4v-.04zm-.18-1.71a1 1 0 1 1 1-1 1 1 0 0 1-1.01 1.04l.01-.04z&#x27;/%3E%3C/g%3E%3C/svg%3E%0A" alt="Reddit" loading="lazy"></a></div><div class="mediaLinks_IgUQ"><a href="https://coinmarketcap.com/currencies/internet-computer/" target="_blank" rel="noopener noreferrer" aria-label="Go to CoinMarketCap"><img src="data:image/svg+xml,%3Csvg width=&#x27;24&#x27; height=&#x27;24&#x27; viewBox=&#x27;0 0 24 24&#x27; fill=&#x27;none&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27;%3E%3Cpath d=&#x27;M20.1307 14.3432C19.9566 14.4632 19.7533 14.534 19.5423 14.5481C19.3313 14.5623 19.1204 14.5193 18.9318 14.4237C18.489 14.1735 18.2504 13.587 18.2504 12.7878V10.3382C18.2504 9.16231 17.7846 8.32567 17.0055 8.09854C15.6887 7.71328 14.7054 9.32619 14.3259 9.93283L11.9971 13.702V9.10193C11.9712 8.04104 11.6262 7.40565 10.9736 7.21589C10.5423 7.08939 9.89545 7.14114 9.26581 8.10141L4.05907 16.4592C3.36629 15.1338 3.00708 13.6594 3.01255 12.1639C3.01255 7.12676 7.03764 3.0298 11.9971 3.0298C16.9566 3.0298 20.9961 7.12676 20.9961 12.1639V12.1898C20.9961 12.1898 20.9961 12.207 20.9961 12.2156C21.045 13.1903 20.7287 13.9665 20.1336 14.3432H20.1307ZM23.0058 12.1668V12.1179C22.9655 5.97961 18.0434 1 11.9971 1C5.95086 1 1 6.00836 1 12.1639C1 18.3194 5.93361 23.3306 11.9971 23.3306C14.7781 23.3305 17.4533 22.2645 19.4723 20.3521C19.6683 20.1674 19.7836 19.913 19.7933 19.6439C19.803 19.3748 19.7062 19.1128 19.524 18.9145C19.4369 18.8181 19.3315 18.7399 19.2139 18.6843C19.0964 18.6287 18.969 18.597 18.8392 18.5908C18.7093 18.5847 18.5795 18.6043 18.4572 18.6485C18.335 18.6927 18.2227 18.7606 18.1268 18.8484C17.2575 19.673 16.2306 20.3133 15.1077 20.7311C13.9848 21.1489 12.7891 21.3355 11.5923 21.2796C10.3955 21.2238 9.22229 20.9267 8.14317 20.4061C7.06406 19.8856 6.10127 19.1523 5.3126 18.2504L9.99895 10.7177V14.1937C9.99895 15.8641 10.6458 16.4046 11.1892 16.5627C11.7326 16.7209 12.5635 16.6116 13.4347 15.1971L16.0222 11.0081C16.1027 10.873 16.1803 10.758 16.2493 10.6573V12.7878C16.2493 14.3489 16.8761 15.5967 17.9744 16.212C18.4738 16.4816 19.0365 16.6118 19.6036 16.5891C20.1707 16.5663 20.7212 16.3914 21.1973 16.0826C22.4049 15.2977 23.0633 13.8774 22.9943 12.1668H23.0058Z&#x27; fill=&#x27;white&#x27;/%3E%3C/svg%3E%0A" alt="CoinMarketCap" loading="lazy"></a></div><div class="mediaLinks_IgUQ"><a href="https://discord.internetcomputer.org" target="_blank" rel="noopener noreferrer" aria-label="Go to Discord"><img src="data:image/svg+xml,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E %3Cpath%20d%3D%22M19.3034%205.33716C17.9344%204.71103%2016.4805%204.2547%2014.9629%204C14.7719%204.32899%2014.5596%204.77471%2014.411%205.12492C12.7969%204.89144%2011.1944%204.89144%209.60255%205.12492C9.45397%204.77471%209.2311%204.32899%209.05068%204C7.52251%204.2547%206.06861%204.71103%204.70915%205.33716C1.96053%209.39111%201.21766%2013.3495%201.5891%2017.2549C3.41443%2018.5815%205.17612%2019.388%206.90701%2019.9187C7.33151%2019.3456%207.71356%2018.73%208.04255%2018.0827C7.41641%2017.8492%206.82211%2017.5627%206.24904%2017.2231C6.39762%2017.117%206.5462%2017.0003%206.68416%2016.8835C10.1438%2018.4648%2013.8911%2018.4648%2017.3082%2016.8835C17.4568%2017.0003%2017.5948%2017.117%2017.7434%2017.2231C17.1703%2017.5627%2016.576%2017.8492%2015.9499%2018.0827C16.2789%2018.73%2016.6609%2019.3456%2017.0854%2019.9187C18.8152%2019.388%2020.5875%2018.5815%2022.4033%2017.2549C22.8596%2012.7341%2021.6806%208.80747%2019.3034%205.33716ZM8.5201%2014.8459C7.48007%2014.8459%206.63107%2013.9014%206.63107%2012.7447C6.63107%2011.5879%207.45884%2010.6434%208.5201%2010.6434C9.57071%2010.6434%2010.4303%2011.5879%2010.4091%2012.7447C10.4091%2013.9014%209.57071%2014.8459%208.5201%2014.8459ZM15.4936%2014.8459C14.4535%2014.8459%2013.6034%2013.9014%2013.6034%2012.7447C13.6034%2011.5879%2014.4323%2010.6434%2015.4936%2010.6434C16.5442%2010.6434%2017.4038%2011.5879%2017.3825%2012.7447C17.3825%2013.9014%2016.5548%2014.8459%2015.4936%2014.8459Z%22%20fill%3D%22white%22%20%2F%3E %3C%2Fsvg%3E" alt="Discord" loading="lazy"></a></div></div><form class="mt-10" method="post" action="https://dfinity.us16.list-manage.com/subscribe/post?u=33c727489e01ff5b6e1fb6cc6&amp;id=7e9469a315&amp;f_id=00bac2e1f0"><p class="tw-lead-sm mb-3 md:mb-5">Sign up for email updates to keep up to date with advancements on the Internet Computer</p><div class="flex gap-3 flex-col md:flex-row items-start"><input type="email" name="EMAIL" placeholder="Email" class="input-text input-text-white flex-1 w-full md:w-auto" required=""><button type="submit" class="button-white">Get Updates!</button></div></form></div></div><div class="footerBottom_SMHg"><div class="legalContainer_YyR4"><div class="legalLinkContainer_v7Sk"><div class="legalLink_o9EZ"><a href="https://dfinity.org/privacy-policy" target="_blank" rel="noopener noreferrer" style="color:white;font-weight:bold">Privacy Policy</a></div><div class="legalLink_o9EZ"><a href="https://dfinity.org/terms-of-use" target="_blank" rel="noopener noreferrer" style="color:white;font-weight:bold">Terms of Use</a></div></div><div class="legalCopyright__Eqq" style="color:white">© 2025 Internet Computer</div></div></div><div class="footerPadding_WXgF"></div></footer></div></div>
+<script src="/assets/js/runtime~main.035beb33.js"></script>
+<script src="/assets/js/main.f8583089.js"></script>
+</body>
+</html>
