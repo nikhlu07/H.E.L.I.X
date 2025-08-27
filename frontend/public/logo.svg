@@ -1,0 +1,22 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Background -->
+  <path d="M24 4L40 12V24C40 32.8366 32.8366 40 24 40C15.1634 40 8 32.8366 8 24V12L24 4Z" fill="#1E40AF" stroke="#1E3A8A" stroke-width="2"/>
+  
+  <!-- Blockchain Nodes -->
+  <circle cx="16" cy="20" r="3" fill="#10B981"/>
+  <circle cx="24" cy="16" r="3" fill="#10B981"/>
+  <circle cx="32" cy="20" r="3" fill="#10B981"/>
+  <circle cx="20" cy="28" r="3" fill="#10B981"/>
+  <circle cx="28" cy="28" r="3" fill="#10B981"/>
+  
+  <!-- Connection Lines -->
+  <path d="M19 20L21 16" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+  <path d="M27 16L29 20" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+  <path d="M20 28L16 20" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+  <path d="M32 20L28 28" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+  <path d="M20 28L28 28" stroke="#10B981" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Shield Badge -->
+  <circle cx="24" cy="24" r="6" fill="#EF4444"/>
+  <path d="M22 24L24 26L26 22" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

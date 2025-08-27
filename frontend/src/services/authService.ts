@@ -8,6 +8,23 @@ export interface User {
   role: string;
   name: string;
   isAuthenticated: boolean;
+  accessToken?: string;
+}
+
+export interface AuthResponse {
+  access_token: string;
+  token_type: string;
+  principal_id: string;
+  role: string;
+  user_info: {
+    name: string;
+    title: string;
+    permissions: string[];
+    authenticated_at: string;
+    demo_mode: boolean;
+  };
+  expires_in: number;
+  demo_mode: boolean;
 }
 
 // Role mapping based on principal IDs (you can customize this)
@@ -19,10 +36,14 @@ const PRINCIPAL_ROLE_MAP: Record<string, string> = {
 // Internet Identity provider URL - use mainnet for now since we don't have local dfx
 const II_URL = 'https://identity.ic0.app';
 
+// Backend API configuration
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+
 class AuthService {
   private authClient: AuthClient | null = null;
   private agent: HttpAgent | null = null;
   private user: User | null = null;
+  private accessToken: string | null = null;
 
   async init(): Promise<void> {
     this.authClient = await AuthClient.create({
@@ -64,12 +85,58 @@ class AuthService {
     });
   }
 
+  async demoLogin(role: string): Promise<User> {
+    try {
+      const response = await fetch(`${BACKEND_URL}/auth/demo-login/${role}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Demo login failed: ${response.statusText}`);
+      }
+
+      const authData: AuthResponse = await response.json();
+      
+      // Create a mock principal for demo users
+      const mockPrincipal = Principal.fromText(`demo-${role}-${Date.now()}`);
+      
+      this.accessToken = authData.access_token;
+      
+      this.user = {
+        principal: mockPrincipal,
+        role: authData.role,
+        name: authData.user_info.name,
+        isAuthenticated: true,
+        accessToken: authData.access_token,
+      };
+
+      // Store token in localStorage for demo mode
+      localStorage.setItem('demo_access_token', authData.access_token);
+      localStorage.setItem('demo_user_role', role);
+
+      console.log('✅ Demo login successful:', this.user);
+      return this.user;
+    } catch (error) {
+      console.error('Demo login failed:', error);
+      throw error;
+    }
+  }
+
   async logout(): Promise<void> {
     if (this.authClient) {
       await this.authClient.logout();
-      this.user = null;
-      this.agent = null;
     }
+    
+    // Clear demo tokens
+    localStorage.removeItem('demo_access_token');
+    localStorage.removeItem('demo_user_role');
+    
+    this.user = null;
+    this.agent = null;
+    this.accessToken = null;
   }
 
   private async handleAuthenticated(): Promise<User> {
@@ -88,24 +155,53 @@ class AuthService {
 
     // Note: No need to fetch root key for mainnet
 
-    // Determine user role
-    const principalString = principal.toString();
-    console.log('🔐 Principal ID:', principalString);
+    // Authenticate with backend using Internet Identity
+    try {
+      const authData = await this.authenticateWithBackend(principal);
+      this.accessToken = authData.access_token;
+      
+      this.user = {
+        principal,
+        role: authData.role,
+        name: authData.user_info.name,
+        isAuthenticated: true,
+        accessToken: authData.access_token,
+      };
+
+      console.log('✅ User authenticated with backend:', this.user);
+      return this.user;
+    } catch (error) {
+      console.error('Backend authentication failed:', error);
+      throw new Error('Failed to authenticate with backend system');
+    }
+  }
+
+  private async authenticateWithBackend(principal: Principal): Promise<AuthResponse> {
+    // Get the delegation chain from the identity
+    const identity = this.authClient!.getIdentity();
+    const delegationChain = await identity.getDelegation();
     
-    const role = this.determineUserRole(principalString);
-    const name = this.getRoleName(role);
-
-    console.log('👤 Assigned role:', role, 'Name:', name);
-
-    this.user = {
-      principal,
-      role,
-      name,
-      isAuthenticated: true,
+    // Prepare the authentication request
+    const authRequest = {
+      principal_id: principal.toString(),
+      delegation_chain: delegationChain,
+      domain: window.location.origin,
     };
 
-    console.log('✅ User authenticated:', this.user);
-    return this.user;
+    const response = await fetch(`${BACKEND_URL}/auth/ii/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(authRequest),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Backend authentication failed: ${response.statusText} - ${errorText}`);
+    }
+
+    return await response.json();
   }
 
   private determineUserRole(principalId: string): string {
@@ -158,6 +254,53 @@ class AuthService {
     return this.agent;
   }
 
+  getAccessToken(): string | null {
+    return this.accessToken;
+  }
+
+  // Check if we have a stored demo token
+  hasStoredDemoToken(): boolean {
+    return !!(localStorage.getItem('demo_access_token') && localStorage.getItem('demo_user_role'));
+  }
+
+  // Restore demo session from stored tokens
+  async restoreDemoSession(): Promise<User | null> {
+    const token = localStorage.getItem('demo_access_token');
+    const role = localStorage.getItem('demo_user_role');
+    
+    if (token && role) {
+      try {
+        // Verify token is still valid by making a test request
+        const response = await fetch(`${BACKEND_URL}/auth/profile`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const mockPrincipal = Principal.fromText(`demo-${role}-restored`);
+          this.accessToken = token;
+          this.user = {
+            principal: mockPrincipal,
+            role: role,
+            name: this.getRoleName(role),
+            isAuthenticated: true,
+            accessToken: token,
+          };
+          return this.user;
+        }
+      } catch (error) {
+        console.error('Failed to restore demo session:', error);
+      }
+      
+      // Clear invalid tokens
+      localStorage.removeItem('demo_access_token');
+      localStorage.removeItem('demo_user_role');
+    }
+    
+    return null;
+  }
+
   // Add a principal to role mapping (for admin use)
   addPrincipalRole(principalId: string, role: string): void {
     PRINCIPAL_ROLE_MAP[principalId] = role;
@@ -169,6 +312,7 @@ class AuthService {
   }
 }
 
-// Export singleton instance
+// Export the class and singleton instance
+export { AuthService };
 export const authService = new AuthService();
 export default authService;

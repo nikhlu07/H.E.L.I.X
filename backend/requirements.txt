@@ -5,8 +5,7 @@ pydantic==2.5.0
 pydantic-settings==2.1.0
 
 # ===== INTERNET COMPUTER PROTOCOL =====
-ic-py==2.5.0
-candid==0.8.1
+ic-py==1.0.1
 PyJWT==2.8.0
 
 # ===== HTTP AND NETWORKING =====
@@ -23,7 +22,7 @@ aiosqlite==0.19.0  # SQLite async driver
 # ===== SECURITY AND AUTHENTICATION =====
 passlib[bcrypt]==1.7.4
 python-jose[cryptography]==3.3.0
-cryptography==41.0.8
+cryptography==45.0.6
 
 # ===== VALIDATION AND SERIALIZATION =====
 email-validator==2.1.0

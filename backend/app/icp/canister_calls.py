@@ -48,6 +48,10 @@ class SystemStats:
     total_challenges: int
     vendor_count: int
 
+from app.config.settings import get_settings
+from app.icp.agent import get_default_agent
+
+
 class CanisterService:
     """
     Service for interacting with the ICP canister
@@ -55,10 +59,9 @@ class CanisterService:
     """
     
     def __init__(self):
-        self.canister_id = "rdmx6-jaaaa-aaaah-qcaiq-cai"  # Your canister ID
-        self.agent = None
-        self.actor = None
-        self.demo_mode = True  # Set to False for real canister calls
+        settings = get_settings()
+        self.canister_id = getattr(settings, 'ICP_CANISTER_ID', "rdmx6-jaaaa-aaaah-qcaiq-cai")
+        self.demo_mode = bool(getattr(settings, 'demo_mode', False))
         
         # Demo data for testing
         self._init_demo_data()
@@ -161,17 +164,10 @@ class CanisterService:
         if self.demo_mode:
             logger.info("Running in demo mode - canister calls will be simulated")
             return
-        
         try:
-            # TODO: Initialize actual ICP agent and actor
-            # from ic.agent import Agent
-            # from ic.principal import Principal
-            # from ic.client import Client
-            
-            # self.agent = Agent()
-            # self.actor = await self.agent.create_actor(self.canister_id, idl_factory)
-            
-            logger.info("ICP canister connection initialized")
+            # Ensure default agent is initialized
+            await get_default_agent()
+            logger.info("ICP canister connection initialized via default agent")
         except Exception as e:
             logger.error(f"Failed to initialize canister connection: {e}")
             raise
@@ -182,9 +178,12 @@ class CanisterService:
         if self.demo_mode:
             return principal_id == "rdmx6-jaaaa-aaaah-qcaiq-cai"
         
-        # TODO: Implement actual canister call
-        # return await self.actor.is_main_government(principal_id)
-        return False
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("isMainGovernment", [principal_id])
+            return bool(result)
+        except Exception:
+            return False
     
     async def is_state_head(self, principal_id: str) -> bool:
         """Check if principal is state head"""
@@ -196,8 +195,12 @@ class CanisterService:
             ]
             return principal_id in state_head_principals
         
-        # TODO: Implement actual canister call
-        return False
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("isStateHead", [principal_id])
+            return bool(result)
+        except Exception:
+            return False
     
     async def is_deputy(self, principal_id: str) -> bool:
         """Check if principal is deputy"""
@@ -210,8 +213,12 @@ class CanisterService:
             ]
             return principal_id in deputy_principals
         
-        # TODO: Implement actual canister call
-        return False
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("isDeputy", [principal_id])
+            return bool(result)
+        except Exception:
+            return False
     
     async def is_vendor(self, principal_id: str) -> bool:
         """Check if principal is approved vendor"""
@@ -223,8 +230,12 @@ class CanisterService:
             ]
             return principal_id in vendor_principals
         
-        # TODO: Implement actual canister call
-        return False
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("isVendor", [principal_id])
+            return bool(result)
+        except Exception:
+            return False
     
     # Government Functions
     async def propose_state_head(self, principal_id: str) -> Dict[str, Any]:
@@ -233,10 +244,12 @@ class CanisterService:
             logger.info(f"Demo: Proposing state head {principal_id}")
             return {"success": True, "message": f"State head {principal_id} proposed"}
         
-        # TODO: Implement actual canister call
-        # result = await self.actor.propose_state_head(principal_id)
-        # return self._handle_canister_result(result)
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("proposeStateHead", [principal_id])
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     async def confirm_state_head(self, principal_id: str) -> Dict[str, Any]:
         """Confirm a proposed state head"""
@@ -244,8 +257,12 @@ class CanisterService:
             logger.info(f"Demo: Confirming state head {principal_id}")
             return {"success": True, "message": f"State head {principal_id} confirmed"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("confirmStateHead", [principal_id])
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     async def lock_budget(self, amount: int, purpose: str) -> Dict[str, Any]:
         """Lock budget for allocation"""
@@ -263,8 +280,13 @@ class CanisterService:
             logger.info(f"Demo: Locked budget {budget_id} for {amount} - {purpose}")
             return {"success": True, "budget_id": budget_id}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            result = await agent.update_method("lockBudget", [amount, purpose])
+            # Expecting Result<nat>
+            return {"success": True, "budget_id": int(result) if result is not None else 0}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     async def allocate_budget(
         self, 
@@ -288,8 +310,12 @@ class CanisterService:
             else:
                 return {"success": False, "error": "Budget not found"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("allocateBudget", [budget_id, amount, area, deputy])
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     # Vendor Functions
     async def propose_vendor(self, principal_id: str) -> Dict[str, Any]:
@@ -298,8 +324,12 @@ class CanisterService:
             logger.info(f"Demo: Proposing vendor {principal_id}")
             return {"success": True, "message": f"Vendor {principal_id} proposed"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("proposeVendor", [principal_id])
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     async def approve_vendor(self, principal_id: str) -> Dict[str, Any]:
         """Approve a proposed vendor"""
@@ -307,8 +337,12 @@ class CanisterService:
             logger.info(f"Demo: Approving vendor {principal_id}")
             return {"success": True, "message": f"Vendor {principal_id} approved"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("approveVendor", [principal_id])
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     async def submit_claim(
         self, 
@@ -346,8 +380,12 @@ class CanisterService:
             
             return {"success": True, "claim_id": claim_id}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            result = await agent.update_method("submitClaim", [budget_id, amount, area, invoice_data])
+            return {"success": True, "claim_id": int(result) if result is not None else 0}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     # Fraud Detection Functions
     async def update_fraud_score(self, claim_id: int, score: int) -> Dict[str, Any]:
@@ -365,8 +403,12 @@ class CanisterService:
             else:
                 return {"success": False, "error": "Claim not found"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("updateFraudScore", [claim_id, score])
+            return {"success": True, "message": "Fraud score updated"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     async def approve_claim_by_ai(self, claim_id: int, approve: bool, reason: str) -> Dict[str, Any]:
         """Approve or reject claim by AI"""
@@ -399,8 +441,12 @@ class CanisterService:
             else:
                 return {"success": False, "error": "Claim not found"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("approveClaimByAI", [claim_id, approve, reason])
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     async def add_fraud_alert(
         self, 
@@ -428,8 +474,12 @@ class CanisterService:
             
             return {"success": True, "message": "Fraud alert added"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("addFraudAlert", [claim_id, alert_type, severity, description])
+            return {"success": True, "message": "Fraud alert added"}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     # Challenge System
     async def stake_challenge(self, invoice_hash: str, reason: str, evidence: str) -> Dict[str, Any]:
@@ -449,8 +499,12 @@ class CanisterService:
             else:
                 return {"success": False, "error": "Invoice not found"}
         
-        # TODO: Implement actual canister call
-        return {"success": False, "error": "Not implemented"}
+        try:
+            agent = await get_default_agent()
+            await agent.update_method("stakeChallenge", [invoice_hash, reason, evidence])
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
     
     # Query Functions
     async def get_claim(self, claim_id: int) -> Optional[ClaimData]:
@@ -458,16 +512,24 @@ class CanisterService:
         if self.demo_mode:
             return self.demo_claims.get(claim_id)
         
-        # TODO: Implement actual canister call
-        return None
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("getClaim", [claim_id])
+            return result or None
+        except Exception:
+            return None
     
     async def get_all_claims(self) -> List[Tuple[int, ClaimData]]:
         """Get all claims"""
         if self.demo_mode:
             return [(cid, claim) for cid, claim in self.demo_claims.items()]
         
-        # TODO: Implement actual canister call
-        return []
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("getAllClaims", [])
+            return result or []
+        except Exception:
+            return []
     
     async def get_high_risk_claims(self) -> List[Tuple[int, int]]:
         """Get high-risk claims with their fraud scores"""
@@ -478,24 +540,36 @@ class CanisterService:
                     high_risk.append((cid, claim.fraud_score))
             return high_risk
         
-        # TODO: Implement actual canister call
-        return []
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("getHighRiskClaims", [])
+            return result or []
+        except Exception:
+            return []
     
     async def get_fraud_alerts(self, claim_id: int) -> List[FraudAlert]:
         """Get fraud alerts for a claim"""
         if self.demo_mode:
             return self.demo_fraud_alerts.get(claim_id, [])
         
-        # TODO: Implement actual canister call
-        return []
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("getFraudAlerts", [claim_id])
+            return result or []
+        except Exception:
+            return []
     
     async def get_budget_transparency(self) -> List[Tuple[int, BudgetData]]:
         """Get budget transparency data"""
         if self.demo_mode:
             return [(bid, budget) for bid, budget in self.demo_budgets.items()]
         
-        # TODO: Implement actual canister call
-        return []
+        try:
+            agent = await get_default_agent()
+            result = await agent.query_method("getBudgetTransparency", [])
+            return result or []
+        except Exception:
+            return []
     
     async def get_system_stats(self) -> SystemStats:
         """Get system statistics"""
@@ -510,8 +584,20 @@ class CanisterService:
             
             return self.demo_system_stats
         
-        # TODO: Implement actual canister call
-        return SystemStats(0, 0, 0, 0, 0)
+        try:
+            agent = await get_default_agent()
+            stats = await agent.query_method("getSystemStats", [])
+            if stats:
+                return SystemStats(
+                    total_budget=stats.get('totalBudget', 0),
+                    active_claims=stats.get('activeClaims', 0),
+                    flagged_claims=stats.get('flaggedClaims', 0),
+                    total_challenges=stats.get('totalChallenges', 0),
+                    vendor_count=stats.get('vendorCount', 0)
+                )
+            return SystemStats(0, 0, 0, 0, 0)
+        except Exception:
+            return SystemStats(0, 0, 0, 0, 0)
     
     # Helper Functions
     async def _trigger_fraud_detection(self, claim: ClaimData):

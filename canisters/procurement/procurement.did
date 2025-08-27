@@ -1,0 +1,220 @@
+// ================================================================================
+// CORRUPTGUARD PROCUREMENT CANISTER - CANDID INTERFACE
+// ================================================================================
+
+// ================================================================================
+// TYPE DEFINITIONS
+// ================================================================================
+
+type Budget = record {
+    amount : nat;
+    purpose : text;
+    locked : bool;
+    lockTime : int;
+};
+
+type Allocation = record {
+    stateHead : principal;
+    amount : nat;
+    area : text;
+    deputy : principal;
+    assigned : bool;
+    vendorAssigned : opt principal;
+};
+
+type Claim = record {
+    vendor : principal;
+    amount : nat;
+    invoiceHash : text;
+    deputy : principal;
+    aiApproved : bool;
+    flagged : bool;
+    paid : bool;
+    escrowTime : int;
+    totalPaidToSuppliers : nat;
+    fraudScore : opt nat;
+    challengeCount : nat;
+};
+
+type SupplierPayment = record {
+    supplier : principal;
+    amount : nat;
+    invoiceHash : text;
+    verified : bool;
+    timestamp : int;
+};
+
+type Challenge = record {
+    staker : principal;
+    amount : nat;
+    withdrawn : bool;
+    reason : text;
+    evidence : text;
+    timestamp : int;
+};
+
+type RoleProposal = record {
+    candidate : principal;
+    proposalTime : int;
+    confirmed : bool;
+};
+
+type FraudAlert = record {
+    claimId : nat;
+    alertType : text;
+    severity : text;
+    description : text;
+    timestamp : int;
+    resolved : bool;
+};
+
+// ================================================================================
+// QUERY RESPONSE TYPES
+// ================================================================================
+
+type ClaimInfo = record {
+    vendor : principal;
+    amount : nat;
+    invoiceHash : text;
+    paid : bool;
+    flagged : bool;
+    fraudScore : opt nat;
+    challengeCount : nat;
+    totalPaidToSuppliers : nat;
+};
+
+type ClaimSummary = record {
+    vendor : principal;
+    amount : nat;
+    flagged : bool;
+    fraudScore : opt nat;
+    challengeCount : nat;
+};
+
+type BudgetInfo = record {
+    amount : nat;
+    purpose : text;
+    allocated : nat;
+    remaining : nat;
+};
+
+type AllocationInfo = record {
+    stateHead : principal;
+    amount : nat;
+    area : text;
+    deputy : principal;
+    assigned : bool;
+    vendorAssigned : opt principal;
+};
+
+type RoleInfo = record {
+    isMainGovernment : bool;
+    isStateHead : bool;
+    isDeputy : bool;
+    isVendor : bool;
+};
+
+type SystemStats = record {
+    totalBudget : nat;
+    activeClaims : nat;
+    flaggedClaims : nat;
+    totalChallenges : nat;
+    vendorCount : nat;
+};
+
+type SystemInfo = record {
+    mainGovernment : principal;
+    totalStateHeads : nat;
+    totalDeputies : nat;
+    totalVendors : nat;
+    systemPaused : bool;
+    totalBudget : nat;
+    totalClaims : nat;
+};
+
+type FraudStats = record {
+    totalAlerts : nat;
+    criticalAlerts : nat;
+    highRiskClaims : nat;
+    averageFraudScore : nat;
+    totalChallenges : nat;
+};
+
+type PendingProposals = record {
+    stateHeadProposals : vec record { principal; RoleProposal };
+    deputyProposals : vec record { principal; RoleProposal };
+    vendorProposals : vec principal;
+};
+
+// ================================================================================
+// SERVICE INTERFACE
+// ================================================================================
+
+service : {
+    // ================================================================================
+    // FRAUD DETECTION INTEGRATION
+    // ================================================================================
+    "updateFraudScore" : (claimId : nat, score : nat) -> (result : variant { ok; err : text });
+    "addFraudAlert" : (claimId : nat, alertType : text, severity : text, description : text) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // BUDGET MANAGEMENT
+    // ================================================================================
+    "lockBudget" : (amount : nat, purpose : text) -> (result : variant { ok : nat; err : text });
+    "allocateBudget" : (budgetId : nat, amount : nat, area : text, deputy : principal) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // VENDOR MANAGEMENT
+    // ================================================================================
+    "selectVendor" : (budgetId : nat, allocationId : nat, vendor : principal) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // CLAIM MANAGEMENT
+    // ================================================================================
+    "submitClaim" : (budgetId : nat, allocationId : nat, amount : nat, invoiceData : text) -> (result : variant { ok : nat; err : text });
+    "approveClaimByAI" : (claimId : nat, approve : bool, flagReason : text) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // CHALLENGE SYSTEM
+    // ================================================================================
+    "stakeChallenge" : (invoiceHash : text, reason : text, evidence : text) -> (result : variant { ok; err : text });
+    "rewardStaker" : (invoiceHash : text, staker : principal) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // SUPPLIER PAYMENTS
+    // ================================================================================
+    "paySupplier" : (claimId : nat, supplier : principal, amount : nat, invoiceHash : text) -> (result : variant { ok; err : text });
+    "paySubSupplier" : (claimId : nat, paymentIndex : nat, subSupplier : principal, amount : nat, invoiceHash : text) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // SYSTEM ADMINISTRATION
+    // ================================================================================
+    "pauseSystem" : () -> (result : variant { ok; err : text });
+    "resumeSystem" : () -> (result : variant { ok; err : text });
+    "setMainGovernment" : (newMainGov : principal) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // DEMO AND TESTING
+    // ================================================================================
+    "initializeDemoData" : () -> (result : variant { ok; err : text });
+    "resetSystem" : () -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // QUERY FUNCTIONS
+    // ================================================================================
+    "getClaim" : (claimId : nat) -> (opt ClaimInfo) query;
+    "getFraudAlerts" : (claimId : nat) -> (vec FraudAlert) query;
+    "getAllClaims" : () -> (vec record { nat; ClaimSummary }) query;
+    "getHighRiskClaims" : () -> (vec record { nat; nat }) query;
+    "getBudgetTransparency" : () -> (vec record { nat; BudgetInfo }) query;
+    "getVendorClaims" : (vendor : principal) -> (vec record { nat; record { amount : nat; invoiceHash : text; deputy : principal; aiApproved : bool; flagged : bool; paid : bool; fraudScore : opt nat; challengeCount : nat } }) query;
+    "getAllocations" : (budgetId : nat) -> (opt vec AllocationInfo) query;
+    "checkRole" : (principal : principal) -> (RoleInfo) query;
+    "getPendingProposals" : () -> (PendingProposals) query;
+    "getSystemStats" : () -> (SystemStats) query;
+    "getSupplierPayments" : (claimId : nat) -> (vec SupplierPayment) query;
+    "getChallenges" : (invoiceHash : text) -> (vec Challenge) query;
+    "getAllBudgets" : () -> (vec record { nat; Budget }) query;
+    "getSystemInfo" : () -> (SystemInfo) query;
+    "getFraudStats" : () -> (FraudStats) query;
+}

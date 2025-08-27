@@ -1,0 +1,65 @@
+// ================================================================================
+// CORRUPTGUARD RBAC CANISTER - CANDID INTERFACE
+// ================================================================================
+
+// ================================================================================
+// TYPE DEFINITIONS
+// ================================================================================
+
+type RoleProposal = record {
+    candidate : principal;
+    proposalTime : int;
+    confirmed : bool;
+};
+
+type RoleInfo = record {
+    isMainGovernment : bool;
+    isStateHead : bool;
+    isDeputy : bool;
+    isVendor : bool;
+};
+
+type PendingProposals = record {
+    stateHeadProposals : vec record { principal; RoleProposal };
+    deputyProposals : vec record { principal; RoleProposal };
+    vendorProposals : vec principal;
+};
+
+type RoleStats = record {
+    totalStateHeads : nat;
+    totalDeputies : nat;
+    totalVendors : nat;
+    pendingStateHeads : nat;
+    pendingDeputies : nat;
+    pendingVendors : nat;
+};
+
+// ================================================================================
+// SERVICE INTERFACE
+// ================================================================================
+
+service : {
+    // ================================================================================
+    // ROLE MANAGEMENT
+    // ================================================================================
+    "setMainGovernment" : (newMainGov : principal) -> (result : variant { ok; err : text });
+    "proposeStateHead" : (stateHead : principal) -> (result : variant { ok; err : text });
+    "confirmStateHead" : (stateHead : principal) -> (result : variant { ok; err : text });
+    "proposeDeputy" : (deputy : principal, stateHead : principal) -> (result : variant { ok; err : text });
+    "confirmDeputy" : (deputy : principal, stateHead : principal) -> (result : variant { ok; err : text });
+    "proposeVendor" : (vendor : principal) -> (result : variant { ok; err : text });
+    "approveVendor" : (vendor : principal) -> (result : variant { ok; err : text });
+    
+    // ================================================================================
+    // QUERY FUNCTIONS
+    // ================================================================================
+    "checkRole" : (principal : principal) -> (RoleInfo) query;
+    "getPendingProposals" : () -> (PendingProposals) query;
+    "getRoleStats" : () -> (RoleStats) query;
+    
+    // ================================================================================
+    // DEMO AND TESTING
+    // ================================================================================
+    "initializeDemoData" : () -> (result : variant { ok; err : text });
+    "resetRBAC" : () -> (result : variant { ok; err : text });
+}

@@ -54,6 +54,8 @@ CorruptGuard is a revolutionary anti-corruption platform that combines **Artific
 - **Internet Identity**: Passwordless, biometric authentication
 - **Immutable Audit Trails**: Every transaction permanently recorded
 - **Public Verification**: Citizens can verify all transactions
+- **Dual Authentication**: ICP Identity + Demo Mode for testing
+- **Professional Logo**: Shield with blockchain nodes design
 
 ### 👥 Multi-Role Platform
 - **Government Officials**: National oversight and policy insights
@@ -126,38 +128,49 @@ python -v  # 3.9 or higher
 dfx --version  # Latest DFX SDK
 ```
 
-### 1. Clone and Setup
+### 🎬 For Video Recording (Demo Mode)
 ```bash
+# Clone and setup
 git clone https://github.com/nikhlu07/Corruptguard.git
 cd Corruptguard
+
+# Run video-ready deployment
+./deploy-video-ready.sh
+
+# Start the application
+python start-backend.py
+cd frontend && npm run dev
+
+# Open: http://localhost:5173
+# Choose "Demo Mode" → "Main Government" for instant access
 ```
 
-### 2. Frontend Development
+### 🌐 For ICP Deployment
 ```bash
+# Get free cycles using our coupon
+dfx cycles --network ic redeem-faucet-coupon 594FA-B3B89-6F436
+
+# Deploy to ICP mainnet
+dfx deploy --network ic
+
+# Get your canister URL
+dfx canister id corruptguard_frontend --network ic
+# Your app will be live at: https://your-canister-id.ic0.app
+```
+
+### 🔧 Development Setup
+```bash
+# Frontend Development
 cd frontend
 npm install
 npm run dev
 # Runs on http://localhost:5173
-```
 
-### 3. Backend Development
-```bash
+# Backend Development
 cd backend
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
+python start-backend.py
 # API available at http://localhost:8000
-```
-
-### 4. Internet Computer Deployment
-```bash
-# Start local ICP network
-dfx start --background
-
-# Deploy canisters
-dfx deploy
-
-# Get canister URLs
-dfx canister call procurement get_stats
 ```
 
 ![CorruptGuard Architecture](docs/fraud-detection-flow.svg)
