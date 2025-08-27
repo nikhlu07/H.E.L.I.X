@@ -52,8 +52,8 @@ class DemoModeService {
       throw new Error(`Invalid role: ${role}`);
     }
 
-    // Create mock principal
-    const mockPrincipal = Principal.fromText(`demo-${role}-${Date.now()}`);
+    // Create mock principal - use a valid principal format
+    const mockPrincipal = Principal.fromText('2vxsx-fae');
     
     // Create demo user
     this.currentUser = {
@@ -84,7 +84,7 @@ class DemoModeService {
         const userData = JSON.parse(storedUser);
         this.currentUser = {
           ...userData,
-          principal: Principal.fromText(userData.principal._arr ? userData.principal._arr.join(',') : userData.principal)
+          principal: Principal.fromText('2vxsx-fae')
         };
         return this.currentUser;
       } catch (error) {
