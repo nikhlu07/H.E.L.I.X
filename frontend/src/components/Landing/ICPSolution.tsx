@@ -1,79 +1,73 @@
 import { Shield, Lock, Eye, Zap, CheckCircle, Globe } from 'lucide-react';
+import React from "react";
 
 export function ICPSolution() {
   const features = [
     {
       icon: Lock,
       title: 'Immutable Records',
-      description: 'Once data is written to the blockchain, it cannot be changed or deleted',
-      example: 'No more "lost" approval documents or mysteriously altered contracts',
-      color: 'emerald'
+      description: 'Once aid data is on the blockchain, it cannot be altered or deleted.',
+      example: 'No more \"lost\" shipping manifests or altered delivery confirmations.',
     },
     {
       icon: Eye,
-      title: 'Public Transparency',
-      description: 'Every transaction, approval, and payment is visible to everyone',
-      example: 'Citizens can audit government spending in real-time, not years later',
-      color: 'amber'
+      title: 'Radical Transparency',
+      description: 'Every step of the aid journey is visible to all stakeholders.',
+      example: 'Donors can track their contributions directly to the communities in need.',
     },
     {
       icon: Zap,
-      title: 'Real-time Detection',
-      description: 'AI monitors patterns and flags suspicious activities instantly',
-      example: 'Catch 870 college approvals in 13 days before damage is done',
-      color: 'red'
+      title: 'Real-time Analytics',
+      description: 'AI monitors the supply chain to flag bottlenecks and inefficiencies.',
+      example: 'Instantly identify a stalled shipment and reroute supplies.',
     },
     {
       icon: Shield,
-      title: 'Unstoppable System',
-      description: 'Runs on decentralized network, cannot be shut down by corrupt officials',
-      example: 'Journalists stay safe while exposing corruption through anonymous tips',
-      color: 'purple'
+      title: 'Unstoppable & Sovereign',
+      description: 'Runs on a decentralized network, immune to local interference.',
+      example: 'Ensures aid delivery continues even in unstable environments.',
     }
   ];
 
   const howItWorks = [
     {
       step: '1',
-      title: 'Every Action Recorded',
-      description: 'When any government official approves a contract, makes a payment, or selects a vendor, it\'s automatically recorded on the Internet Computer blockchain with timestamp and digital signature.',
+      title: 'Digital Twinning',
+      description: 'Physical aid is assigned a unique digital identity on the blockchain, creating an immutable link from the start of its journey.',
       icon: CheckCircle
     },
     {
       step: '2',
-      title: 'Public Verification',
-      description: 'Citizens, journalists, and auditors can instantly verify any transaction. No RTI requests needed—everything is transparent by default.',
-      icon: Eye
+      title: 'Real-Time Tracking',
+      description: 'As aid moves through the supply chain, every scan and handover is recorded, providing a live, end-to-end view of its location.',
+      icon: Globe
     },
     {
       step: '3',
-      title: 'AI Fraud Detection',
-      description: 'Smart algorithms continuously analyze patterns to detect anomalies like bulk approvals, cost inflation, or suspicious vendor relationships.',
+      title: 'Automated Verification',
+      description: 'Smart contracts automatically verify and process customs, vendor payments, and other logistical steps, reducing delays and human error.',
       icon: Zap
     },
     {
       step: '4',
-      title: 'Community Challenges',
-      description: 'Anyone can challenge suspicious transactions with evidence. Valid challenges trigger automatic investigations and public notifications.',
-      icon: Globe
+      title: 'Proof of Delivery',
+      description: 'Recipients confirm arrival with a secure digital signature, closing the loop and providing undeniable proof that aid reached its destination.',
+      icon: Eye
     }
   ];
 
   return (
-    <section id="transparency" className="py-20 bg-white">
+    <section id="protocol" className="py-20 bg-helix-gray-900">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-r from-emerald-400 to-green-400 rounded-full flex items-center justify-center">
-              <Shield className="h-6 w-6 text-white" />
-            </div>
-            <h2 className="text-4xl font-bold text-slate-900">
-              How Internet Computer Protocol Powers Transparency
+            <h2 className="text-4xl font-bold text-white">
+              The H<span className="text-primary">.</span>E<span className="text-primary">.</span>L<span className="text-primary">.</span>I<span className="text-primary">.</span>X<span className="text-primary">.</span> Protocol
             </h2>
           </div>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Built on the most advanced blockchain technology, CorruptGuard makes corruption impossible to hide
+          <p className="text-xl text-helix-gray-300 max-w-3xl mx-auto">
+            Built on the Internet Computer, H.E.L.I.X. makes aid delivery transparent and accountable.
           </p>
         </div>
 
@@ -82,28 +76,13 @@ export function ICPSolution() {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <div key={index} className="text-center">
-                <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center ${
-                  feature.color === 'emerald' ? 'bg-emerald-100' :
-                  feature.color === 'amber' ? 'bg-amber-100' :
-                  feature.color === 'red' ? 'bg-red-100' :
-                  'bg-purple-100'
-                }`}>
-                  <Icon className={`h-8 w-8 ${
-                    feature.color === 'emerald' ? 'text-emerald-600' :
-                    feature.color === 'amber' ? 'text-amber-600' :
-                    feature.color === 'red' ? 'text-red-600' :
-                    'text-purple-600'
-                  }`} />
+              <div key={index} className="text-center bg-background p-6 rounded-lg border border-helix-gray-800">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center bg-primary">
+                  <Icon className="h-8 w-8 text-primary-foreground" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{feature.title}</h3>
-                <p className="text-slate-600 mb-3">{feature.description}</p>
-                <div className={`text-sm font-medium p-3 rounded-xl ${
-                  feature.color === 'emerald' ? 'bg-emerald-50 text-emerald-700' :
-                  feature.color === 'amber' ? 'bg-amber-50 text-amber-700' :
-                  feature.color === 'red' ? 'bg-red-50 text-red-700' :
-                  'bg-purple-50 text-purple-700'
-                }`}>
+                <h3 className="text-xl font-bold text-foreground mb-2">{feature.title}</h3>
+                <p className="text-helix-gray-400 mb-3">{feature.description}</p>
+                <div className="text-sm font-medium p-3 rounded-lg bg-primary text-black">
                   {feature.example}
                 </div>
               </div>
@@ -113,8 +92,8 @@ export function ICPSolution() {
 
         {/* How It Works */}
         <div className="mb-20">
-          <h3 className="text-3xl font-bold text-slate-900 text-center mb-12">
-            How CorruptGuard Prevents Corruption
+          <h3 className="text-3xl font-bold text-white text-center mb-12">
+            How H.E.L.I.X. Ensures Integrity
           </h3>
           <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {howItWorks.map((item, index) => {
@@ -122,16 +101,16 @@ export function ICPSolution() {
               return (
                 <div key={index} className="flex space-x-4">
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-                      <span className="text-emerald-600 font-bold">{item.step}</span>
+                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                      <span className="text-primary-foreground font-bold">{item.step}</span>
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-xl font-bold text-slate-900 mb-2 flex items-center space-x-2">
-                      <Icon className="h-5 w-5 text-emerald-600" />
+                    <h4 className="text-xl font-bold text-white mb-2 flex items-center space-x-2">
+                      <Icon className="h-5 w-5 text-primary" />
                       <span>{item.title}</span>
                     </h4>
-                    <p className="text-slate-600">{item.description}</p>
+                    <p className="text-helix-gray-400">{item.description}</p>
                   </div>
                 </div>
               );
@@ -139,74 +118,32 @@ export function ICPSolution() {
           </div>
         </div>
 
-        {/* Real Examples */}
-        <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-8 border border-emerald-200">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">
-            Real Examples: How This Would Have Stopped Recent Scams
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl p-6 border border-emerald-100">
-              <h4 className="font-bold text-slate-900 mb-2">PCI College Scam</h4>
-              <p className="text-sm text-slate-600 mb-3">
-                870 colleges approved in 13 days would have triggered immediate fraud alerts.
-              </p>
-              <div className="text-emerald-600 font-semibold text-sm">
-                ✓ Bulk approval detection
-                <br />✓ Time-based anomaly flagging
-                <br />✓ Public verification required
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-emerald-100">
-              <h4 className="font-bold text-slate-900 mb-2">NAAC Bribery</h4>
-              <p className="text-sm text-slate-600 mb-3">
-                Rating changes would be publicly visible with justifications required.
-              </p>
-              <div className="text-emerald-600 font-semibold text-sm">
-                ✓ Rating history immutable
-                <br />✓ Reviewer actions logged
-                <br />✓ Pattern analysis alerts
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-6 border border-emerald-100">
-              <h4 className="font-bold text-slate-900 mb-2">Road Project Murder</h4>
-              <p className="text-sm text-slate-600 mb-3">
-                Cost inflation from ₹56Cr to ₹120Cr would be flagged automatically.
-              </p>
-              <div className="text-emerald-600 font-semibold text-sm">
-                ✓ Anonymous reporting safe
-                <br />✓ Cost change detection
-                <br />✓ Public audit trail
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Technical Benefits */}
-        <div className="mt-16 text-center">
-          <h3 className="text-2xl font-bold text-slate-900 mb-8">
-            Why Internet Computer Protocol?
+        <div className="text-center">
+          <h3 className="text-2xl font-bold text-white mb-8">
+            Why the Internet Computer?
           </h3>
           <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Globe className="h-8 w-8 text-emerald-600" />
+              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Globe className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h4 className="font-bold text-slate-900 mb-2">True Decentralization</h4>
-              <p className="text-slate-600">No single government or entity can control or manipulate the data</p>
+              <h4 className="font-bold text-primary mb-2">True Decentralization</h4>
+              <p className="text-helix-gray-400">No single entity can control the data, ensuring neutrality.</p>
             </div>
             <div>
-              <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-emerald-600" />
+              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Zap className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h4 className="font-bold text-slate-900 mb-2">Lightning Fast</h4>
-              <p className="text-slate-600">Real-time updates and instant fraud detection, not batch processing</p>
+              <h4 className="font-bold text-primary mb-2">Web Speed</h4>
+              <p className="text-helix-gray-400">Real-time updates and instant analytics at scale.</p>
             </div>
             <div>
-              <div className="w-16 h-16 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8 text-emerald-600" />
+              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8 text-primary-foreground" />
               </div>
-              <h4 className="font-bold text-slate-900 mb-2">Military-Grade Security</h4>
-              <p className="text-slate-600">Cryptographic proofs ensure data integrity and authenticity</p>
+              <h4 className="font-bold text-primary mb-2">Chain-Key Cryptography</h4>
+              <p className="text-helix-gray-400">Airtight security that ensures data integrity and authenticity.</p>
             </div>
           </div>
         </div>

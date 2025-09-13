@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { LandingPage } from './components/Landing/LandingPage';
 import { LoginPage } from './components/Auth/LoginPage';
-import { MainGovernmentDashboard } from './components/Dashboard/MainGovernmentDashboard';
-import { StateHeadDashboard } from './components/Dashboard/StateHeadDashboard';
-import { DeputyDashboard } from './components/Dashboard/DeputyDashboard';
-import { VendorDashboard } from './components/Dashboard/VendorDashboard';
-import { SubSupplierDashboard } from './components/Dashboard/SubSupplierDashboard';
-import { CitizenDashboard } from './components/Dashboard/CitizenDashboard';
-import { GenericDashboard } from './components/Dashboard/GenericDashboard';
 import { Header } from './components/Dashboard/Header';
 import { AuthTest } from './components/Test/AuthTest';
-import corruptGuardService from './services/corruptGuardService';
+import helixService from './services/helixService';
 import demoModeService from './services/demoMode';
+
+// Import the new dashboard components
+import { LeadAgencyDashboard } from './components/Dashboard/LeadAgencyDashboard';
+import { FieldDirectorDashboard } from './components/Dashboard/FieldDirectorDashboard';
+import { ProgramManagerDashboard } from './components/Dashboard/ProgramManagerDashboard';
+import { LogisticsPartnerDashboard } from './components/Dashboard/LogisticsPartnerDashboard';
+import { LocalSupplierDashboard } from './components/Dashboard/LocalSupplierDashboard';
+import { AuditorDashboard } from './components/Dashboard/AuditorDashboard';
 
 type ViewType = 'landing' | 'login' | 'dashboard' | 'auth-test';
 
@@ -24,37 +25,22 @@ interface User {
 function App() {
   const [currentView, setCurrentView] = useState<ViewType>('landing');
   const [user, setUser] = useState<User | null>(null);
-  const [selectedSector, setSelectedSector] = useState<string>('government');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Initialize the service and check authentication status
     const initializeApp = async () => {
       try {
-        await corruptGuardService.init();
-        
-        // Check for demo user first
+        await helixService.init();
         const demoUser = await demoModeService.getCurrentUser();
         if (demoUser) {
-          setUser({
-            role: demoUser.role,
-            sector: 'government',
-            isAuthenticated: true
-          });
+          setUser({ ...demoUser, sector: 'government' });
           setCurrentView('dashboard');
-          setIsLoading(false);
-          return;
-        }
-        
-        // Check if user is already authenticated
-        const currentUser = await corruptGuardService.getCurrentUser();
-        if (currentUser && corruptGuardService.isAuthenticated()) {
-          setUser({
-            role: currentUser.role,
-            sector: 'government', // Default to government for authenticated users
-            isAuthenticated: true
-          });
-          setCurrentView('dashboard');
+        } else {
+          const currentUser = await helixService.getCurrentUser();
+          if (currentUser && helixService.isAuthenticated()) {
+            setUser({ ...currentUser, sector: 'government' });
+            setCurrentView('dashboard');
+          }
         }
       } catch (error) {
         console.error('Failed to initialize app:', error);
@@ -62,79 +48,48 @@ function App() {
         setIsLoading(false);
       }
     };
-
     initializeApp();
   }, []);
 
-  const handleGetStarted = () => {
-    setCurrentView('login');
-  };
-
-  const handleBackToLanding = () => {
-    setCurrentView('landing');
-    setUser(null);
-  };
-
-  const handleLogin = async (role: string, sector: string) => {
-    setSelectedSector(sector);
-    setUser({
-      role,
-      sector,
-      isAuthenticated: true
-    });
+  const handleLogin = (role: string, sector: string) => {
+    setUser({ role, sector, isAuthenticated: true });
     setCurrentView('dashboard');
   };
 
   const handleLogout = async () => {
-    try {
-      // Logout from both services
-      await corruptGuardService.logout();
-      await demoModeService.logout();
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-    
+    await helixService.logout();
+    await demoModeService.logout();
     setUser(null);
     setCurrentView('landing');
-  };
-
-  const handleShowAuthTest = () => {
-    setCurrentView('auth-test');
   };
 
   const renderDashboard = () => {
     if (!user) return null;
 
-    // For government sector, render specific dashboards
-    if (selectedSector === 'government') {
-      switch (user.role) {
-        case 'main_government':
-          return <MainGovernmentDashboard />;
-        case 'state_head':
-          return <StateHeadDashboard />;
-        case 'deputy':
-          return <DeputyDashboard />;
-        case 'vendor':
-          return <VendorDashboard />;
-        case 'sub_supplier':
-          return <SubSupplierDashboard />;
-        case 'citizen':
-          return <CitizenDashboard />;
-        default:
-          return <MainGovernmentDashboard />;
-      }
+    switch (user.role) {
+      case 'lead_agency':
+        return <LeadAgencyDashboard />;
+      case 'field_director':
+        return <FieldDirectorDashboard />;
+      case 'program_manager':
+        return <ProgramManagerDashboard />;
+      case 'logistics_partner':
+        return <LogisticsPartnerDashboard />;
+      case 'local_supplier':
+        return <LocalSupplierDashboard />;
+      case 'auditor':
+        return <AuditorDashboard />;
+      default:
+        return <LeadAgencyDashboard />;
     }
-
-    // For other sectors, render generic dashboard
-    return <GenericDashboard sector={selectedSector} role={user.role} />;
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-lg">Initializing CorruptGuard...</p>
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-foreground text-lg">Initializing H.E.L.I.X....</p>
         </div>
       </div>
     );
@@ -143,63 +98,30 @@ function App() {
   return (
     <div className="App">
       {currentView === 'landing' && (
-        <div>
-          <LandingPage onGetStarted={handleGetStarted} />
-          {/* Add a small test button in the corner */}
-          <button
-            onClick={handleShowAuthTest}
-            className="fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors z-50"
-          >
-            🔐 Test Auth
-          </button>
-        </div>
+        <LandingPage onGetStarted={() => setCurrentView('login')} />
       )}
       
       {currentView === 'login' && (
-        <div>
-          <LoginPage 
-            onLogin={handleLogin} 
-            onBackToLanding={handleBackToLanding}
-          />
-          {/* Add a small test button in the corner */}
-          <button
-            onClick={handleShowAuthTest}
-            className="fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors z-50"
-          >
-            🔐 Test Auth
-          </button>
-        </div>
+        <LoginPage 
+          onLogin={handleLogin} 
+          onBackToLanding={() => setCurrentView('landing')}
+        />
       )}
       
       {currentView === 'dashboard' && user && (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-background">
           <Header 
             user={user} 
             onLogout={handleLogout}
-            sector={selectedSector}
+            sector={user.sector}
           />
           {renderDashboard()}
         </div>
       )}
 
       {currentView === 'auth-test' && (
-        <div className="min-h-screen bg-gray-50">
-          <div className="bg-white shadow-sm border-b">
-            <div className="container mx-auto px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <button
-                    onClick={handleBackToLanding}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                    ← Back to App
-                  </button>
-                  <h1 className="text-xl font-bold text-gray-900">Authentication Test</h1>
-                </div>
-              </div>
-            </div>
-          </div>
-          <AuthTest />
+        <div className="min-h-screen bg-background">
+          {/* AuthTest component can be added back if needed */}
         </div>
       )}
     </div>

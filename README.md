@@ -1,6 +1,7 @@
 # ⚡ H.E.L.I.X. ⚡
-
 **Humanitarian Economic Logistics & Integrity Xchange**
+
+<img src="logo.png" alt="Z.E.N.I.T.H. Logo" width="120"/>
 
 > *"Where quantum algorithms pierce through the veil of deception, ensuring every credit reaches its destined coordinates in the digital frontier."*
 

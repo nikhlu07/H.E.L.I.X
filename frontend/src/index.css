@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --background: theme('colors.helix-light');
+    --foreground: theme('colors.helix-dark');
+    --primary: theme('colors.helix-accent');
+    --primary-foreground: theme('colors.helix-dark');
+  }
+
+  .dark {
+    --background: theme('colors.helix-dark');
+    --foreground: theme('colors.helix-light');
+    --primary: theme('colors.helix-accent');
+    --primary-foreground: theme('colors.helix-light');
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

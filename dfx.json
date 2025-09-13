@@ -1,11 +1,11 @@
 {
   "canisters": {
-    "corruptguard_backend": {
+    "helix_backend": {
       "type": "rust",
-      "package": "corruptguard_backend",
-      "candid": "canisters/backend/src/corruptguard_backend.did"
+      "package": "helix_backend",
+      "candid": "canisters/backend/src/helix_backend.did"
     },
-    "corruptguard_frontend": {
+    "helix_frontend": {
       "type": "assets",
       "source": ["frontend/dist"],
       "frontend": {
