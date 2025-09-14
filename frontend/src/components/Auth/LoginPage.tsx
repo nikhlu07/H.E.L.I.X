@@ -247,7 +247,7 @@ const AuthMethodCard = ({ method, title, description, icon: Icon, features, sele
       </div>
     </div>
     <div className="text-center">
-      <h3 className="text-2xl font-bold text-foreground mb-2">{title}</h3>
+      <h3 className="text-2xl font-bold text-white mb-2">{title}</h3>
       <p className="text-helix-gray-400 text-sm mb-6">{description}</p>
       <div className="space-y-2">
         {features.map((feature, i) => (
@@ -286,7 +286,7 @@ const RoleCard = ({ roleKey, config, isSelected, onSelect }) => {
         </div>
       </div>
       <div className="text-center">
-        <h3 className="text-lg font-bold text-foreground mb-2">{config.title}</h3>
+        <h3 className="text-lg font-bold text-white mb-2">{config.title}</h3>
         <p className="text-helix-gray-400 text-sm mb-4">{config.description}</p>
         <div className="space-y-1 text-left">
           {config.features.map((feature, index) => (
