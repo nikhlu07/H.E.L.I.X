@@ -28,6 +28,25 @@ The CorruptGuard Fraud Detection Engine is composed of three main components:
 
 The service works by first analyzing a claim with the rules engine, then feeding the results and other claim features into the machine learning module for a more in-depth analysis. The final fraud score is a combination of the outputs from both components.
 
+## Workflow
+
+```mermaid
+graph TD
+    A[Start: New Claim Submitted] --> B{POST /analyze-claim};
+    B --> C[FraudRulesEngine Analysis];
+    C --> D{Rules Score};
+    B --> E[MLFraudDetector Analysis];
+    E --> F{ML Probability};
+    D & F --> G{Combine Scores};
+    G --> H[Calculate Final Score and Risk Level];
+    H --> I{Score >= 70?};
+    I -- Yes --> J[Generate Fraud Alert];
+    J --> K[Update Backend API];
+    I -- No --> K;
+    K --> L[Return Analysis to Backend];
+    L --> M[End];
+```
+
 ## Installation
 
 1.  **Clone the repository:**
