@@ -77,27 +77,51 @@ H.E.L.I.X. represents humanity's rebellion against systemic entropy, a declarati
 ## 🏗️ QUANTUM ARCHITECTURE
 
 ```mermaid
-graph TB
-    A[Citizen Neural Network] --> B[Quantum Interface Layer]
-    C[Government Entities] --> B
-    D[Vendor Network Nodes] --> B
-    
-    B --> E[Authentication Quantum Gate]
-    E --> F[Internet Identity Nexus]
-    
-    B --> G[Central Processing Matrix]
-    G --> H[Fraud Detection Consciousness]
-    G --> I[Role-Based Neural Access]
-    
-    H --> J[Machine Learning Algorithms]
-    H --> K[Rule-Based Threat Detection]
-    
-    G --> L[ICP Quantum Blockchain]
-    L --> M[Smart Contract Dimension]
-    L --> N[Immutable Data Crystallization]
-    
-    O[External Data Streams] --> G
-    P[Document Neural Analysis] --> H
+graph TD
+    subgraph "User Roles"
+        A[Citizen]
+        B[Government]
+        C[Vendor]
+    end
+
+    subgraph "Frontend (Quantum Interface)"
+        D[React Application]
+    end
+
+    subgraph "Backend (Central Processing Matrix)"
+        E[API Endpoints]
+        F[Authentication Service]
+        G[Fraud Detection Service]
+        H[ICP Canister Service]
+        I[Database Service]
+    end
+
+    subgraph "Fraud Detection Consciousness"
+        J[Rule-Based Engine]
+        K[Machine Learning Model]
+    end
+
+    subgraph "Data Persistence"
+        L[ICP Blockchain]
+        M[PostgreSQL Database]
+    end
+
+    A --> D
+    B --> D
+    C --> D
+
+    D --> E
+
+    E --> F
+    E --> G
+    E --> H
+    E --> I
+
+    G --> J
+    G --> K
+
+    H --> L
+    I --> M
 ```
 
 ### TECHNOLOGY QUANTUM STACK
