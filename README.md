@@ -98,7 +98,7 @@ graph TD
 
     subgraph "Fraud Detection Consciousness"
         J[Rule-Based Engine]
-        K[LLM RAG Pipeline (gemma3:4b)]
+        K["LLM RAG Pipeline (gemma3:4b)"]
     end
 
     subgraph "Data Persistence"
