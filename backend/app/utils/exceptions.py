@@ -1,13 +1,13 @@
 """
-CorruptGuard Custom Exception Classes
+H.E.L.I.X. Custom Exception Classes
 Professional error handling for government-grade software
 """
 
 from typing import Any, Dict, Optional
 from fastapi import HTTPException
 
-class CorruptGuardException(HTTPException):
-    """Base exception class for CorruptGuard application"""
+class HELIXException(HTTPException):
+    """Base exception class for H.E.L.I.X. application"""
     
     def __init__(
         self,
@@ -19,7 +19,7 @@ class CorruptGuardException(HTTPException):
         super().__init__(status_code=status_code, detail=detail, headers=headers)
         self.error_code = error_code
 
-class ValidationError(CorruptGuardException):
+class ValidationError(HELIXException):
     """Data validation errors"""
     
     def __init__(self, detail: str, field: Optional[str] = None):
@@ -30,7 +30,7 @@ class ValidationError(CorruptGuardException):
         )
         self.field = field
 
-class AuthenticationError(CorruptGuardException):
+class AuthenticationError(HELIXException):
     """Authentication and authorization errors"""
     
     def __init__(self, detail: str = "Authentication failed"):
@@ -40,7 +40,7 @@ class AuthenticationError(CorruptGuardException):
             error_code="AUTH_ERROR"
         )
 
-class PermissionError(CorruptGuardException):
+class PermissionError(HELIXException):
     """Permission and access control errors"""
     
     def __init__(self, detail: str = "Insufficient permissions"):
@@ -50,7 +50,7 @@ class PermissionError(CorruptGuardException):
             error_code="PERMISSION_ERROR"
         )
 
-class NotFoundError(CorruptGuardException):
+class NotFoundError(HELIXException):
     """Resource not found errors"""
     
     def __init__(self, resource: str, identifier: str):
@@ -60,7 +60,7 @@ class NotFoundError(CorruptGuardException):
             error_code="NOT_FOUND"
         )
 
-class ConflictError(CorruptGuardException):
+class ConflictError(HELIXException):
     """Resource conflict errors"""
     
     def __init__(self, detail: str):
@@ -70,7 +70,7 @@ class ConflictError(CorruptGuardException):
             error_code="CONFLICT_ERROR"
         )
 
-class ICPError(CorruptGuardException):
+class ICPError(HELIXException):
     """ICP canister and blockchain related errors"""
     
     def __init__(self, detail: str, canister_id: Optional[str] = None):
@@ -81,7 +81,7 @@ class ICPError(CorruptGuardException):
         )
         self.canister_id = canister_id
 
-class FraudDetectionError(CorruptGuardException):
+class FraudDetectionError(HELIXException):
     """Fraud detection system errors"""
     
     def __init__(self, detail: str, claim_id: Optional[str] = None):
@@ -92,7 +92,7 @@ class FraudDetectionError(CorruptGuardException):
         )
         self.claim_id = claim_id
 
-class DatabaseError(CorruptGuardException):
+class DatabaseError(HELIXException):
     """Database operation errors"""
     
     def __init__(self, detail: str, operation: Optional[str] = None):
@@ -103,7 +103,7 @@ class DatabaseError(CorruptGuardException):
         )
         self.operation = operation
 
-class RateLimitError(CorruptGuardException):
+class RateLimitError(HELIXException):
     """Rate limiting errors"""
     
     def __init__(self, detail: str = "Rate limit exceeded"):
@@ -114,7 +114,7 @@ class RateLimitError(CorruptGuardException):
         )
 
 
-class ConfigurationError(CorruptGuardException):
+class ConfigurationError(HELIXException):
     """Configuration and setup errors"""
     
     def __init__(self, detail: str):

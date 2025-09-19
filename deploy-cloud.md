@@ -1,4 +1,4 @@
-# CorruptGuard Cloud Deployment Guide
+# H.E.L.I.X. Cloud Deployment Guide
 
 ## 🚀 Quick Deploy Options
 
@@ -164,7 +164,7 @@ CORS_ORIGINS=https://your-frontend-url.vercel.app
 - [Vercel Documentation](https://vercel.com/docs)
 - [Railway Documentation](https://docs.railway.app)
 - [Render Documentation](https://render.com/docs)
-- [CorruptGuard GitHub](https://github.com/nikhlu07/Corruptguard)
+- [H.E.L.I.X. GitHub](https://github.com/nikhlu07/H.E.L.I.X.)
 
 ## 📞 Support
 

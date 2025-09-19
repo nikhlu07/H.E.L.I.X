@@ -26,7 +26,7 @@ from sklearn.preprocessing import StandardScaler
 # Import our modules
 from app.config.settings import get_settings
 from app.utils.logging import setup_logging
-from app.utils.exceptions import CorruptGuardException, ValidationError, AuthenticationError
+from app.utils.exceptions import HELIXException, ValidationError, AuthenticationError
 from app.auth.middleware import AuthenticationMiddleware, get_current_user, require_main_government
 from app.database import Base, engine, get_db
 from sqlalchemy.orm import Session
@@ -517,10 +517,10 @@ fraud_service = FraudDetectionService()
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan management"""
-    logger.info("🚀 CorruptGuard Backend Starting...")
+    logger.info("🚀 H.E.L.I.X. Backend Starting...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Fraud Detection: {'Enabled' if settings.FRAUD_DETECTION_ENABLED else 'Disabled'}")
-    logger.info("✅ CorruptGuard Backend Started Successfully")
+    logger.info("✅ H.E.L.I.X. Backend Started Successfully")
     try:
         Base.metadata.create_all(bind=engine)
         logger.info("📦 Database tables ensured")
@@ -529,7 +529,7 @@ async def lifespan(app: FastAPI):
     
     yield
     
-    logger.info("🛑 CorruptGuard Backend Shutting Down...")
+    logger.info("🛑 H.E.L.I.X. Backend Shutting Down...")
 
 app = FastAPI(
     title="TransGov API",
@@ -1042,7 +1042,7 @@ async def get_system_statistics(current_user: dict = Depends(get_current_user)):
                     "fraud_engine_status": "optimized"
                 }
             },
-            "requested_by": current_user["principal_id"],
+            "requested_by": current_user['principal_id'],
             "generated_at": datetime.now().isoformat()
         }
     
@@ -1519,7 +1519,7 @@ if settings.DEBUG:
 if __name__ == "__main__":
     import uvicorn
     
-    logger.info("🚀 Starting CorruptGuard with Advanced Fraud Detection")
+    logger.info("🚀 Starting H.E.L.I.X. with Advanced Fraud Detection")
     uvicorn.run(
         "app.main:app",
         host=settings.HOST,

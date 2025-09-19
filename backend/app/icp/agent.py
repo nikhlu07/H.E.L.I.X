@@ -1,5 +1,5 @@
 """
-CorruptGuard ICP Agent Setup
+H.E.L.I.X. ICP Agent Setup
 Internet Computer Protocol agent configuration and management
 """
 
@@ -43,7 +43,7 @@ class ICPConfig:
 
 class ICPAgent:
     """
-    ICP Agent for interacting with CorruptGuard canister
+    ICP Agent for interacting with H.E.L.I.X. canister
     """
     
     def __init__(self, config: ICPConfig):

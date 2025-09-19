@@ -34,8 +34,8 @@ dfx --version
 
 ### 2. Create Identity
 ```bash
-dfx identity new corruptguard
-dfx identity use corruptguard
+dfx identity new h.e.l.i.x
+dfx identity use h.e.l.i.x
 dfx identity whoami
 ```
 
@@ -51,10 +51,10 @@ dfx wallet balance --network ic
 ### 4. Deploy to ICP
 ```bash
 # Deploy frontend to ICP
-dfx deploy corruptguard_frontend --network ic
+dfx deploy helix_frontend --network ic
 
 # Get your canister URL
-dfx canister id corruptguard_frontend --network ic
+dfx canister id helix_frontend --network ic
 ```
 
 ## Alternative: Use the Web Interface
@@ -72,17 +72,17 @@ Once DFX is installed:
 
 ```bash
 # 1. Setup identity
-dfx identity new corruptguard
-dfx identity use corruptguard
+dfx identity new h.e.l.i.x
+dfx identity use h.e.l.i.x
 
 # 2. Get cycles
 dfx cycles --network ic redeem-faucet-coupon 594FA-B3B89-6F436
 
 # 3. Deploy
-dfx deploy corruptguard_frontend --network ic
+dfx deploy helix_frontend --network ic
 
 # 4. Get URL
-dfx canister id corruptguard_frontend --network ic
+dfx canister id helix_frontend --network ic
 ```
 
 Your app will be live at: `https://your-canister-id.ic0.app`

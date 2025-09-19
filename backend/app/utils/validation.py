@@ -1,5 +1,5 @@
 """
-CorruptGuard Enhanced Validation Utilities
+H.E.L.I.X. Enhanced Validation Utilities
 Additional validation functions for business logic and security
 """
 
@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 
 class ValidationUtils:
     """
-    Enhanced validation utilities for CorruptGuard application
+    Enhanced validation utilities for H.E.L.I.X. application
     """
     
     # Validation patterns
@@ -229,7 +229,7 @@ class ValidationUtils:
 # Business logic validators
 class BusinessValidators:
     """
-    Business-specific validation rules for CorruptGuard
+    Business-specific validation rules for H.E.L.I.X.
     """
     
     @staticmethod

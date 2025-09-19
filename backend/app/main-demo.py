@@ -1,5 +1,5 @@
 """
-CorruptGuard Backend - Demo Mode Only
+H.E.L.I.X. Backend - Demo Mode Only
 This version doesn't require ICP dependencies for quick testing
 """
 
@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
-    title="CorruptGuard Backend - Demo Mode",
+    title="H.E.L.I.X. Backend - Demo Mode",
     description="Corruption Detection System Backend (Demo Version)",
     version="1.0.0",
     docs_url="/docs",
@@ -74,7 +74,7 @@ async def add_process_time_header(request: Request, call_next):
 async def root():
     """Root endpoint"""
     return {
-        "service": "CorruptGuard Backend",
+        "service": "H.E.L.I.X. Backend",
         "version": "1.0.0",
         "status": "running",
         "description": "Corruption Detection System Backend",
@@ -284,14 +284,14 @@ async def get_fraud_history():
 @app.on_event("startup")
 async def startup_event():
     """Application startup event"""
-    logger.info("🚀 CorruptGuard Backend (Demo Mode) Starting...")
+    logger.info("🚀 H.E.L.I.X. Backend (Demo Mode) Starting...")
     logger.info("✅ Demo mode enabled - no ICP dependencies required")
     logger.info("✅ Backend started successfully")
 
 @app.on_event("shutdown")
 async def shutdown_event():
     """Application shutdown event"""
-    logger.info("🔌 CorruptGuard Backend shutting down...")
+    logger.info("🔌 H.E.L.I.X. Backend shutting down...")
 
 if __name__ == "__main__":
     import uvicorn

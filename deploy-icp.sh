@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "🚀 CorruptGuard ICP Deployment"
+echo "🚀 H.E.L.I.X. ICP Deployment"
 echo "================================"
 
 # Check if dfx is installed
@@ -21,13 +21,13 @@ fi
 echo "✅ Project structure verified"
 
 # Setup identity if not exists
-if ! dfx identity list | grep -q "corruptguard"; then
+if ! dfx identity list | grep -q "h.e.l.i.x"; then
     echo "🔐 Creating new DFX identity..."
-    dfx identity new corruptguard --disable-encryption
+    dfx identity new h.e.l.i.x --disable-encryption
 fi
 
-echo "🔑 Using corruptguard identity..."
-dfx identity use corruptguard
+echo "🔑 Using h.e.l.i.x identity..."
+dfx identity use h.e.l.i.x
 
 echo "👤 Current identity: $(dfx identity whoami)"
 echo "🔑 Principal: $(dfx identity get-principal)"
@@ -73,7 +73,7 @@ case $choice in
         dfx deploy --network ic
         
         # Get canister ID
-        canister_id=$(dfx canister id corruptguard_frontend --network ic)
+        canister_id=$(dfx canister id helix_frontend --network ic)
         echo "✅ Mainnet deployment complete!"
         echo "🌐 Your app is available at: https://$canister_id.ic0.app"
         ;;

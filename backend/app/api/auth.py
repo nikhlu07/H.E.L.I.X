@@ -1,5 +1,5 @@
 # """
-# CorruptGuard Authentication API Endpoints
+# H.E.L.I.X. Authentication API Endpoints
 # Internet Identity authentication and session management
 # """
 
@@ -884,7 +884,7 @@ async def get_auth_system_status(user: dict = Depends(get_optional_user)):
     """
     try:
         base_status = {
-            "service": "CorruptGuard Authentication",
+            "service": "H.E.L.I.X. Authentication",
             "status": "operational",
             "internet_identity": "connected",
             "icp_canister": "operational"
@@ -910,7 +910,7 @@ async def get_auth_system_status(user: dict = Depends(get_optional_user)):
     except Exception as e:
         logger.error(f"Failed to get auth system status: {e}")
         return {
-            "service": "CorruptGuard Authentication",
+            "service": "H.E.L.I.X. Authentication",
             "status": "error",
             "message": "Failed to retrieve system status"
         }

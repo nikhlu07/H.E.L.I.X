@@ -9,7 +9,7 @@
 [![React](https://img.shields.io/badge/React-18.x-neon.svg)](https://reactjs.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.x-electric.svg)](https://fastapi.tiangolo.com/)
 [![Internet Computer](https://img.shields.io/badge/Internet_Computer-ICP-plasma.svg)](https://internetcomputer.org/)
-[![AI Detection](https://img.shields.io/badge/Neural_Accuracy-87%25-holographic.svg)](#neural-sentinels)
+[![AI Detection](https://img.shields.io/badge/AI_Consciousness-Gemma3-holographic.svg)](#neural-sentinels)
 [![Live Demo](https://img.shields.io/badge/Live_Terminal-Active-bioluminescent.svg)](#quantum-interface)
 
 ## 🌌 PRIME DIRECTIVE
@@ -22,7 +22,7 @@ H.E.L.I.X. represents humanity's rebellion against systemic entropy, a declarati
 
 ### 🎯 CORE NEURAL NETWORKS
 
-- **Quantum Fraud Sentinels**: AI consciousness achieving 87% corruption-detection accuracy in sub-nanosecond analysis cycles
+- **Quantum Fraud Sentinels**: Advanced AI consciousness powered by a `gemma3:4b` Large Language Model, synthesizing rule-based logic and historical data for superior threat detection.
 - **Cryptographic Genesis Ledger**: Immutable truth-chains secured within the Internet Computer's quantum substrate
 - **Multi-Dimensional Oversight Matrix**: Six specialized neural interfaces providing omniscient intelligence to all system entities
 - **Citizen Guardian Collective**: Public-access truth-verification terminals empowering the masses to report anomalies
@@ -45,7 +45,7 @@ H.E.L.I.X. represents humanity's rebellion against systemic entropy, a declarati
 ## ✨ QUANTUM PROTOCOLS
 
 ### 🤖 Neural Fraud Sentinels
-- **Consciousness Core**: Isolation Forest algorithms achieving 87% threat-pattern recognition
+- **Consciousness Core**: A dynamic Hybrid RAG (Retrieval-Augmented Generation) pipeline. The `gemma3:4b` LLM, running on Ollama, acts as the core consciousness, analyzing data synthesized from our rules engine and a historical vector knowledge base.
 - **Real-time Quantum Processing**: Transaction analysis in 2-second perception cycles
 - **Pattern Matrix Recognition**: Detection of 10 distinct corruption signature types
 - **Threat Assessment Protocol**: Dynamic 0-100 risk quantification with automated high-alert broadcasting
@@ -98,7 +98,7 @@ graph TD
 
     subgraph "Fraud Detection Consciousness"
         J[Rule-Based Engine]
-        K[Machine Learning Model]
+        K[LLM RAG Pipeline (gemma3:4b)]
     end
 
     subgraph "Data Persistence"
@@ -134,7 +134,7 @@ graph TD
 
 **Backend Processing Matrix (FastAPI + Python)**
 - FastAPI for hyper-dimensional REST API performance
-- Scikit-learn for machine consciousness models
+- **Ollama, LangChain, and `langchain-ollama`** for the `gemma3:4b` LLM-based consciousness and RAG pipeline.
 - Real-time fraud detection neural pipeline
 - Comprehensive Role-Based Access Control system
 
@@ -154,11 +154,21 @@ python -v # 3.9 or higher neural processing
 dfx --version # Latest DFX Quantum SDK
 ```
 
+#### Neural Consciousness Setup (Ollama)
+The fraud detection engine now runs on a local LLM.
+1. Install Ollama from [ollama.ai](https://ollama.ai/)
+2. Pull the required models:
+```bash
+ollama pull gemma3:4b
+ollama pull nomic-embed-text
+```
+**Ensure the Ollama application is running before activating the backend neural networks.**
+
 ### 🎬 Demo Simulation Mode
 ```bash
 # Clone the quantum repository
-git clone https://github.com/nikhlu07/Corruptguard.git
-cd Corruptguard
+git clone https://github.com/nikhlu07/H.E.L.I.X..git
+cd H.E.L.I.X.
 
 # Initialize video-ready deployment protocol
 ./deploy-video-ready.sh
@@ -180,13 +190,13 @@ dfx cycles --network ic redeem-faucet-coupon 594FA-B3B89-6F436
 dfx deploy --network ic
 
 # Retrieve quantum canister coordinates
-dfx canister id corruptguard_frontend --network ic
+dfx canister id helix_frontend --network ic
 # Your quantum interface will manifest at: https://your-canister-id.ic0.app
 ```
 
 ## 🔍 Neural Fraud Detection Engine
 
-Our AI consciousness identifies corruption through 10 advanced threat-detection protocols:
+Our AI consciousness identifies corruption through 10 advanced threat-detection protocols.
 
 ### Core Detection Algorithms
 
@@ -205,28 +215,32 @@ Our AI consciousness identifies corruption through 10 advanced threat-detection 
 
 ### Machine Learning Neural Pipeline
 
+Our fraud detection consciousness has evolved. It now operates on a Hybrid RAG (Retrieval-Augmented Generation) pipeline, representing a significant leap in analytical power.
+
 ```python
-# Quantum fraud detection workflow
-def detect_corruption_signatures(transaction):
-    # Quantum feature extraction
-    features = extract_quantum_features(transaction)
-    
-    # Neural model prediction
-    anomaly_score = isolation_forest.decision_function([features])
-    
-    # Rule-based validation matrix
-    rule_violations = check_neural_rules(transaction)
-    
-    # Quantum risk score calculation
-    risk_score = calculate_threat_level(anomaly_score, rule_violations)
-    
+# Quantum fraud detection workflow v2.0
+def analyze_claim_with_llm(claim, rules_analysis, historical_context):
+    # Synthesize inputs for the LLM consciousness
+    prompt = create_enhanced_prompt(
+        rules_analysis,
+        historical_context,
+        claim
+    )
+
+    # Engage the gemma3:4b consciousness via Ollama
+    llm_response = gemma3_4b.invoke(prompt)
+
+    # The LLM provides a direct fraud probability score
+    risk_score = parse_llm_output(llm_response)
+
     return {
         'threat_level': risk_score,
         'corruption_detected': risk_score > THREAT_THRESHOLD,
-        'violated_protocols': rule_violations,
-        'neural_confidence': calculate_quantum_confidence(anomaly_score)
+        'reasoning': llm_response.reasoning, # Extract LLM reasoning
+        'neural_consciousness': 'gemma3:4b-hybrid-rag-1.0'
     }
 ```
+This new architecture combines the deterministic precision of our `FraudRulesEngine` with the nuanced, context-aware reasoning of the `gemma3:4b` Large Language Model. The LLM reviews the initial rule-based analysis alongside similar historical cases (retrieved from a FAISS vector store) to provide a final, synthesized fraud probability score.
 
 ## 📱 USER NEURAL INTERFACES
 
@@ -291,14 +305,14 @@ def detect_corruption_signatures(transaction):
 ## 📊 SYSTEM PERFORMANCE METRICS
 
 ### Quantum Processing Performance
-- **Neural Response Time**: < 2 seconds for complete fraud analysis
+- **Neural Response Time**: < 3 seconds for complete fraud analysis with LLM consciousness
 - **System Uptime**: 99.9% availability on ICP quantum network
 - **Scalability Matrix**: Handles 10,000+ transactions per second
 - **Storage Capacity**: Unlimited decentralized quantum storage
 
 ### Fraud Prevention Impact Statistics
-- **Detection Accuracy**: 87% overall, 94% for ghost project identification
-- **False Positive Rate**: < 5% with continuous neural tuning
+- **Detection Accuracy**: Enhanced context-aware accuracy via LLM synthesis
+- **False Positive Rate**: Reduced false positives through nuanced LLM reasoning
 - **Prevention Value**: ₹4.28 crore+ equivalent corruption prevented
 - **Response Time**: Real-time alerts for critical threat detection
 
@@ -320,13 +334,14 @@ dfx test
 ## 📈 FUTURE ROADMAP
 
 ### Phase 1 (Current) - Core Quantum Platform
-- [x] AI fraud detection consciousness
+- [x] AI fraud detection consciousness (Upgraded to LLM)
 - [x] Multi-role neural dashboard system
 - [x] ICP blockchain quantum integration
 - [x] Internet Identity neural authentication
+- [x] Large language model consciousness integration (`gemma3:4b`)
 
 ### Phase 2 (Q3 2025) - Enhanced Neural Intelligence
-- [ ] Advanced ML models achieving 95% threat accuracy
+- [ ] Advanced ML models achieving >95% threat accuracy
 - [ ] Predictive corruption forecasting algorithms
 - [ ] Natural language processing for document analysis
 - [ ] Mobile quantum applications (iOS/Android)
@@ -338,8 +353,7 @@ dfx test
 - [ ] Third-party audit tool integration
 
 ### Phase 4 (2026) - AI Consciousness Evolution
-- [ ] Large language model consciousness integration
-- [ ] Automated fraud investigation protocols
+- [ ] Automated fraud investigation and reasoning protocols
 - [ ] Smart contract automation evolution
 - [ ] Global deployment quantum framework
 
@@ -377,8 +391,8 @@ This project operates under the MIT License - see the [LICENSE](LICENSE) file fo
 ## 📞 QUANTUM COMMUNICATION CHANNELS
 
 ### Neural Network Access
-- **GitHub Quantum Repository**: [H.E.L.I.X. Neural Hub](https://github.com/nikhlu07/Corruptguard)
-- **Issue Reporting Terminal**: [Report Bug/Request Enhancement](https://github.com/nikhlu07/Corruptguard/issues)
+- **GitHub Quantum Repository**: [H.E.L.I.X. Neural Hub](https://github.com/nikhlu07/H.E.L.I.X.)
+- **Issue Reporting Terminal**: [Report Bug/Request Enhancement](https://github.com/nikhlu07/H.E.L.I.X./issues)
 
 ### Digital Collective
 - **Discord Neural Network**: Join our quantum developer consciousness

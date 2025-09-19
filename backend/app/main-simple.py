@@ -1,5 +1,5 @@
 """
-CorruptGuard Backend - Simplified Version
+H.E.L.I.X. Backend - Simplified Version
 This version works with minimal dependencies but includes full features
 """
 
@@ -25,7 +25,7 @@ JWT_ALGORITHM = "HS256"
 
 # Create FastAPI app
 app = FastAPI(
-    title="CorruptGuard Backend",
+    title="H.E.L.I.X. Backend",
     description="Corruption Detection System Backend",
     version="1.0.0",
     docs_url="/docs",
@@ -122,7 +122,7 @@ def verify_token(token: str) -> Dict[str, Any]:
 async def root():
     """Root endpoint"""
     return {
-        "service": "CorruptGuard Backend",
+        "service": "H.E.L.I.X. Backend",
         "version": "1.0.0",
         "status": "running",
         "description": "Corruption Detection System Backend",
@@ -443,7 +443,7 @@ async def get_fraud_history():
 @app.on_event("startup")
 async def startup_event():
     """Application startup event"""
-    logger.info("🚀 CorruptGuard Backend Starting...")
+    logger.info("🚀 H.E.L.I.X. Backend Starting...")
     logger.info("✅ JWT authentication enabled")
     logger.info("✅ Fraud detection system active")
     logger.info("✅ ICP integration simulated")
@@ -452,7 +452,7 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     """Application shutdown event"""
-    logger.info("🔌 CorruptGuard Backend shutting down...")
+    logger.info("🔌 H.E.L.I.X. Backend shutting down...")
 
 if __name__ == "__main__":
     import uvicorn

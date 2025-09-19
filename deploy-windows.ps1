@@ -1,7 +1,7 @@
-# 🚀 CorruptGuard Windows Deployment Script
+# 🚀 H.E.L.I.X. Windows Deployment Script
 # Run this script as Administrator
 
-Write-Host "🚀 CorruptGuard ICP Deployment Script" -ForegroundColor Green
+Write-Host "🚀 H.E.L.I.X. ICP Deployment Script" -ForegroundColor Green
 Write-Host "=====================================" -ForegroundColor Green
 
 # Check if running as Administrator
@@ -90,8 +90,8 @@ try {
 # Step 3: Setup DFX identity
 Write-Host "`n👤 Setting up DFX identity..." -ForegroundColor Cyan
 try {
-    dfx identity new corruptguard --force 2>$null
-    dfx identity use corruptguard
+    dfx identity new h.e.l.i.x --force 2>$null
+    dfx identity use h.e.l.i.x
     $identity = dfx identity whoami
     Write-Host "✅ Identity created: $identity" -ForegroundColor Green
 } catch {
@@ -124,11 +124,11 @@ Write-Host "`n🚀 Deploying to ICP..." -ForegroundColor Cyan
 Write-Host "This may take a few minutes..." -ForegroundColor Yellow
 
 try {
-    dfx deploy corruptguard_frontend --network ic
+    dfx deploy helix_frontend --network ic
     Write-Host "✅ Deployment successful!" -ForegroundColor Green
     
     # Get canister ID
-    $canisterId = dfx canister id corruptguard_frontend --network ic
+    $canisterId = dfx canister id helix_frontend --network ic
     Write-Host "`n🎉 Your app is live!" -ForegroundColor Green
     Write-Host "URL: https://$canisterId.ic0.app" -ForegroundColor Cyan
     Write-Host "`n📋 Next steps:" -ForegroundColor Yellow
@@ -140,7 +140,7 @@ try {
     Write-Host "❌ Deployment failed" -ForegroundColor Red
     Write-Host "Please check the error messages above" -ForegroundColor Yellow
     Write-Host "You can also try deploying manually:" -ForegroundColor Yellow
-    Write-Host "dfx deploy corruptguard_frontend --network ic" -ForegroundColor White
+    Write-Host "dfx deploy helix_frontend --network ic" -ForegroundColor White
 }
 
 Write-Host "`n🎬 For video recording, use the local demo mode:" -ForegroundColor Cyan
