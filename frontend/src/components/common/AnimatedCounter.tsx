@@ -1,83 +1,54 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface AnimatedCounterProps {
   target: number;
   duration?: number;
   prefix?: string;
   suffix?: string;
-  className?: string;
+  formatter?: (value: number) => string;
 }
 
-const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
-  target,
-  duration = 2000,
-  prefix = '',
+export function AnimatedCounter({ 
+  target, 
+  duration = 2000, 
+  prefix = '', 
   suffix = '',
-  className = ''
-}) => {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLSpanElement>(null);
+  formatter 
+}: AnimatedCounterProps) {
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let startTime: number;
-    let animationFrame: number;
-
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
+    const startTime = Date.now();
+    const startValue = 0;
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
       
-      const progress = Math.min((timestamp - startTime) / duration, 1);
+      // Easing function for smooth animation
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const value = Math.floor(startValue + (target - startValue) * easeOut);
       
-      // Use easing function for smoother animation
-      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      setCurrent(value);
       
-      const currentCount = Math.floor(target * easedProgress);
-      setCount(currentCount);
-
       if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
       }
     };
+    
+    animate();
+  }, [target, duration]);
 
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
-      }
-    };
-  }, [target, duration, isVisible]);
-
-  // Format number with commas for thousands
-  const formatNumber = (num: number): string => {
-    return num.toLocaleString();
+  const formatValue = (value: number) => {
+    if (formatter) return formatter(value);
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+    if (value >= 1000) return `${(value / 1000).toFixed(0)}K`;
+    return value.toString();
   };
 
   return (
-    <span ref={ref} className={className}>
-      {prefix}{formatNumber(count)}{suffix}
+    <span className="font-bold">
+      {prefix}{formatValue(current)}{suffix}
     </span>
   );
-};
-
-export default AnimatedCounter;
+}
