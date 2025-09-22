@@ -1,7 +1,12 @@
 import React from 'react';
 import { Building2, Heart, Code } from 'lucide-react';
 
-export function SectorShowcase() {
+interface SectorShowcaseProps {
+  onTryLiveDemo?: () => void;
+}
+
+export function SectorShowcase(props: SectorShowcaseProps = {}) {
+  const { onTryLiveDemo } = props;
   const sectors = [
     {
       icon: Building2,
@@ -92,7 +97,10 @@ export function SectorShowcase() {
                         <span className={`font-bold px-3 py-1 rounded-full ${isPrimary ? 'bg-primary/10 text-primary' : 'bg-helix-gray-800 text-helix-gray-300'}`}>{sector.status}</span>
                         <span className="text-helix-gray-400">{sector.statusText}</span>
                     </div>
-                    <button className={`w-full py-3 rounded-lg font-semibold transition-colors ${isPrimary ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-helix-gray-800 text-foreground hover:bg-helix-gray-700'}`}>
+                    <button 
+                      onClick={isPrimary && sector.buttonText === "Try Live Demo" ? onTryLiveDemo : undefined}
+                      className={`w-full py-3 rounded-lg font-semibold transition-colors ${isPrimary ? 'bg-primary text-primary-foreground hover:bg-primary/90' : 'bg-helix-gray-800 text-foreground hover:bg-helix-gray-700'}`}
+                    >
                         {sector.buttonText}
                     </button>
                 </div>

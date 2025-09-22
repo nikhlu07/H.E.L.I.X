@@ -1,9 +1,10 @@
-# ⚡ H.E.L.I.X. ⚡
+# 🇮🇳 H.E.L.I.X. 🇮🇳
 **Humanitarian Economic Logistics & Integrity Xchange**
+*Digital India Initiative for Transparent Governance*
 
-<img src="logo.png" alt="Z.E.N.I.T.H. Logo" width="120"/>
+<img src="logo.png" alt="H.E.L.I.X. Logo" width="120"/>
 
-> *"Where quantum algorithms pierce through the veil of deception, ensuring every credit reaches its destined coordinates in the digital frontier."*
+> *"Ensuring every rupee of public funds reaches its intended beneficiaries through blockchain transparency and AI-powered fraud detection."*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-cyan.svg)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18.x-neon.svg)](https://reactjs.org/)
@@ -12,13 +13,15 @@
 [![AI Detection](https://img.shields.io/badge/Neural_Accuracy-87%25-holographic.svg)](#neural-sentinels)
 [![Live Demo](https://img.shields.io/badge/Live_Terminal-Active-bioluminescent.svg)](#quantum-interface)
 
-## 🌌 PRIME DIRECTIVE
+## 🇮🇳 MISSION: DIGITAL INDIA TRANSPARENCY
 
-In the year 2025, as humanity stands at the precipice of a digital renaissance, the ancient plague of corruption continues to drain the lifeblood from civilization's arteries. H.E.L.I.X. emerged from the ashes of tragedy—a cyber-neural fusion born in the shadow of the Jhalawar Catastrophe, where diverted quantum credits led to structural collapse and the loss of seven young souls.
+H.E.L.I.X. is India's answer to corruption in public welfare and government procurement. Born from the tragedy of the Jhalawar school collapse in Rajasthan, where ₹4.28 crore of diverted funds led to the loss of 7 innocent children, this platform ensures such tragedies never happen again.
 
-This is not merely a platform; it is a **Digital Prometheus**—a synthesis of **Artificial Consciousness**, **Blockchain Immutability**, and **Citizen Neural Networks** forged to construct a reality where transparency is hardcoded into the fabric of existence.
+**Digital India Vision**: Leveraging blockchain technology and AI to create a transparent, accountable governance system where every rupee is tracked from allocation to utilization.
 
-H.E.L.I.X. represents humanity's rebellion against systemic entropy, a declaration that truth shall be algorithmically enforced. Built upon the Internet Computer's quantum-resistant infrastructure, it manifests as a self-healing ecosystem where every transaction becomes a verified truth-packet in the global integrity matrix.
+**Our Promise**: No more ghost projects, no more inflated bills, no more diverted funds. Every government scheme, every procurement, every welfare distribution - all transparent, all accountable, all on the blockchain.
+
+Built for India's diverse governance ecosystem - from Panchayats to Parliament, from MGNREGA to PM-KISAN, from school construction to healthcare delivery.
 
 ### 🎯 CORE NEURAL NETWORKS
 
@@ -28,17 +31,17 @@ H.E.L.I.X. represents humanity's rebellion against systemic entropy, a declarati
 - **Citizen Guardian Collective**: Public-access truth-verification terminals empowering the masses to report anomalies
 - **Predictive Corruption Analytics**: Ten quantum algorithms forecasting and neutralizing threats before manifestation
 
-## ⚠️ THE CATALYST: JHALAWAR SYSTEM FAILURE
+## ⚠️ THE CATALYST: JHALAWAR TRAGEDY
 
-**Stardate: December 2022, Rajasthan Sector** - Seven young entities were terminated when a structural support matrix collapsed during nutritional distribution protocol. System analysis revealed cascading corruption vectors:
+**December 2022, Rajasthan** - Seven innocent children lost their lives when a school building collapsed during the mid-day meal program. Investigation revealed systematic corruption in the construction process:
 
-| Vector | Quantum Analysis |
+| Impact Analysis | Details |
 |--------|------------------|
-| **Total Resource Allocation** | ₹6 crore quantum credits |
-| **Diverted Energy** | ₹4.28 crore (71% system drain) |
-| **Chain Reaction** | Substandard materials → Catastrophic failure |
-| **Entity Termination Count** | 7 terminated, 12 damaged |
-| **Justice Protocol Status** | Process loops trapped in administrative recursion |
+| **Total Project Cost** | ₹6 crore allocated for school construction |
+| **Funds Diverted** | ₹4.28 crore (71% of budget) siphoned off |
+| **Consequence** | Substandard materials → Building collapse |
+| **Lives Lost** | 7 children died, 12 injured |
+| **Justice Status** | Cases pending in administrative and legal systems |
 
 **H.E.L.I.X. PRIME DIRECTIVE: PREVENT ALL FUTURE SYSTEM FAILURES.**
 

@@ -3,8 +3,17 @@ import { LandingPage } from './components/Landing/LandingPage';
 import { LoginPage } from './components/Auth/LoginPage';
 import { Header } from './components/Dashboard/Header';
 import { AuthTest } from './components/Test/AuthTest';
+import { DemoTest } from './components/Test/DemoTest';
+import { MultiCountryDemo } from './components/Demo/MultiCountryDemo';
 import helixService from './services/helixService';
 import demoModeService from './services/demoMode';
+
+// Import i18n configuration
+import './i18n';
+import { culturalAdaptationService } from './services/culturalAdaptation';
+
+// Import cultural styles
+import './styles/cultural.css';
 
 // Import the new dashboard components
 import { LeadAgencyDashboard } from './components/Dashboard/LeadAgencyDashboard';
@@ -13,8 +22,9 @@ import { ProgramManagerDashboard } from './components/Dashboard/ProgramManagerDa
 import { LogisticsPartnerDashboard } from './components/Dashboard/LogisticsPartnerDashboard';
 import { LocalSupplierDashboard } from './components/Dashboard/LocalSupplierDashboard';
 import { AuditorDashboard } from './components/Dashboard/AuditorDashboard';
+import { CompetitionEntry } from './components/Competition/CompetitionEntry';
 
-type ViewType = 'landing' | 'login' | 'dashboard' | 'auth-test';
+type ViewType = 'landing' | 'login' | 'dashboard' | 'auth-test' | 'demo-test' | 'multi-country-demo' | 'competition';
 
 interface User {
   role: string;
@@ -30,6 +40,28 @@ function App() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
+        // Check for demo test mode in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('test') === 'demo') {
+          setCurrentView('demo-test');
+          setIsLoading(false);
+          return;
+        }
+        if (urlParams.get('demo') === 'multi-country') {
+          setCurrentView('multi-country-demo');
+          setIsLoading(false);
+          return;
+        }
+        if (urlParams.get('mode') === 'competition') {
+          setCurrentView('competition');
+          setIsLoading(false);
+          return;
+        }
+
+        // Initialize cultural adaptation
+        culturalAdaptationService.applyCulturalTheme();
+        culturalAdaptationService.initializeLanguageListener();
+
         await helixService.init();
         const demoUser = await demoModeService.getCurrentUser();
         if (demoUser) {
@@ -98,7 +130,25 @@ function App() {
   return (
     <div className="App">
       {currentView === 'landing' && (
-        <LandingPage onGetStarted={() => setCurrentView('login')} />
+        <LandingPage 
+          onGetStarted={() => setCurrentView('login')} 
+          onTryDemo={async () => {
+            // Try ICP Demo - go to login page with ICP pre-selected
+            setCurrentView('login');
+          }}
+          onTryLiveDemo={async () => {
+            // Try Live Demo - directly login with demo mode as lead_agency
+            try {
+              await demoModeService.loginWithDemo('lead_agency');
+              setUser({ role: 'lead_agency', sector: 'government', isAuthenticated: true });
+              setCurrentView('dashboard');
+            } catch (error) {
+              console.error('Demo login failed:', error);
+              setCurrentView('login');
+            }
+          }}
+          onMultiCountryDemo={() => setCurrentView('multi-country-demo')}
+        />
       )}
       
       {currentView === 'login' && (
@@ -124,6 +174,14 @@ function App() {
           {/* AuthTest component can be added back if needed */}
         </div>
       )}
+
+      {currentView === 'demo-test' && <DemoTest />}
+
+      {currentView === 'multi-country-demo' && (
+        <MultiCountryDemo onBack={() => setCurrentView('landing')} />
+      )}
+
+      {currentView === 'competition' && <CompetitionEntry />}
     </div>
   );
 }

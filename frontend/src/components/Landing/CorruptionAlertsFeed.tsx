@@ -141,7 +141,7 @@ export function CorruptionAlertsFeed() {
                   </span>
                 </div>
                 <div className="text-slate-500">
-                  ${(alert.amount / 1000).toFixed(0)}K at risk
+                  ₹{(alert.amount / 100000).toFixed(1)}L at risk
                 </div>
               </div>
             </div>
