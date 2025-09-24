@@ -1,5 +1,5 @@
 // CorruptGuard Service - Handles Backend API and ICP Integration
-import { apiGet, apiPost, apiGetWithToken, apiPostWithToken } from './api';
+import { apiGet, apiPost, apiGetWithToken } from './api';
 import { AuthService, User } from './authService';
 
 export interface FraudDetectionRequest {
@@ -11,7 +11,7 @@ export interface FraudDetectionRequest {
   invoice_hash: string;
   deputy_id: string;
   area: string;
-  vendor_history?: any;
+  vendor_history?: Record<string, unknown>;
 }
 
 export interface FraudDetectionResponse {
@@ -145,7 +145,7 @@ class CorruptGuardService {
       // Call backend logout
       if (this.accessToken) {
         try {
-          await apiPost('/auth/logout', {}, {}, true);
+          await apiPost('/api/v1/auth/logout', {}, {}, true);
         } catch (error) {
           console.warn('Backend logout failed:', error);
         }
@@ -169,11 +169,11 @@ class CorruptGuardService {
     if (demoToken && demoRole && !this.currentUser) {
       try {
         // Verify token is still valid by making a test request
-        const response = await apiGetWithToken('/auth/profile', demoToken);
+        const response = await apiGetWithToken('/api/v1/auth/profile', demoToken);
         
         // Convert response to User format
         this.currentUser = {
-          principal: null as any, // Demo users don't have real principals
+          principal: null as unknown, // Demo users don't have real principals
           role: response.data.role,
           name: response.data.name,
           isAuthenticated: true,
@@ -318,7 +318,7 @@ class CorruptGuardService {
   }
 
   // Demo Methods
-  async generateTestScenario(): Promise<any> {
+  async generateTestScenario(): Promise<Record<string, unknown>> {
     try {
       const response = await apiPost(
         '/api/v1/demo/generate-test-scenario',
@@ -333,7 +333,7 @@ class CorruptGuardService {
     }
   }
 
-  async getFraudPatterns(): Promise<any> {
+  async getFraudPatterns(): Promise<Record<string, unknown>> {
     try {
       const response = await apiGet(
         '/api/v1/demo/fraud-patterns',
@@ -348,7 +348,7 @@ class CorruptGuardService {
   }
 
   // Health Check
-  async getHealth(): Promise<any> {
+  async getHealth(): Promise<Record<string, unknown>> {
     try {
       const response = await apiGet('/health', {}, false);
       return response.data;

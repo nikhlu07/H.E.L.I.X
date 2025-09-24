@@ -1,18 +1,19 @@
 // frontend/src/services/icpCanisterService.ts - NEW
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
-import { authService } from '../auth/authService';
 
 // Define the IDL interface based on your Motoko contract
-const idlFactory = ({ IDL }: any) => {
-  const Budget = IDL.Record({
+const idlFactory = ({ IDL }: { IDL: any }) => {
+  // Remove unused variable assignments
+  IDL.Record({
     amount: IDL.Nat,
     purpose: IDL.Text,
     locked: IDL.Bool,
     lockTime: IDL.Int,
   });
 
-  const Allocation = IDL.Record({
+  IDL.Record({
     stateHead: IDL.Principal,
     amount: IDL.Nat,
     area: IDL.Text,
@@ -21,7 +22,7 @@ const idlFactory = ({ IDL }: any) => {
     vendorAssigned: IDL.Opt(IDL.Principal),
   });
 
-  const Claim = IDL.Record({
+  IDL.Record({
     vendor: IDL.Principal,
     amount: IDL.Nat,
     invoiceHash: IDL.Text,
@@ -44,7 +45,7 @@ const idlFactory = ({ IDL }: any) => {
     resolved: IDL.Bool,
   });
 
-  const Result = (T: any) => IDL.Variant({ ok: T, err: IDL.Text });
+  const Result = (T: unknown) => IDL.Variant({ ok: T, err: IDL.Text });
 
   return IDL.Service({
     // Government functions
@@ -161,22 +162,22 @@ export interface BudgetTransparency {
 }
 
 class ICPCanisterService {
-  private actor: any = null;
+  private actor: unknown = null;
   private agent: HttpAgent | null = null;
   private canisterId: string;
 
   constructor() {
-    this.canisterId = process.env.REACT_APP_CANISTER_ID || 'rdmx6-jaaaa-aaaah-qcaiq-cai';
+    this.canisterId = (import.meta.env.VITE_CANISTER_ID as string) || 'rdmx6-jaaaa-aaaah-qcaiq-cai';
   }
 
   async init(): Promise<void> {
     try {
-      const host = process.env.REACT_APP_IC_HOST || 'http://127.0.0.1:4943';
+      const host = (import.meta.env.VITE_IC_HOST as string) || 'http://127.0.0.1:4943';
       
       this.agent = new HttpAgent({ host });
       
       // Only fetch root key in development
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         await this.agent.fetchRootKey();
       }
 
@@ -199,7 +200,7 @@ class ICPCanisterService {
   }
 
   // Helper to handle Result types from Motoko
-  private handleResult(result: any): any {
+  private handleResult(result: Record<string, unknown>): unknown {
     if ('ok' in result) {
       return result.ok;
     } else if ('err' in result) {
@@ -212,20 +213,20 @@ class ICPCanisterService {
   async proposeStateHead(principal: string): Promise<void> {
     await this.ensureActor();
     const principalObj = Principal.fromText(principal);
-    const result = await this.actor.proposeStateHead(principalObj);
+    const result = await (this.actor as any).proposeStateHead(principalObj);
     return this.handleResult(result);
   }
 
   async confirmStateHead(principal: string): Promise<void> {
     await this.ensureActor();
     const principalObj = Principal.fromText(principal);
-    const result = await this.actor.confirmStateHead(principalObj);
+    const result = await (this.actor as any).confirmStateHead(principalObj);
     return this.handleResult(result);
   }
 
   async lockBudget(amount: number, purpose: string): Promise<number> {
     await this.ensureActor();
-    const result = await this.actor.lockBudget(BigInt(amount), purpose);
+    const result = await (this.actor as any).lockBudget(BigInt(amount), purpose);
     const budgetId = this.handleResult(result);
     return Number(budgetId);
   }
@@ -238,7 +239,7 @@ class ICPCanisterService {
   ): Promise<void> {
     await this.ensureActor();
     const deputyPrincipal = Principal.fromText(deputy);
-    const result = await this.actor.allocateBudget(
+    const result = await (this.actor as any).allocateBudget(
       BigInt(budgetId),
       BigInt(amount),
       area,
@@ -251,14 +252,14 @@ class ICPCanisterService {
   async proposeVendor(principal: string): Promise<void> {
     await this.ensureActor();
     const principalObj = Principal.fromText(principal);
-    const result = await this.actor.proposeVendor(principalObj);
+    const result = await (this.actor as any).proposeVendor(principalObj);
     return this.handleResult(result);
   }
 
   async approveVendor(principal: string): Promise<void> {
     await this.ensureActor();
     const principalObj = Principal.fromText(principal);
-    const result = await this.actor.approveVendor(principalObj);
+    const result = await (this.actor as any).approveVendor(principalObj);
     return this.handleResult(result);
   }
 
@@ -269,7 +270,7 @@ class ICPCanisterService {
     invoiceData: string
   ): Promise<number> {
     await this.ensureActor();
-    const result = await this.actor.submitClaim(
+    const result = await (this.actor as any).submitClaim(
       BigInt(budgetId),
       BigInt(allocationId),
       BigInt(amount),
@@ -282,13 +283,13 @@ class ICPCanisterService {
   // Fraud Detection Functions
   async updateFraudScore(claimId: number, score: number): Promise<void> {
     await this.ensureActor();
-    const result = await this.actor.updateFraudScore(BigInt(claimId), BigInt(score));
+    const result = await (this.actor as any).updateFraudScore(BigInt(claimId), BigInt(score));
     return this.handleResult(result);
   }
 
   async approveClaimByAI(claimId: number, approve: boolean, reason: string): Promise<void> {
     await this.ensureActor();
-    const result = await this.actor.approveClaimByAI(BigInt(claimId), approve, reason);
+    const result = await (this.actor as any).approveClaimByAI(BigInt(claimId), approve, reason);
     return this.handleResult(result);
   }
 
@@ -299,7 +300,7 @@ class ICPCanisterService {
     description: string
   ): Promise<void> {
     await this.ensureActor();
-    const result = await this.actor.addFraudAlert(
+    const result = await (this.actor as any).addFraudAlert(
       BigInt(claimId),
       alertType,
       severity,
@@ -310,50 +311,50 @@ class ICPCanisterService {
 
   async calculateFraudScore(claimId: number): Promise<number> {
     await this.ensureActor();
-    const result = await this.actor.calculateFraudScore(BigInt(claimId));
+    const result = await (this.actor as any).calculateFraudScore(BigInt(claimId));
     return Number(result);
   }
 
   // Challenge System
   async stakeChallenge(invoiceHash: string, reason: string, evidence: string): Promise<void> {
     await this.ensureActor();
-    const result = await this.actor.stakeChallenge(invoiceHash, reason, evidence);
+    const result = await (this.actor as any).stakeChallenge(invoiceHash, reason, evidence);
     return this.handleResult(result);
   }
 
   // Query Functions
   async getClaim(claimId: number): Promise<Claim | null> {
     await this.ensureActor();
-    const result = await this.actor.getClaim(BigInt(claimId));
+    const result = await (this.actor as any).getClaim(BigInt(claimId));
     return result.length > 0 ? result[0] : null;
   }
 
   async getAllClaims(): Promise<Array<[number, ClaimSummary]>> {
     await this.ensureActor();
-    const result = await this.actor.getAllClaims();
-    return result.map(([id, claim]: [bigint, any]) => [Number(id), claim]);
+    const result = await (this.actor as any).getAllClaims();
+    return result.map(([id, claim]: [bigint, ClaimSummary]) => [Number(id), claim]);
   }
 
   async getHighRiskClaims(): Promise<Array<[number, number]>> {
     await this.ensureActor();
-    const result = await this.actor.getHighRiskClaims();
+    const result = await (this.actor as any).getHighRiskClaims();
     return result.map(([id, score]: [bigint, bigint]) => [Number(id), Number(score)]);
   }
 
   async getFraudAlerts(claimId: number): Promise<FraudAlert[]> {
     await this.ensureActor();
-    return await this.actor.getFraudAlerts(BigInt(claimId));
+    return await (this.actor as any).getFraudAlerts(BigInt(claimId));
   }
 
   async getBudgetTransparency(): Promise<Array<[number, BudgetTransparency]>> {
     await this.ensureActor();
-    const result = await this.actor.getBudgetTransparency();
-    return result.map(([id, budget]: [bigint, any]) => [Number(id), budget]);
+    const result = await (this.actor as any).getBudgetTransparency();
+    return result.map(([id, budget]: [bigint, BudgetTransparency]) => [Number(id), budget]);
   }
 
   async getSystemStats(): Promise<SystemStats> {
     await this.ensureActor();
-    const result = await this.actor.getSystemStats();
+    const result = await (this.actor as any).getSystemStats();
     return {
       totalBudget: result.totalBudget,
       activeClaims: result.activeClaims,

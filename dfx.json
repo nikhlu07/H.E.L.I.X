@@ -21,6 +21,16 @@
           "ic": "rdmx6-jaaaa-aaaah-qcaiq-cai"
         }
       }
+    },
+    "ckUSDC_ledger": {
+      "type": "custom",
+      "candid": "https://raw.githubusercontent.com/dfinity/ic/master/rs/rosetta-api/icrc1/ledger/ledger.did",
+      "wasm": "https://download.dfinity.systems/ic/d2a224397oo7b23a26a0a2a763f9e058a9b350aea/canisters/ic-icrc1-ledger.wasm.gz",
+      "remote": {
+        "id": {
+          "ic": "xevnm-gaaaa-aaaar-qafnq-cai"
+        }
+      }
     }
   },
   "defaults": {

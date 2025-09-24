@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import { CheckCircle, XCircle, Loader, AlertTriangle, User, Shield } from 'lucide-react';
+import { CheckCircle, XCircle, Loader, AlertTriangle, User } from 'lucide-react';
 import corruptGuardService from '../../services/corruptGuardService';
 
 interface AuthTestResult {
   name: string;
   status: 'pending' | 'success' | 'error';
   message: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 export function AuthTest() {
   const [tests, setTests] = useState<AuthTestResult[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<Record<string, unknown> | null>(null);
 
   const runAuthTests = async () => {
     setIsRunning(true);

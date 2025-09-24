@@ -114,6 +114,13 @@ def verify_token(token: str) -> Dict[str, Any]:
     except jwt.JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
+# Request models for auth utility endpoints
+class TokenVerifyRequest(BaseModel):
+    token: str = Field(..., description="JWT access token to verify")
+
+class RefreshRequest(BaseModel):
+    token: Optional[str] = Field(None, description="JWT access token to refresh (optional if Authorization header provided)")
+
 # ================================================================================
 # CORE API ENDPOINTS
 # ================================================================================
@@ -293,6 +300,80 @@ async def get_profile(request: Request):
         raise HTTPException(status_code=500, detail="Profile retrieval failed")
 
 # ================================================================================
+# AUTH PATH ALIASES AND TOKEN ENDPOINTS
+# ==============================================================================
+
+# Add /api/v1/auth aliases for existing authentication endpoints
+app.add_api_route("/api/v1/auth/demo-login/{role}", endpoint=demo_login, methods=["POST"], tags=["Authentication"])
+app.add_api_route("/api/v1/auth/login/internet-identity", endpoint=ii_login, methods=["POST"], tags=["Authentication"])
+app.add_api_route("/api/v1/auth/profile", endpoint=get_profile, methods=["GET"], tags=["Authentication"])
+
+# Verify token endpoint (returns valid flag regardless of token status)
+@app.post("/auth/verify-token", tags=["Authentication"])
+@app.post("/api/v1/auth/verify-token", tags=["Authentication"])
+async def verify_token_endpoint(payload: TokenVerifyRequest):
+    token = payload.token
+    try:
+        decoded = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return {
+            "success": True,
+            "data": {
+                "valid": True,
+                "principal": decoded.get("principal_id"),
+                "role": decoded.get("role")
+            }
+        }
+    except jwt.ExpiredSignatureError:
+        return {"success": True, "data": {"valid": False, "reason": "expired"}}
+    except jwt.InvalidTokenError:
+        return {"success": True, "data": {"valid": False, "reason": "invalid"}}
+
+# Refresh token endpoint
+@app.post("/auth/refresh", tags=["Authentication"])
+@app.post("/api/v1/auth/refresh", tags=["Authentication"])
+async def refresh_token_endpoint(request: Request, body: Optional[RefreshRequest] = None):
+    auth_header = request.headers.get("Authorization")
+    token: Optional[str] = None
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ", 1)[1]
+    if not token and body and body.token:
+        token = body.token
+    if not token:
+        raise HTTPException(status_code=400, detail="Missing token for refresh")
+
+    try:
+        decoded = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM], options={"verify_exp": False})
+        new_payload = {k: v for k, v in decoded.items() if k != "exp"}
+        new_token = create_access_token(new_payload)
+
+        role = decoded.get("role", "citizen")
+        user_info = {
+            "name": f"User {role.replace('_', ' ').title()}",
+            "title": role.replace('_', ' ').title(),
+            "permissions": get_role_permissions(role),
+            "authenticated_at": datetime.now().isoformat(),
+            "demo_mode": decoded.get("demo_mode", True)
+        }
+
+        return {
+            "access_token": new_token,
+            "token_type": "bearer",
+            "principal_id": decoded.get("principal_id"),
+            "role": role,
+            "user_info": user_info,
+            "expires_in": 1800,
+            "demo_mode": decoded.get("demo_mode", True)
+        }
+    except Exception:
+        raise HTTPException(status_code=401, detail="Token refresh failed")
+
+# Logout endpoint (stateless)
+@app.post("/auth/logout", tags=["Authentication"])
+@app.post("/api/v1/auth/logout", tags=["Authentication"])
+async def logout_endpoint():
+    return {"success": True, "message": "Logged out"}
+
+# ================================================================================
 # FRAUD DETECTION SYSTEM
 # ================================================================================
 
@@ -457,9 +538,9 @@ async def shutdown_event():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
-        "main-simple:app",
+        app,
         host="127.0.0.1",
         port=8000,
-        reload=True,
+        reload=False,
         log_level="info"
     )

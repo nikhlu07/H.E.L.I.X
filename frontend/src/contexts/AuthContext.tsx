@@ -66,28 +66,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
       console.log(`Attempting login with method: ${method}, role: ${role}`);
       setLoading(true);
       setError(null);
-
+  
       let loggedInUser: User;
-
+  
       if (method === 'internet_identity') {
         console.log('Starting Internet Identity login...');
         loggedInUser = await authService.loginWithInternetIdentity();
-      } else if (method === 'demo' && role) {
-        console.log(`Starting demo login for role: ${role}`);
-        loggedInUser = await authService.loginDemo(role);
-        console.log('Demo login successful:', loggedInUser);
       } else {
-        throw new Error('Invalid login method or missing role for demo');
+        // Enable demo login path using backend demo endpoint
+        const demoRole = role || 'vendor';
+        console.log('Starting Demo login...', demoRole);
+        loggedInUser = await authService.loginDemo(demoRole);
       }
-
+  
       setUser(loggedInUser);
       
       // Analytics/logging
       console.log(`User logged in: ${loggedInUser.principal_id} as ${loggedInUser.role}`);
       
-    } catch (loginError: any) {
+    } catch (loginError: unknown) {
       console.error('Login failed:', loginError);
-      setError(loginError.message || 'Login failed');
+      setError((loginError as Error).message || 'Login failed');
       throw loginError;
     } finally {
       setLoading(false);
@@ -104,9 +103,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       console.log('User logged out successfully');
       
-    } catch (logoutError: any) {
+    } catch (logoutError: unknown) {
       console.error('Logout failed:', logoutError);
-      setError(logoutError.message || 'Logout failed');
+      setError((logoutError as Error).message || 'Logout failed');
       // Clear user state anyway
       setUser(null);
     } finally {
@@ -118,9 +117,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const updatedUser = await authService.getUserProfile();
       setUser(updatedUser);
-    } catch (refreshError: any) {
+    } catch (refreshError: unknown) {
       console.error('Profile refresh failed:', refreshError);
-      setError(refreshError.message || 'Failed to refresh profile');
+      setError((refreshError as Error).message || 'Failed to refresh profile');
     }
   };
 

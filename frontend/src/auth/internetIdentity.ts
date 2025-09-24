@@ -4,20 +4,17 @@
  */
 
 import { AuthClient } from "@dfinity/auth-client";
-import { Actor, HttpAgent } from "@dfinity/agent";
-import { Principal } from "@dfinity/principal";
-import type { 
-  User, 
-  UserRole, 
-  LoginResponse, 
-  DelegationChain, 
+import type {
+  User,
+  UserRole,
+  DelegationChain,
   AuthClientConfig,
   LoginOptions,
   IIDelegationIdentity,
   DemoUser,
   SessionData,
   ApiRequestOptions
-} from '../types/auth';
+} from './types';
 
 // Configuration
 interface Config {
@@ -29,27 +26,19 @@ interface Config {
 
 const CONFIG: Config = {
   // Internet Identity URL (use local for development)
-  II_URL: process.env.NODE_ENV === 'development' 
+  II_URL: process.env.NODE_ENV === 'development'
     ? 'http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaah-qcaiq-cai'
     : 'https://identity.ic0.app',
-  
+
   // CorruptGuard canister ID
   CANISTER_ID: process.env.REACT_APP_CANISTER_ID || 'rdmx6-jaaaa-aaaah-qcaiq-cai',
-  
+
   // Backend API URL
   API_URL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1',
-  
+
   // Host for local development
   HOST: process.env.NODE_ENV === 'development' ? 'http://localhost:4943' : 'https://ic0.app'
 };
-
-interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
-  principal: string | null;
-  token: string | null;
-  sessionId: string | null;
-}
 
 type AuthListener = (state: { isAuthenticated: boolean; user: User | null; principal: string | null }) => void;
 
@@ -69,7 +58,7 @@ class InternetIdentityAuth {
   async init(): Promise<AuthClient> {
     try {
       console.log('🔧 Initializing Internet Identity auth client...');
-      
+
       const config: AuthClientConfig = {
         idleOptions: {
           idleTimeout: 1000 * 60 * 30, // 30 minutes
@@ -81,7 +70,7 @@ class InternetIdentityAuth {
 
       // Check if user is already authenticated
       const isAuthenticated = await this.authClient.isAuthenticated();
-      
+
       if (isAuthenticated) {
         await this.handleAuthSuccess();
         console.log('✅ User already authenticated');
@@ -144,55 +133,48 @@ class InternetIdentityAuth {
     try {
       console.log('🎭 Demo login as:', role);
 
-      const response = await fetch(`${CONFIG.API_URL}/auth/login/demo`, {
+      const response = await fetch(`${CONFIG.API_URL}/auth/demo-login/${role}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          principal_id: principalId,
-          role: role
-        })
+        }
       });
 
       if (!response.ok) {
         throw new Error(`Demo login failed: ${response.statusText}`);
       }
 
-      const data: { success: boolean; data: LoginResponse } = await response.json();
+      const data: AuthResponse = await response.json();
 
-      if (data.success) {
-        this.userProfile = data.data.user;
-        this.apiToken = data.data.token;
-        this.sessionId = data.data.session_id;
-        this.isAuthenticated = true;
-        this.principal = principalId;
+      // Adapt to backend response shape
+      this.userProfile = {
+        principal: principalId,
+        role: data.role as UserRole,
+        name: data.user_info?.name || 'Demo User',
+        permissions: data.user_info?.permissions || [],
+      } as unknown as User;
+      this.apiToken = data.access_token;
+      this.sessionId = 'demo-session';
+      this.isAuthenticated = true;
+      this.principal = principalId;
 
-        // Store in localStorage for persistence
-        const sessionData: SessionData = {
-          token: this.apiToken,
-          sessionId: this.sessionId || '',
-          user: this.userProfile,
-          demoMode: true
-        };
-        
-        localStorage.setItem('corruptguard_auth', JSON.stringify(sessionData));
+      const sessionData: SessionData = {
+        token: this.apiToken,
+        sessionId: this.sessionId,
+        user: this.userProfile,
+        demoMode: true
+      };
+      localStorage.setItem('corruptguard_auth', JSON.stringify(sessionData));
 
-        this.notifyAuthListeners(true);
-        console.log('✅ Demo authentication successful');
-        return this.userProfile;
-      } else {
-        throw new Error('Demo authentication failed');
-      }
+      this.notifyAuthListeners(true);
+      console.log('✅ Demo authentication successful');
+      return this.userProfile;
     } catch (error) {
       console.error('❌ Demo login failed:', error);
       throw error;
     }
   }
 
-  /**
-   * Handle successful authentication
-   */
   private async handleAuthSuccess(): Promise<void> {
     try {
       if (!this.authClient) {
@@ -201,21 +183,16 @@ class InternetIdentityAuth {
 
       this.identity = this.authClient.getIdentity() as IIDelegationIdentity;
       this.principal = this.identity.getPrincipal().toString();
-      
       console.log('🆔 Principal:', this.principal);
 
-      // Get delegation chain for backend authentication
-      const delegationChain = await this.getDelegationChain();
-
-      // Authenticate with backend
+      // Authenticate with backend (II login)
       const response = await fetch(`${CONFIG.API_URL}/auth/login/internet-identity`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          delegation_chain: delegationChain,
-          user_principal: this.principal
+          principal_id: this.principal,
+          delegation_chain: await this.getDelegationChain(),
+          domain: window.location.origin
         })
       });
 
@@ -223,49 +200,45 @@ class InternetIdentityAuth {
         throw new Error(`Backend authentication failed: ${response.statusText}`);
       }
 
-      const data: { success: boolean; data: LoginResponse } = await response.json();
+      const data: AuthResponse = await response.json();
 
-      if (data.success) {
-        this.userProfile = data.data.user;
-        this.apiToken = data.data.token;
-        this.sessionId = data.data.session_id;
-        this.isAuthenticated = true;
+      this.userProfile = {
+        principal: this.principal,
+        role: data.role as UserRole,
+        name: data.user_info?.name || 'II User',
+        permissions: data.user_info?.permissions || [],
+      } as unknown as User;
+      this.apiToken = data.access_token;
+      this.sessionId = 'ii-session';
+      this.isAuthenticated = true;
 
-        // Store auth data for persistence
-        const sessionData: SessionData = {
-          token: this.apiToken,
-          sessionId: this.sessionId || '',
-          user: this.userProfile,
-          demoMode: false
-        };
-        
-        localStorage.setItem('corruptguard_auth', JSON.stringify(sessionData));
+      const sessionData: SessionData = {
+        token: this.apiToken,
+        sessionId: this.sessionId,
+        user: this.userProfile,
+        demoMode: false
+      };
+      localStorage.setItem('corruptguard_auth', JSON.stringify(sessionData));
 
-        this.notifyAuthListeners(true);
-        console.log('✅ Backend authentication successful');
-      } else {
-        throw new Error('Backend authentication failed');
-      }
+      this.notifyAuthListeners(true);
+      console.log('✅ Backend authentication successful');
     } catch (error) {
       console.error('❌ Auth success handling failed:', error);
       throw error;
     }
   }
 
-  /**
-   * Get delegation chain for backend authentication
-   */
   private async getDelegationChain(): Promise<DelegationChain[]> {
     try {
       const identity = this.authClient?.getIdentity() as IIDelegationIdentity;
-      
+
       // Extract delegation chain from identity
       if (identity._delegation && identity._delegation.delegations) {
         return identity._delegation.delegations.map(delegation => ({
           delegation: {
             pubkey: Array.from(delegation.delegation.pubkey as number[]),
             expiration: delegation.delegation.expiration.toString(),
-            targets: delegation.delegation.targets ? 
+            targets: delegation.delegation.targets ?
               delegation.delegation.targets.map(t => t.toString()) : undefined
           },
           signature: Array.from(delegation.signature as number[])
@@ -279,9 +252,6 @@ class InternetIdentityAuth {
     }
   }
 
-  /**
-   * Logout user
-   */
   async logout(): Promise<void> {
     try {
       console.log('👋 Logging out...');
@@ -325,9 +295,6 @@ class InternetIdentityAuth {
     }
   }
 
-  /**
-   * Clear authentication state
-   */
   private clearAuthState(): void {
     this.identity = null;
     this.principal = null;
@@ -338,26 +305,23 @@ class InternetIdentityAuth {
     this.notifyAuthListeners(false);
   }
 
-  /**
-   * Restore authentication from localStorage
-   */
   async restoreAuth(): Promise<boolean> {
     try {
       const storedAuth = localStorage.getItem('corruptguard_auth');
-      
+
       if (storedAuth) {
         const authData: SessionData = JSON.parse(storedAuth);
-        
+
         // Verify token is still valid
         const isValid = await this.verifyToken(authData.token);
-        
+
         if (isValid) {
           this.userProfile = authData.user;
           this.apiToken = authData.token;
           this.sessionId = authData.sessionId;
           this.isAuthenticated = true;
           this.principal = authData.user.principal;
-          
+
           this.notifyAuthListeners(true);
           console.log('✅ Authentication restored from storage');
           return true;
@@ -367,7 +331,7 @@ class InternetIdentityAuth {
           console.log('⚠️ Stored token invalid, cleared');
         }
       }
-      
+
       return false;
     } catch (error) {
       console.error('❌ Failed to restore auth:', error);
@@ -376,24 +340,18 @@ class InternetIdentityAuth {
     }
   }
 
-  /**
-   * Verify if token is still valid
-   */
   async verifyToken(token: string): Promise<boolean> {
     try {
       const response = await fetch(`${CONFIG.API_URL}/auth/verify-token`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token })
       });
 
       if (response.ok) {
-        const data: { data: { valid: boolean } } = await response.json();
-        return data.data?.valid || false;
+        const data: { data?: { valid?: boolean } } = await response.json();
+        return !!data.data?.valid;
       }
-
       return false;
     } catch (error) {
       console.error('❌ Token verification failed:', error);
@@ -401,9 +359,6 @@ class InternetIdentityAuth {
     }
   }
 
-  /**
-   * Refresh authentication token
-   */
   async refreshToken(): Promise<boolean> {
     try {
       if (!this.apiToken) {
@@ -413,7 +368,8 @@ class InternetIdentityAuth {
       const response = await fetch(`${CONFIG.API_URL}/auth/refresh`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiToken}`
         },
         body: JSON.stringify({
           token: this.apiToken
@@ -422,10 +378,10 @@ class InternetIdentityAuth {
 
       if (response.ok) {
         const data: { success: boolean; data: { token: string } } = await response.json();
-        
+
         if (data.success) {
           this.apiToken = data.data.token;
-          
+
           // Update localStorage
           const storedAuth = localStorage.getItem('corruptguard_auth');
           if (storedAuth) {
@@ -433,7 +389,7 @@ class InternetIdentityAuth {
             authData.token = this.apiToken;
             localStorage.setItem('corruptguard_auth', JSON.stringify(authData));
           }
-          
+
           console.log('✅ Token refreshed successfully');
           return true;
         }
@@ -448,9 +404,6 @@ class InternetIdentityAuth {
     }
   }
 
-  /**
-   * Get authentication headers for API requests
-   */
   getAuthHeaders(): Record<string, string> {
     if (!this.apiToken) {
       return {};
@@ -463,13 +416,10 @@ class InternetIdentityAuth {
     };
   }
 
-  /**
-   * Make authenticated API request
-   */
   async apiRequest(endpoint: string, options: ApiRequestOptions = {}): Promise<Response> {
     try {
       const url = endpoint.startsWith('http') ? endpoint : `${CONFIG.API_URL}${endpoint}`;
-      
+
       const requestOptions: RequestInit = {
         ...options,
         headers: {
@@ -485,7 +435,7 @@ class InternetIdentityAuth {
       if (response.status === 401) {
         console.log('🔄 Token expired, attempting refresh...');
         const refreshed = await this.refreshToken();
-        
+
         if (refreshed) {
           // Retry request with new token
           requestOptions.headers = {
@@ -505,13 +455,10 @@ class InternetIdentityAuth {
     }
   }
 
-  /**
-   * Get user profile
-   */
   async getUserProfile(): Promise<User> {
     try {
       const response = await this.apiRequest('/auth/profile');
-      
+
       if (response.ok) {
         const data: { success: boolean; data: User } = await response.json();
         if (data.success) {
@@ -519,7 +466,7 @@ class InternetIdentityAuth {
           return this.userProfile;
         }
       }
-      
+
       throw new Error('Failed to get user profile');
     } catch (error) {
       console.error('❌ Failed to get user profile:', error);
@@ -527,23 +474,14 @@ class InternetIdentityAuth {
     }
   }
 
-  /**
-   * Add authentication state listener
-   */
   addAuthListener(callback: AuthListener): void {
     this.authListeners.push(callback);
   }
 
-  /**
-   * Remove authentication state listener
-   */
   removeAuthListener(callback: AuthListener): void {
     this.authListeners = this.authListeners.filter(listener => listener !== callback);
   }
 
-  /**
-   * Notify all auth listeners of state change
-   */
   private notifyAuthListeners(isAuthenticated: boolean): void {
     this.authListeners.forEach(callback => {
       try {
@@ -558,43 +496,31 @@ class InternetIdentityAuth {
     });
   }
 
-  /**
-   * Check if user has specific permission
-   */
   hasPermission(permission: string): boolean {
     if (!this.userProfile || !this.userProfile.permissions) {
       return false;
     }
-    
+
     return this.userProfile.permissions.includes(permission);
   }
 
-  /**
-   * Check if user has specific role
-   */
   hasRole(role: UserRole): boolean {
     return this.userProfile?.role === role;
   }
 
-  /**
-   * Check if user has any of the specified roles
-   */
   hasAnyRole(roles: UserRole[]): boolean {
     return this.userProfile ? roles.includes(this.userProfile.role) : false;
   }
 
-  /**
-   * Get available demo users for development
-   */
   async getDemoUsers(): Promise<DemoUser[]> {
     try {
       const response = await fetch(`${CONFIG.API_URL}/auth/dev/mock-users`);
-      
+
       if (response.ok) {
         const data: { data: { mock_users: DemoUser[] } } = await response.json();
         return data.data?.mock_users || [];
       }
-      
+
       return [];
     } catch (error) {
       console.error('❌ Failed to get demo users:', error);

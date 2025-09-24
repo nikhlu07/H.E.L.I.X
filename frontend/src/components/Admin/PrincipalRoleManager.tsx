@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, Plus, Trash2, Save } from 'lucide-react';
+import { Shield, Users, Plus, Trash2 } from 'lucide-react';
 import { authService } from '../../services/authService';
 
 interface PrincipalRole {

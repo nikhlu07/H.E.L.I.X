@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Calendar, DollarSign, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
+import { Calendar, DollarSign, AlertTriangle, CheckCircle, Clock } from 'lucide-react';
 
 interface SearchResult {
   id: string;
@@ -129,7 +129,7 @@ export function SearchResults({ query, type, onClose }: SearchResultsProps) {
             ].map((filterOption) => (
               <button
                 key={filterOption.key}
-                onClick={() => setFilter(filterOption.key as any)}
+                onClick={() => setFilter(filterOption.key as 'all' | 'procurement' | 'vendor' | 'fraud')}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   filter === filterOption.key
                     ? 'bg-blue-500 text-white'

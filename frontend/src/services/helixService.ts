@@ -1,5 +1,5 @@
-// H.E.L.I.X. Service - Handles Backend API and ICP Integration
-import { apiGet, apiPost, apiGetWithToken, apiPostWithToken } from './api';
+// Helix Service - Handles Backend API and ICP Integration
+import { apiGet, apiPost, apiGetWithToken } from './api';
 import { AuthService, User } from './authService';
 
 export interface FraudDetectionRequest {
@@ -11,7 +11,7 @@ export interface FraudDetectionRequest {
   invoice_hash: string;
   deputy_id: string;
   area: string;
-  vendor_history?: any;
+  vendor_history?: Record<string, unknown>;
 }
 
 export interface FraudDetectionResponse {
@@ -110,28 +110,14 @@ class HelixService {
     }
   }
 
-  async loginWithDemo(role: string): Promise<User> {
+  async loginWithSimpleII(role: string): Promise<User> {
     try {
-      const response = await this.authService.demoLogin(role);
-      this.currentUser = response;
-      this.accessToken = response.accessToken || null;
-      
-      // Store demo token for API calls
-      if (response.accessToken) {
-        localStorage.setItem('demo_access_token', response.accessToken);
-        localStorage.setItem('demo_user_role', role);
-      }
-      
-      console.log('✅ Demo login successful:', {
-        role: response.role,
-        name: response.name,
-        isAuthenticated: response.isAuthenticated,
-        hasToken: !!response.accessToken
-      });
-      
-      return response;
+      const user = await this.authService.simpleIILogin(role);
+      this.currentUser = user;
+      this.accessToken = user.accessToken || null;
+      return user;
     } catch (error) {
-      console.error('Demo login failed:', error);
+      console.error('Simple II login failed:', error);
       throw error;
     }
   }
@@ -145,7 +131,7 @@ class HelixService {
       // Call backend logout
       if (this.accessToken) {
         try {
-          await apiPost('/auth/logout', {}, {}, true);
+          await apiPost('/api/v1/auth/logout', {}, {}, true);
         } catch (error) {
           console.warn('Backend logout failed:', error);
         }
@@ -169,13 +155,13 @@ class HelixService {
     if (demoToken && demoRole && !this.currentUser) {
       try {
         // Verify token is still valid by making a test request
-        const response = await apiGetWithToken('/auth/profile', demoToken);
+        const response = await apiGetWithToken('/api/v1/auth/profile', demoToken);
         
         // Convert response to User format
         this.currentUser = {
           principal: null as any, // Demo users don't have real principals
-          role: response.data.role,
-          name: response.data.name,
+          role: (response.data as any).role as string,
+          name: (response.data as any).name as string,
           isAuthenticated: true,
           accessToken: demoToken
         };
@@ -206,7 +192,7 @@ class HelixService {
     try {
       const response = await apiPost<FraudDetectionResponse>(
         '/api/v1/fraud/detect',
-        claimData,
+        claimData as any,
         {},
         true
       );
@@ -318,7 +304,7 @@ class HelixService {
   }
 
   // Demo Methods
-  async generateTestScenario(): Promise<any> {
+  async generateTestScenario(): Promise<Record<string, unknown>> {
     try {
       const response = await apiPost(
         '/api/v1/demo/generate-test-scenario',
@@ -333,7 +319,7 @@ class HelixService {
     }
   }
 
-  async getFraudPatterns(): Promise<any> {
+  async getFraudPatterns(): Promise<Record<string, unknown>> {
     try {
       const response = await apiGet(
         '/api/v1/demo/fraud-patterns',
@@ -348,7 +334,7 @@ class HelixService {
   }
 
   // Health Check
-  async getHealth(): Promise<any> {
+  async getHealth(): Promise<Record<string, unknown>> {
     try {
       const response = await apiGet('/health', {}, false);
       return response.data;

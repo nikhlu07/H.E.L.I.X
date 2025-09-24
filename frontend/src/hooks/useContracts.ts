@@ -3,6 +3,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { icpCanisterService, useICP } from '../services/icpCanisterService';
 import { authService } from '../auth/authService';
+import ckusdcLedgerService from '../services/ckusdcLedgerService';
+import { Principal } from '@dfinity/principal';
 
 export interface ContractState {
   loading: boolean;
@@ -55,7 +57,7 @@ export interface SystemStats {
 }
 
 export const useContract = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const icp = useICP();
   const [state, setState] = useState<ContractState>({
     loading: false,
@@ -227,7 +229,7 @@ export const useContract = () => {
         const claims = await icp.getAllClaims();
         const claimsWithDetails: ClaimData[] = [];
         
-        for (const [claimId, claimSummary] of claims) {
+        for (const [claimId] of claims) {
           const claimDetails = await icp.getClaim(claimId);
           if (claimDetails) {
             const alerts = await icp.getFraudAlerts(claimId);
@@ -440,7 +442,7 @@ export const useContract = () => {
       await icpCanisterService.init();
       const connected = await icpCanisterService.checkConnection();
       setState(prev => ({ ...prev, connected, loading: false }));
-    } catch (error) {
+    } catch {
       setState(prev => ({ 
         ...prev, 
         connected: false, 
@@ -455,7 +457,7 @@ export const useContract = () => {
     // First call backend API for immediate response
     const apiResult = await createBudgetViaAPI(amount, purpose);
     
-    if (apiResult?.success) {
+    if (apiResult && typeof apiResult === 'object' && 'success' in apiResult && apiResult.success) {
       // Then verify on canister (background operation)
       setTimeout(async () => {
         try {
@@ -479,7 +481,7 @@ export const useContract = () => {
     // Submit via API first
     const apiResult = await submitClaimViaAPI(claimData);
     
-    if (apiResult?.success) {
+    if (apiResult && typeof apiResult === 'object' && 'success' in apiResult && apiResult.success) {
       // Verify on canister (background)
       setTimeout(async () => {
         try {
@@ -498,6 +500,45 @@ export const useContract = () => {
     return apiResult;
   }, [submitClaimViaAPI, submitClaim]);
 
+  // ckUSDC Ledger interactions
+  const getCkUSDCBalance = useCallback(async (subaccount?: Uint8Array | number[]) => {
+    return callContract(async () => {
+      const principalText = authService.getPrincipalId();
+      if (!principalText) throw new Error('Not authenticated');
+      const principal = Principal.fromText(principalText);
+      await ckusdcLedgerService.init();
+      const bal = await ckusdcLedgerService.balanceOf(principal, subaccount);
+      const decimals = await ckusdcLedgerService.decimals();
+      return {
+        raw: bal,
+        formatted: ckusdcLedgerService.formatTokenAmount(bal, decimals),
+        decimals,
+      } as { raw: bigint; formatted: string; decimals: number };
+    }, 'Failed to fetch ckUSDC balance');
+  }, [callContract]);
+
+  const transferCkUSDC = useCallback(async (
+    toPrincipalText: string,
+    amount: string | number,
+    options?: { to_subaccount?: Uint8Array | number[]; from_subaccount?: Uint8Array | number[]; memo?: Uint8Array }
+  ) => {
+    return callContract(async () => {
+      await ckusdcLedgerService.init();
+      const natAmount = await ckusdcLedgerService.parseTokenAmount(amount);
+      const fee = await ckusdcLedgerService.fee();
+      const res = await ckusdcLedgerService.transfer(toPrincipalText, natAmount, {
+        to_subaccount: options?.to_subaccount,
+        from_subaccount: options?.from_subaccount,
+        memo: options?.memo,
+        fee,
+      });
+      if ('Err' in res || (res as Record<string, unknown>).err) {
+        throw new Error(JSON.stringify((res as Record<string, unknown>).Err || (res as Record<string, unknown>).err));
+      }
+      return (res as Record<string, unknown>).Ok || (res as Record<string, unknown>).ok; // transaction index
+    }, 'Failed to transfer ckUSDC');
+  }, [callContract]);
+
   return {
     // State
     ...state,
@@ -514,6 +555,10 @@ export const useContract = () => {
     approveClaimByAI,
     addFraudAlert,
     stakeChallenge,
+
+    // ckUSDC Wallet
+    getCkUSDCBalance,
+    transferCkUSDC,
     
     // Query operations
     getClaim,
@@ -532,7 +577,7 @@ export const useContract = () => {
     getSystemStatsViaAPI,
     getBudgetTransparencyViaAPI,
     getHighRiskClaimsViaAPI,
-    stakeChallengeChallengeViaAPI,
+    stakeChallengeViaAPI,
     
     // Combined operations (recommended for UX)
     createBudgetCombined,
@@ -555,7 +600,7 @@ function calculateRiskLevel(fraudScore?: number): string {
   return 'low';
 }
 
-function getClaimStatus(claim: any): string {
+function getClaimStatus(claim: Record<string, unknown>): string {
   if (claim.paid) return 'paid';
   if (claim.flagged) return 'flagged';
   if (claim.aiApproved) return 'approved';

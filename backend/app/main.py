@@ -22,6 +22,7 @@ import time
 from contextlib import asynccontextmanager
 from sklearn.ensemble import IsolationForest
 from sklearn.preprocessing import StandardScaler
+from app.api import auth as auth_api
 
 # Import our modules
 from app.config.settings import get_settings
@@ -578,6 +579,9 @@ app.add_middleware(
 )
 
 app.add_middleware(AuthenticationMiddleware)
+
+# Mount API routers
+app.include_router(auth_api.router, prefix="/api/v1")
 
 # Request timing middleware
 @app.middleware("http")

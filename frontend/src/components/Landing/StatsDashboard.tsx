@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, CheckCircle, DollarSign, PackageSearch, Rocket, TrendingUp } from 'lucide-react';
-import AnimatedCounter from '../common/AnimatedCounter';
+import { AnimatedCounter } from '../common/AnimatedCounter';
 
 export function StatsDashboard() {
   const stats = [

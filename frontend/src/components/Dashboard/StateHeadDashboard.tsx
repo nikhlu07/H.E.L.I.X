@@ -82,6 +82,7 @@ export function StateHeadDashboard() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Header is rendered by DashboardLayout */}
       <div className="container mx-auto px-6 py-8">
         {/* State Header */}
         <div className="bg-gradient-to-r from-emerald-700 to-emerald-800 rounded-2xl p-8 mb-8 text-white">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { CheckCircle, XCircle, Loader, AlertTriangle } from 'lucide-react';
 import corruptGuardService from '../../services/corruptGuardService';
 
@@ -6,7 +6,7 @@ interface TestResult {
   name: string;
   status: 'pending' | 'success' | 'error';
   message: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 export function IntegrationTest() {

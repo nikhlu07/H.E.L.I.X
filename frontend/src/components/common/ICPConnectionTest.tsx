@@ -6,7 +6,7 @@ export function ICPConnectionTest() {
   const [connectionStatus, setConnectionStatus] = useState<'loading' | 'connected' | 'error' | 'not_tested'>('not_tested');
   const [canisterId, setCanisterId] = useState<string>('');
   const [host, setHost] = useState<string>('');
-  const [stats, setStats] = useState<any>(null);
+  const [stats, setStats] = useState<Record<string, unknown> | null>(null);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
@@ -26,8 +26,8 @@ export function ICPConnectionTest() {
       const systemStats = await icpCanisterService.getSystemStats();
       setStats(systemStats);
       setConnectionStatus('connected');
-    } catch (err: any) {
-      setError(err.message || 'Unknown error');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Unknown error');
       setConnectionStatus('error');
     }
   };

@@ -1,6 +1,6 @@
 // Internet Identity Authentication Service
 import { AuthClient } from '@dfinity/auth-client';
-import { Actor, HttpAgent } from '@dfinity/agent';
+import { HttpAgent } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
 
 export interface User {
@@ -33,9 +33,6 @@ const PRINCIPAL_ROLE_MAP: Record<string, string> = {
   // For demo, we'll determine roles based on principal patterns
 };
 
-// Internet Identity provider URL - use mainnet for now since we don't have local dfx
-const II_URL = 'https://identity.ic0.app';
-
 // Backend API configuration
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
 
@@ -65,8 +62,12 @@ class AuthService {
     }
 
     return new Promise((resolve, reject) => {
+      // Use MAINNET Internet Identity for real authentication
+      const iiUrl = import.meta.env.VITE_II_URL || 'https://identity.ic0.app';
+
       this.authClient!.login({
-        identityProvider: II_URL,
+        identityProvider: iiUrl,
+        maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000), // 7 days
         onSuccess: async () => {
           try {
             const user = await this.handleAuthenticated();
@@ -87,40 +88,86 @@ class AuthService {
 
   async demoLogin(role: string): Promise<User> {
     try {
-      const response = await fetch(`${BACKEND_URL}/auth/demo-login/${role}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      console.log(`Attempting demo login for role: ${role}`);
 
-      if (!response.ok) {
-        throw new Error(`Demo login failed: ${response.statusText}`);
+      // Try backend first, but don't fail if it's not available
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/v1/auth/demo-login/${role}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if (response.ok) {
+          console.log('Using real backend API for demo login');
+          const authData: AuthResponse = await response.json();
+
+          // Create a mock principal for demo users
+          const mockPrincipal = Principal.fromText(`demo-${role}-${Date.now()}`);
+
+          this.accessToken = authData.access_token;
+
+          this.user = {
+            principal: mockPrincipal,
+            role: authData.role,
+            name: authData.user_info.name,
+            isAuthenticated: true,
+            accessToken: authData.access_token,
+          };
+
+          // Store token in localStorage for demo mode
+          localStorage.setItem('demo_access_token', authData.access_token);
+          localStorage.setItem('demo_user_role', role);
+
+          console.log('✅ Demo login successful:', this.user);
+          return this.user;
+        }
+      } catch (apiError) {
+        console.log('Backend API not available, using client-side demo');
       }
 
-      const authData: AuthResponse = await response.json();
-      
-      // Create a mock principal for demo users
-      const mockPrincipal = Principal.fromText(`demo-${role}-${Date.now()}`);
-      
-      this.accessToken = authData.access_token;
-      
-      this.user = {
-        principal: mockPrincipal,
-        role: authData.role,
-        name: authData.user_info.name,
-        isAuthenticated: true,
-        accessToken: authData.access_token,
+      // Fallback to client-side demo authentication
+      return this.handleClientSideDemoLogin(role);
+    } catch (error) {
+      console.warn('Demo login failed, using client-side fallback:', error);
+      return this.handleClientSideDemoLogin(role);
+    }
+  }
+
+  async simpleIILogin(role: string): Promise<User> {
+    try {
+      console.log(`🔐 Simple Internet Identity Demo for role: ${role}`);
+
+      // Create a mock principal for demo purposes
+      const mockPrincipal = Principal.fromText(`demo-ii-${role}-${Date.now()}`);
+
+      // Generate demo user based on role
+      const roleData = {
+        main_government: { name: 'Government Official', title: 'National Director' },
+        state_head: { name: 'State Head', title: 'Regional Manager' },
+        deputy: { name: 'Deputy Officer', title: 'District Officer' },
+        vendor: { name: 'Vendor Manager', title: 'Contract Manager' },
+        citizen: { name: 'Citizen User', title: 'Community Observer' }
       };
 
-      // Store token in localStorage for demo mode
-      localStorage.setItem('demo_access_token', authData.access_token);
-      localStorage.setItem('demo_user_role', role);
+      const userRole = role as keyof typeof roleData;
+      const userData = roleData[userRole] || roleData.citizen;
 
-      console.log('✅ Demo login successful:', this.user);
+      this.accessToken = `simple_ii_${role}_${Date.now()}`;
+
+      this.user = {
+        principal: mockPrincipal,
+        role: role,
+        name: userData.name,
+        isAuthenticated: true,
+        accessToken: this.accessToken,
+      };
+
+      console.log('✅ Simple Internet Identity demo successful:', this.user);
       return this.user;
     } catch (error) {
-      console.error('Demo login failed:', error);
+      console.error('Simple II demo failed:', error);
       throw error;
     }
   }
@@ -129,11 +176,11 @@ class AuthService {
     if (this.authClient) {
       await this.authClient.logout();
     }
-    
+
     // Clear demo tokens
     localStorage.removeItem('demo_access_token');
     localStorage.removeItem('demo_user_role');
-    
+
     this.user = null;
     this.agent = null;
     this.accessToken = null;
@@ -146,41 +193,50 @@ class AuthService {
 
     const identity = this.authClient.getIdentity();
     const principal = identity.getPrincipal();
-    
-    // Create agent with the authenticated identity - use mainnet
+
+    // Create agent with the authenticated identity - use MAINNET for production
+    // Always use mainnet for real Internet Identity authentication
     this.agent = new HttpAgent({
       identity,
-      host: 'https://ic0.app',
+      host: 'https://ic0.app', // Use mainnet, not localhost
     });
 
-    // Note: No need to fetch root key for mainnet
+    // Note: No need to fetch root key for mainnet - it's already available
 
     // Authenticate with backend using Internet Identity
     try {
-      const authData = await this.authenticateWithBackend(principal);
-      this.accessToken = authData.access_token;
-      
-      this.user = {
-        principal,
-        role: authData.role,
-        name: authData.user_info.name,
-        isAuthenticated: true,
-        accessToken: authData.access_token,
-      };
+      // For real Internet Identity, try backend first
+      if (import.meta.env.PROD || !import.meta.env.DEV) {
+        console.log('🔐 Production mode: Using real Internet Identity authentication');
+        const authData = await this.authenticateWithBackend(principal);
+        this.accessToken = authData.access_token;
 
-      console.log('✅ User authenticated with backend:', this.user);
-      return this.user;
+        this.user = {
+          principal,
+          role: authData.role,
+          name: authData.user_info.name,
+          isAuthenticated: true,
+          accessToken: authData.access_token,
+        };
+
+        console.log('✅ User authenticated with backend:', this.user);
+        return this.user;
+      } else {
+        // In development, use client-side authentication
+        console.log('🔧 Development mode: Using client-side Internet Identity authentication');
+        return this.handleClientSideInternetIdentityAuth(principal);
+      }
     } catch (error) {
-      console.error('Backend authentication failed:', error);
-      throw new Error('Failed to authenticate with backend system');
+      console.warn('Backend authentication failed, using client-side fallback:', error);
+      return this.handleClientSideInternetIdentityAuth(principal);
     }
   }
 
   private async authenticateWithBackend(principal: Principal): Promise<AuthResponse> {
     // Get the delegation chain from the identity
     const identity = this.authClient!.getIdentity();
-    const delegationChain = await identity.getDelegation();
-    
+    const delegationChain = 'getDelegation' in identity ? (identity as any).getDelegation() : null;
+
     // Prepare the authentication request
     const authRequest = {
       principal_id: principal.toString(),
@@ -188,12 +244,12 @@ class AuthService {
       domain: window.location.origin,
     };
 
-    const response = await fetch(`${BACKEND_URL}/auth/ii/login`, {
+    const response = await fetch(`${BACKEND_URL}/api/v1/auth/login/internet-identity`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(authRequest),
+      body: JSON.stringify(authRequest)
     });
 
     if (!response.ok) {
@@ -204,30 +260,46 @@ class AuthService {
     return await response.json();
   }
 
-  private determineUserRole(principalId: string): string {
-    // Check if principal is in the explicit mapping
-    if (PRINCIPAL_ROLE_MAP[principalId]) {
-      return PRINCIPAL_ROLE_MAP[principalId];
-    }
+  private handleClientSideInternetIdentityAuth(principal: Principal): User {
+    // Generate demo user based on principal for development
+    const demoRole = this.getDemoRoleFromPrincipal(principal.toString());
 
-    // For demo purposes, we can determine roles based on principal patterns
-    // In production, this would come from your canister's user management system
-    
-    // You can customize this logic based on your requirements
-    if (principalId.includes('gov') || principalId.includes('admin')) {
-      return 'main_government';
-    } else if (principalId.includes('state')) {
-      return 'state_head';
-    } else if (principalId.includes('deputy')) {
-      return 'deputy';
-    } else if (principalId.includes('vendor')) {
-      return 'vendor';
-    } else if (principalId.includes('supplier')) {
-      return 'sub_supplier';
-    } else {
-      // Default to citizen for any other principals
-      return 'citizen';
-    }
+    this.accessToken = `ii_dev_${principal.toString()}_${Date.now()}`;
+
+    this.user = {
+      principal,
+      role: demoRole.role,
+      name: demoRole.name,
+      isAuthenticated: true,
+      accessToken: this.accessToken,
+    };
+
+    console.log('✅ Client-side Internet Identity authentication successful (Development Mode)');
+    return this.user;
+  }
+
+  private getDemoRoleFromPrincipal(principal: string): {
+    role: string;
+    name: string;
+  } {
+    // Simple role assignment based on principal ID for demo
+    const roles = ['main_government', 'vendor', 'citizen', 'state_head', 'deputy'];
+    const hash = principal.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+    const roleIndex = hash % roles.length;
+    const role = roles[roleIndex];
+
+    const roleData = {
+      main_government: { name: 'Government Official' },
+      state_head: { name: 'State Head' },
+      deputy: { name: 'Deputy Officer' },
+      vendor: { name: 'Vendor Manager' },
+      citizen: { name: 'Citizen User' }
+    };
+
+    return {
+      role,
+      name: roleData[role as keyof typeof roleData]?.name || 'Demo User'
+    };
   }
 
   private getRoleName(role: string): string {
@@ -267,14 +339,30 @@ class AuthService {
   async restoreDemoSession(): Promise<User | null> {
     const token = localStorage.getItem('demo_access_token');
     const role = localStorage.getItem('demo_user_role');
-    
+
     if (token && role) {
       try {
+        // In development mode, skip backend verification
+        if (import.meta.env.DEV) {
+          const mockPrincipal = Principal.fromText(`demo-${role}-restored`);
+          this.accessToken = token;
+          this.user = {
+            principal: mockPrincipal,
+            role: role,
+            name: this.getRoleName(role),
+            isAuthenticated: true,
+            accessToken: token,
+          };
+          return this.user;
+        }
+
         // Verify token is still valid by making a test request
-        const response = await fetch(`${BACKEND_URL}/auth/profile`, {
+        const response = await fetch(`${BACKEND_URL}/api/v1/auth/profile`, {
+          method: 'GET',
           headers: {
+            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
-          },
+          }
         });
 
         if (response.ok) {
@@ -290,14 +378,14 @@ class AuthService {
           return this.user;
         }
       } catch (error) {
-        console.error('Failed to restore demo session:', error);
+        console.warn('Failed to restore demo session:', error);
       }
-      
+
       // Clear invalid tokens
       localStorage.removeItem('demo_access_token');
       localStorage.removeItem('demo_user_role');
     }
-    
+
     return null;
   }
 

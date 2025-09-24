@@ -1,7 +1,7 @@
 // Simple API client for backend calls
 // Uses VITE_BACKEND_URL if provided, else defaults to same origin
 
-export const API_BASE_URL = (import.meta as any).env?.VITE_BACKEND_URL || '';
+export const API_BASE_URL = (import.meta as Record<string, unknown>).env?.VITE_BACKEND_URL || '';
 
 // Helper to get auth headers
 function getAuthHeaders(): Record<string, string> {
@@ -16,10 +16,10 @@ function getAuthHeaders(): Record<string, string> {
   return {};
 }
 
-export async function apiGet<T = any>(path: string, init?: RequestInit, includeAuth: boolean = true): Promise<{ data: T; headers: Headers }>{
+export async function apiGet<T = Record<string, unknown>>(path: string, init?: RequestInit, includeAuth: boolean = true): Promise<{ data: T; headers: Headers }>{
   const url = API_BASE_URL + path;
   
-  const headers: Record<string, string> = {
+  const headers = {
     'Accept': 'application/json',
     ...(init?.headers || {}),
   };
@@ -43,10 +43,10 @@ export async function apiGet<T = any>(path: string, init?: RequestInit, includeA
   return { data, headers: res.headers };
 }
 
-export async function apiPost<T = any>(path: string, body: any, init?: RequestInit, includeAuth: boolean = true): Promise<{ data: T; headers: Headers }> {
+export async function apiPost<T = Record<string, unknown>>(path: string, body: Record<string, unknown>, init?: RequestInit, includeAuth: boolean = true): Promise<{ data: T; headers: Headers }> {
   const url = API_BASE_URL + path;
   
-  const headers: Record<string, string> = {
+  const headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     ...(init?.headers || {}),
@@ -73,10 +73,10 @@ export async function apiPost<T = any>(path: string, body: any, init?: RequestIn
 }
 
 // Helper function to make authenticated requests with a specific token
-export async function apiGetWithToken<T = any>(path: string, token: string, init?: RequestInit): Promise<{ data: T; headers: Headers }> {
+export async function apiGetWithToken<T = Record<string, unknown>>(path: string, token: string, init?: RequestInit): Promise<{ data: T; headers: Headers }> {
   const url = API_BASE_URL + path;
   
-  const headers: Record<string, string> = {
+  const headers = {
     'Accept': 'application/json',
     'Authorization': `Bearer ${token}`,
     ...(init?.headers || {}),
@@ -96,10 +96,10 @@ export async function apiGetWithToken<T = any>(path: string, token: string, init
   return { data, headers: res.headers };
 }
 
-export async function apiPostWithToken<T = any>(path: string, body: any, token: string, init?: RequestInit): Promise<{ data: T; headers: Headers }> {
+export async function apiPostWithToken<T = Record<string, unknown>>(path: string, body: Record<string, unknown>, token: string, init?: RequestInit): Promise<{ data: T; headers: Headers }> {
   const url = API_BASE_URL + path;
   
-  const headers: Record<string, string> = {
+  const headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${token}`,

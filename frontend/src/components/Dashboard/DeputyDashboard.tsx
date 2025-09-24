@@ -129,7 +129,6 @@ export function DeputyDashboard() {
       return;
     }
 
-    const claim = pendingClaims.find(c => c.id === selectedClaim);
     const actionMessages = {
       approve: `Claim ${selectedClaim} recommended for approval`,
       reject: `Claim ${selectedClaim} recommended for rejection`,
@@ -141,7 +140,7 @@ export function DeputyDashboard() {
     setClaimRecommendation('');
   };
 
-  const handleVerifyProject = (projectId: string) => {
+  const handleVerifyProject = () => {
     showToast('Project verification report submitted to State Head', 'success');
   };
 

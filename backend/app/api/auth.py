@@ -547,40 +547,35 @@
 #     )
 
 
-# @router.post("/verify-token")
-# async def verify_auth_token(
-#     token_data: Dict[str, Any]
-# ):
-#     """
-#     Verify if a token is valid
-#     """
-#     try:
-#         token = token_data.get("token")
-        
-#         if not token:
-#             raise ValidationError("Token is required")
-        
-#         # Verify token
-#         payload = verify_token(token)
-        
-#         return ResponseSchema(
-#             message="Token is valid",
-#             data={
-#                 "valid": True,
-#                 "principal": payload.get("principal"),
-#                 "role": payload.get("role"),
-#                 "expires": payload.get("exp")
-#             }
-#         )
-        
-#     except Exception as e:
-#         return ResponseSchema(
-#             message="Token verification failed",
-#             data={
-#                 "valid": False,
-#                 "error": str(e)
-#             }
-#         )
+class VerifyTokenRequest(BaseModel):
+    token: str = Field(..., description="JWT access token to verify")
+
+@router.post("/verify-token")
+async def verify_auth_token(req: VerifyTokenRequest):
+    """
+    Verify if a JWT token is valid and return principal and role if so
+    """
+    try:
+        result = await principal_auth_service.verify_token(req.token)
+        return {
+            "message": "Token is valid",
+            "data": {
+                "valid": True,
+                "principal": result.get("principal_id"),
+                "role": result.get("role")
+            }
+        }
+    except HTTPException as e:
+        # Return a 200 with valid False to simplify client handling on frontend
+        return {
+            "message": "Token verification failed",
+            "data": {"valid": False, "error": e.detail}
+        }
+    except Exception:
+        return {
+            "message": "Token verification failed",
+            "data": {"valid": False, "error": "Token verification failed"}
+        }
 
 
 # # ===== DEVELOPMENT ENDPOINTS =====
@@ -641,7 +636,7 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 import logging
-from ..auth.principal_auth import principal_auth_service
+from ..auth.prinicipal_auth import principal_auth_service
 from ..auth.middleware import get_current_user, get_optional_user
 
 logger = logging.getLogger(__name__)
