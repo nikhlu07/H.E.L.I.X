@@ -7,31 +7,12 @@
       "config": {
         "distDir": "dist"
       }
-    },
-    {
-      "src": "api/**/*.py",
-      "use": "@vercel/python",
-      "config": {
-        "runtime": "python3.11"
-      }
     }
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "functions": {
-    "api/**/*.py": {
-      "runtime": "python3.11"
-    }
-  },
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
