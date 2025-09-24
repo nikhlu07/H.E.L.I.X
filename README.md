@@ -3,9 +3,6 @@
 **Humanitarian Economic Logistics & Integrity Xchange**
 
 <img src="logo.png" alt="Helix Logo" width="120"/>
-=======
-# ⚡ H.E.L.I.X. ⚡
-**Humanitarian Economic Logistics & Integrity Xchange**
 
 <img src="logo.png" alt="Z.E.N.I.T.H. Logo" width="120"/>
 >>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
