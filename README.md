@@ -21,7 +21,7 @@
 > Full-featured hierarchical data flow system with real Internet Identity authentication
 
 ### 🎬 **Demo Video** 
-🔗 **[Coming Soon - System Walkthrough]**
+🔗 **[System Walkthrough](https://youtu.be/0UBLoz_86ds)**
 > Complete demonstration of hierarchical government data flow and fraud detection
 
 ### 🎯 **Pitch Video**
