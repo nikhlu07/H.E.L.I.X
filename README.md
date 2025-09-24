@@ -17,7 +17,7 @@
 ## 🚀 **Quick Access Links**
 
 ### 📱 **Live Web App**
-🔗 **[h-e-l-i-x.vercel.app]**
+🔗 **[Web app](h-e-l-i-x.vercel.app)**
 > Full-featured hierarchical data flow system with real Internet Identity authentication
 
 ### 🎬 **Demo Video** 
