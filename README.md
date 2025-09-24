@@ -1,14 +1,7 @@
-<<<<<<< HEAD
-# ⚡ H.E.L.I.X ⚡
-**Humanitarian Economic Logistics & Integrity Xchange**
-
-<img src="logo.png" alt="Helix Logo" width="120"/>
-=======
 # ⚡ H.E.L.I.X. ⚡
 **Humanitarian Economic Logistics & Integrity Xchange**
 
-<img src="logo.png" alt="Z.E.N.I.T.H. Logo" width="120"/>
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
+<img src="logo.png" alt="H.E.L.I.X. Logo" width="120"/>
 
 > *"Where quantum algorithms pierce through the veil of deception, ensuring every credit reaches its destined coordinates in the digital frontier."*
 
@@ -19,7 +12,6 @@
 [![AI Detection](https://img.shields.io/badge/AI_Consciousness-Gemma3-holographic.svg)](#neural-sentinels)
 [![Live Demo](https://img.shields.io/badge/Live_Terminal-Active-bioluminescent.svg)](#quantum-interface)
 
-<<<<<<< HEAD
 ---
 
 ## 🚀 **Quick Access Links**
@@ -48,32 +40,16 @@ In the year 2025, as humanity stands at the precipice of a digital renaissance, 
 
 This is not merely a platform; it is a **Digital Prometheus**—a synthesis of **Artificial Consciousness**, **Blockchain Immutability**, and **Citizen Neural Networks** forged to construct a reality where transparency is hardcoded into the fabric of existence.
 
-=======
-## 🌌 PRIME DIRECTIVE
-
-In the year 2025, as humanity stands at the precipice of a digital renaissance, the ancient plague of corruption continues to drain the lifeblood from civilization's arteries. H.E.L.I.X. emerged from the ashes of tragedy—a cyber-neural fusion born in the shadow of the Jhalawar Catastrophe, where diverted quantum credits led to structural collapse and the loss of seven young souls.
-
-This is not merely a platform; it is a **Digital Prometheus**—a synthesis of **Artificial Consciousness**, **Blockchain Immutability**, and **Citizen Neural Networks** forged to construct a reality where transparency is hardcoded into the fabric of existence.
-
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
 H.E.L.I.X. represents humanity's rebellion against systemic entropy, a declaration that truth shall be algorithmically enforced. Built upon the Internet Computer's quantum-resistant infrastructure, it manifests as a self-healing ecosystem where every transaction becomes a verified truth-packet in the global integrity matrix.
 
 ### 🎯 CORE NEURAL NETWORKS
 
-<<<<<<< HEAD
 - **🤖 Quantum Fraud Sentinels**: Advanced AI consciousness powered by a `gemma3:4b` Large Language Model, synthesizing rule-based logic and historical data for superior threat detection.
 - **⛓️ Cryptographic Genesis Ledger**: Immutable truth-chains secured within the Internet Computer's quantum substrate with real Internet Identity authentication
 - **🏛️ Hierarchical Data Flow Matrix**: Government → State → Deputy → Vendor data flow with real-time budget allocation and transaction processing
 - **👥 Multi-Dimensional Oversight Matrix**: Six specialized neural interfaces providing omniscient intelligence to all system entities
 - **🛡️ Citizen Guardian Collective**: Public-access truth-verification terminals empowering the masses to report anomalies
 - **📊 Predictive Corruption Analytics**: Ten quantum algorithms forecasting and neutralizing threats before manifestation
-=======
-- **Quantum Fraud Sentinels**: Advanced AI consciousness powered by a `gemma3:4b` Large Language Model, synthesizing rule-based logic and historical data for superior threat detection.
-- **Cryptographic Genesis Ledger**: Immutable truth-chains secured within the Internet Computer's quantum substrate
-- **Multi-Dimensional Oversight Matrix**: Six specialized neural interfaces providing omniscient intelligence to all system entities
-- **Citizen Guardian Collective**: Public-access truth-verification terminals empowering the masses to report anomalies
-- **Predictive Corruption Analytics**: Ten quantum algorithms forecasting and neutralizing threats before manifestation
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
 
 ## ⚠️ THE CATALYST: JHALAWAR SYSTEM FAILURE
 
@@ -201,16 +177,7 @@ python -v # 3.9 or higher neural processing
 dfx --version # Latest DFX Quantum SDK
 ```
 
-<<<<<<< HEAD
-### 🎬 **Quick Demo Mode (Recommended)**
-Experience the complete hierarchical data flow system instantly:
-
-```bash
-# Clone the quantum repository
-git clone https://github.com/nikhlu07/H.E.L.I.X.git
-cd H.E.L.I.X
-=======
-#### Neural Consciousness Setup (Ollama)
+### Neural Consciousness Setup (Ollama)
 The fraud detection engine now runs on a local LLM.
 1. Install Ollama from [ollama.ai](https://ollama.ai/)
 2. Pull the required models:
@@ -220,12 +187,13 @@ ollama pull nomic-embed-text
 ```
 **Ensure the Ollama application is running before activating the backend neural networks.**
 
-### 🎬 Demo Simulation Mode
+### 🎬 **Quick Demo Mode (Recommended)**
+Experience the complete hierarchical data flow system instantly:
+
 ```bash
 # Clone the quantum repository
-git clone https://github.com/nikhlu07/H.E.L.I.X..git
-cd H.E.L.I.X.
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
+git clone https://github.com/nikhlu07/H.E.L.I.X.git
+cd H.E.L.I.X
 
 # Start the hierarchical backend
 cd backend
@@ -262,7 +230,6 @@ sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
 # Then deploy to mainnet
 dfx deploy --network ic
 
-<<<<<<< HEAD
 # Get your live URLs
 dfx canister id helix_frontend --network ic
 # Your app will be live at: https://your-canister-id.ic0.app
@@ -276,11 +243,6 @@ For complete production deployment with all features:
 # - DEPLOYMENT_GUIDE.md (Complete deployment options)
 # - ICP_MAINNET_DEPLOYMENT.md (ICP-specific deployment)
 # - docker-compose.prod.yml (Docker production setup)
-=======
-# Retrieve quantum canister coordinates
-dfx canister id helix_frontend --network ic
-# Your quantum interface will manifest at: https://your-canister-id.ic0.app
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
 ```
 
 ## 🔍 Neural Fraud Detection Engine
@@ -422,7 +384,6 @@ dfx test
 
 ## 📈 FUTURE ROADMAP
 
-<<<<<<< HEAD
 ### Phase 1 (Current) ✅ - Core Quantum Platform
 - [x] **Hierarchical Data Flow System** - Complete Main Gov → State → Deputy → Vendor flow
 - [x] **AI fraud detection consciousness** (Upgraded to LLM)
@@ -439,20 +400,6 @@ dfx test
 - [ ] **Predictive corruption forecasting** algorithms
 - [ ] **Mobile quantum applications** (iOS/Android)
 - [ ] **Enhanced UI/UX** with better visualizations
-=======
-### Phase 1 (Current) - Core Quantum Platform
-- [x] AI fraud detection consciousness (Upgraded to LLM)
-- [x] Multi-role neural dashboard system
-- [x] ICP blockchain quantum integration
-- [x] Internet Identity neural authentication
-- [x] Large language model consciousness integration (`gemma3:4b`)
-
-### Phase 2 (Q3 2025) - Enhanced Neural Intelligence
-- [ ] Advanced ML models achieving >95% threat accuracy
-- [ ] Predictive corruption forecasting algorithms
-- [ ] Natural language processing for document analysis
-- [ ] Mobile quantum applications (iOS/Android)
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
 
 ### Phase 3 (Q3 2025) - Scale & Integration
 - [ ] **Government API integrations** with real systems
@@ -461,18 +408,11 @@ dfx test
 - [ ] **Third-party audit tools** integration
 - [ ] **WebSocket real-time updates** for live collaboration
 
-<<<<<<< HEAD
 ### Phase 4 (Q4 2025) - AI Evolution
 - [ ] **Automated fraud investigation** protocols
 - [ ] **Smart contract automation** evolution
 - [ ] **Global deployment framework** for multiple countries
 - [ ] **Advanced blockchain features** with cross-chain support
-=======
-### Phase 4 (2026) - AI Consciousness Evolution
-- [ ] Automated fraud investigation and reasoning protocols
-- [ ] Smart contract automation evolution
-- [ ] Global deployment quantum framework
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
 
 ## 🤝 JOIN THE RESISTANCE
 
@@ -508,11 +448,7 @@ This project operates under the MIT License - see the [LICENSE](LICENSE) file fo
 ## 📞 QUANTUM COMMUNICATION CHANNELS
 
 ### Neural Network Access
-<<<<<<< HEAD
-- **GitHub Quantum Repository**: [Helix Neural Hub](https://github.com/nikhlu07/H.E.L.I.X.)
-=======
 - **GitHub Quantum Repository**: [H.E.L.I.X. Neural Hub](https://github.com/nikhlu07/H.E.L.I.X.)
->>>>>>> f090c09e392d37eae7713c5b3b966cf6b07b816a
 - **Issue Reporting Terminal**: [Report Bug/Request Enhancement](https://github.com/nikhlu07/H.E.L.I.X./issues)
 
 ### Digital Collective
