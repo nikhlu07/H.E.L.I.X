@@ -17,7 +17,7 @@
 ## 🚀 **Quick Access Links**
 
 ### 📱 **Live Web App**
-🔗 **[Coming Soon - ICP Mainnet Deployment]**
+🔗 **[h-e-l-i-x.vercel.app]**
 > Full-featured hierarchical data flow system with real Internet Identity authentication
 
 ### 🎬 **Demo Video** 
