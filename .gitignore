@@ -74,3 +74,4 @@ env/
 
 # Claude Code
 .claude/
+.vercel
