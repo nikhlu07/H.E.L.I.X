@@ -1,58 +1,18 @@
 {
   "canisters": {
-    "helix_backend": {
-      "type": "rust",
-      "package": "helix_backend",
-      "candid": "canisters/backend/src/helix_backend.did"
-    },
     "helix_frontend": {
       "type": "assets",
-      "source": ["frontend/dist"],
-      "frontend": {
-        "entrypoint": "frontend/dist/index.html"
-      }
-    },
-    "internet_identity": {
-      "type": "custom",
-      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
-      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.wasm",
-      "remote": {
-        "id": {
-          "ic": "rdmx6-jaaaa-aaaah-qcaiq-cai"
-        }
-      }
-    },
-    "ckUSDC_ledger": {
-      "type": "custom",
-      "candid": "https://raw.githubusercontent.com/dfinity/ic/master/rs/rosetta-api/icrc1/ledger/ledger.did",
-      "wasm": "https://download.dfinity.systems/ic/d2a224397oo7b23a26a0a2a763f9e058a9b350aea/canisters/ic-icrc1-ledger.wasm.gz",
-      "remote": {
-        "id": {
-          "ic": "xevnm-gaaaa-aaaar-qafnq-cai"
-        }
-      }
+      "source": ["frontend/dist"]
     }
   },
-  "defaults": {
-    "build": {
-      "packtool": "",
-      "args": ""
-    },
-    "canister_http": {
-      "enabled": false
-    },
-    "proguard": {
-      "enabled": false
-    }
-  },
-  "dfx": "0.15.0",
   "networks": {
     "local": {
-      "bind": "127.0.0.1:8000",
+      "bind": "127.0.0.1:4943",
       "type": "ephemeral"
     },
     "ic": {
-      "providers": ["https://ic0.app"]
+      "providers": ["https://ic0.app"],
+      "type": "persistent"
     }
   },
   "version": 1
