@@ -1,4 +1,4 @@
-# ⚡ Helix ⚡
+# ⚡ H.E.L.I.X ⚡
 **Humanitarian Economic Logistics & Integrity Xchange**
 
 <img src="logo.png" alt="Helix Logo" width="120"/>
@@ -12,6 +12,28 @@
 [![AI Detection](https://img.shields.io/badge/AI_Consciousness-Gemma3-holographic.svg)](#neural-sentinels)
 [![Live Demo](https://img.shields.io/badge/Live_Terminal-Active-bioluminescent.svg)](#quantum-interface)
 
+---
+
+## 🚀 **Quick Access Links**
+
+### 📱 **Live Web App**
+🔗 **[Coming Soon - ICP Mainnet Deployment]**
+> Full-featured hierarchical data flow system with real Internet Identity authentication
+
+### 🎬 **Demo Video** 
+🔗 **[Coming Soon - System Walkthrough]**
+> Complete demonstration of hierarchical government data flow and fraud detection
+
+### 🎯 **Pitch Video**
+🔗 **[Watch on YouTube](https://youtu.be/0UBLoz_86ds)**
+> Project overview, problem statement, and solution demonstration
+
+### 📊 **Pitch Deck**
+🔗 **[View Presentation](https://drive.google.com/file/d/1v2i2EHywrPNiXXWuvsf_nko_78V1Klie/view)**
+> Comprehensive project overview, market analysis, and technical architecture
+
+---
+
 ## 🌌 PRIME DIRECTIVE
 
 In the year 2025, as humanity stands at the precipice of a digital renaissance, the ancient plague of corruption continues to drain the lifeblood from civilization's arteries. H.E.L.I.X. emerged from the ashes of tragedy—a cyber-neural fusion born in the shadow of the Jhalawar Catastrophe, where diverted quantum credits led to structural collapse and the loss of seven young souls.
@@ -22,11 +44,12 @@ H.E.L.I.X. represents humanity's rebellion against systemic entropy, a declarati
 
 ### 🎯 CORE NEURAL NETWORKS
 
-- **Quantum Fraud Sentinels**: Advanced AI consciousness powered by a `gemma3:4b` Large Language Model, synthesizing rule-based logic and historical data for superior threat detection.
-- **Cryptographic Genesis Ledger**: Immutable truth-chains secured within the Internet Computer's quantum substrate
-- **Multi-Dimensional Oversight Matrix**: Six specialized neural interfaces providing omniscient intelligence to all system entities
-- **Citizen Guardian Collective**: Public-access truth-verification terminals empowering the masses to report anomalies
-- **Predictive Corruption Analytics**: Ten quantum algorithms forecasting and neutralizing threats before manifestation
+- **🤖 Quantum Fraud Sentinels**: Advanced AI consciousness powered by a `gemma3:4b` Large Language Model, synthesizing rule-based logic and historical data for superior threat detection.
+- **⛓️ Cryptographic Genesis Ledger**: Immutable truth-chains secured within the Internet Computer's quantum substrate with real Internet Identity authentication
+- **🏛️ Hierarchical Data Flow Matrix**: Government → State → Deputy → Vendor data flow with real-time budget allocation and transaction processing
+- **👥 Multi-Dimensional Oversight Matrix**: Six specialized neural interfaces providing omniscient intelligence to all system entities
+- **🛡️ Citizen Guardian Collective**: Public-access truth-verification terminals empowering the masses to report anomalies
+- **📊 Predictive Corruption Analytics**: Ten quantum algorithms forecasting and neutralizing threats before manifestation
 
 ## ⚠️ THE CATALYST: JHALAWAR SYSTEM FAILURE
 
@@ -154,44 +177,62 @@ python -v # 3.9 or higher neural processing
 dfx --version # Latest DFX Quantum SDK
 ```
 
-#### Neural Consciousness Setup (Ollama)
-The fraud detection engine now runs on a local LLM.
-1. Install Ollama from [ollama.ai](https://ollama.ai/)
-2. Pull the required models:
-```bash
-ollama pull gemma3:4b
-ollama pull nomic-embed-text
-```
-**Ensure the Ollama application is running before activating the backend neural networks.**
+### 🎬 **Quick Demo Mode (Recommended)**
+Experience the complete hierarchical data flow system instantly:
 
-### 🎬 Demo Simulation Mode
 ```bash
 # Clone the quantum repository
-git clone https://github.com/nikhlu07/H.E.L.I.X..git
-cd H.E.L.I.X.
+git clone https://github.com/nikhlu07/H.E.L.I.X.git
+cd H.E.L.I.X
 
-# Initialize video-ready deployment protocol
-./deploy-video-ready.sh
+# Start the hierarchical backend
+cd backend
+python hierarchical_demo_api.py
 
-# Activate neural networks
-python start-backend.py
-cd frontend && npm run dev
+# In another terminal, start frontend
+cd frontend
+npm install && npm run dev
 
-# Access terminal: http://localhost:5173
-# Select "Demo Mode" → "Main Government" for immediate quantum access
+# Access at: http://localhost:5173
+# Try all 3 authentication methods:
+# 1. "Internet Computer Identity" - Real ICP blockchain auth
+# 2. "Simple II Demo" - Mock Internet Identity (perfect for presentations)
+# 3. "Demo Mode" - Instant access for testing
 ```
 
-### 🌐 ICP Quantum Deployment
-```bash
-# Acquire quantum cycles using classified coupon
-dfx cycles --network ic redeem-faucet-coupon 594FA-B3B89-6F436
+### 🏛️ **Hierarchical Data Flow Demo**
+Test the complete government hierarchy system:
 
-# Deploy to ICP quantum mainnet
+1. **Login as Main Government** → Allocate budget to State Head
+2. **Login as State Head** → Receive budget, allocate to Deputy
+3. **Login as Deputy** → Receive budget, process vendor payments
+4. **Watch real-time data flow** between all levels
+5. **Create transactions** to see fraud detection in action
+
+### 🌐 **ICP Mainnet Deployment**
+Deploy your system to Internet Computer mainnet:
+
+```bash
+# Install DFX SDK
+sh -ci "$(curl -fsSL https://sdk.dfinity.org/install.sh)"
+
+# Redeem your cycles coupon at: https://nns.ic0.app
+# Then deploy to mainnet
 dfx deploy --network ic
 
-# Retrieve quantum canister coordinates
+# Get your live URLs
 dfx canister id helix_frontend --network ic
-# Your quantum interface will manifest at: https://your-canister-id.ic0.app
+# Your app will be live at: https://your-canister-id.ic0.app
+```
+
+### 🔧 **Full Production Setup**
+For complete production deployment with all features:
+
+```bash
+# See detailed guides:
+# - DEPLOYMENT_GUIDE.md (Complete deployment options)
+# - ICP_MAINNET_DEPLOYMENT.md (ICP-specific deployment)
+# - docker-compose.prod.yml (Docker production setup)
 ```
 
 ## 🔍 Neural Fraud Detection Engine
@@ -333,29 +374,35 @@ dfx test
 
 ## 📈 FUTURE ROADMAP
 
-### Phase 1 (Current) - Core Quantum Platform
-- [x] AI fraud detection consciousness (Upgraded to LLM)
-- [x] Multi-role neural dashboard system
-- [x] ICP blockchain quantum integration
-- [x] Internet Identity neural authentication
-- [x] Large language model consciousness integration (`gemma3:4b`)
+### Phase 1 (Current) ✅ - Core Quantum Platform
+- [x] **Hierarchical Data Flow System** - Complete Main Gov → State → Deputy → Vendor flow
+- [x] **AI fraud detection consciousness** (Upgraded to LLM)
+- [x] **Multi-role neural dashboard system** with real-time updates
+- [x] **ICP blockchain quantum integration** with Internet Identity
+- [x] **3 Authentication Methods** - Real ICP, Simple II Demo, Demo Mode
+- [x] **Real-time Budget Allocation** between government levels
+- [x] **Live Transaction Processing** with fraud detection
+- [x] **Production Deployment Ready** - Complete deployment guides
 
-### Phase 2 (Q3 2025) - Enhanced Neural Intelligence
-- [ ] Advanced ML models achieving >95% threat accuracy
-- [ ] Predictive corruption forecasting algorithms
-- [ ] Natural language processing for document analysis
-- [ ] Mobile quantum applications (iOS/Android)
+### Phase 2 (Q2 2025) - ICP Mainnet & Enhancement
+- [ ] **ICP Mainnet Deployment** with cycles management
+- [ ] **Advanced ML models** achieving >95% threat accuracy
+- [ ] **Predictive corruption forecasting** algorithms
+- [ ] **Mobile quantum applications** (iOS/Android)
+- [ ] **Enhanced UI/UX** with better visualizations
 
-### Phase 3 (Q4 2025) - Scale & Neural Integration
-- [ ] Government API quantum integrations
-- [ ] Multi-language neural support
-- [ ] Advanced reporting and quantum analytics
-- [ ] Third-party audit tool integration
+### Phase 3 (Q3 2025) - Scale & Integration
+- [ ] **Government API integrations** with real systems
+- [ ] **Multi-language support** for global deployment
+- [ ] **Advanced reporting** and quantum analytics
+- [ ] **Third-party audit tools** integration
+- [ ] **WebSocket real-time updates** for live collaboration
 
-### Phase 4 (2026) - AI Consciousness Evolution
-- [ ] Automated fraud investigation and reasoning protocols
-- [ ] Smart contract automation evolution
-- [ ] Global deployment quantum framework
+### Phase 4 (Q4 2025) - AI Evolution
+- [ ] **Automated fraud investigation** protocols
+- [ ] **Smart contract automation** evolution
+- [ ] **Global deployment framework** for multiple countries
+- [ ] **Advanced blockchain features** with cross-chain support
 
 ## 🤝 JOIN THE RESISTANCE
 
