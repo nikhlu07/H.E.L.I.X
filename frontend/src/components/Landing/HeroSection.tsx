@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import * as THREE from 'three';
@@ -10,216 +10,220 @@ interface HeroSectionProps {
 
 export function HeroSection({ onGetStarted }: HeroSectionProps) {
   const heroCanvasRef = useRef<HTMLDivElement>(null);
+  const main = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const header = document.getElementById('header');
-    const handleScroll = () => {
-      if (window.scrollY > 50) {
-        header?.classList.add('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-gray-200', 'shadow-sm');
-      } else {
-        header?.classList.remove('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-gray-200', 'shadow-sm');
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-
-    const heroTitle = document.querySelector('.hero-title');
-    if (heroTitle) {
-      const titleText = heroTitle.textContent?.trim() ?? '';
-      heroTitle.innerHTML = '';
-      titleText.split('').forEach(char => {
-        const span = document.createElement('span');
-        span.className = 'hero-title-char';
-        span.style.whiteSpace = char === ' ' ? 'pre' : 'normal';
-        span.textContent = char;
-        heroTitle.appendChild(span);
-      });
-
-      gsap.from(".hero-title-char", {
-        opacity: 0, y: 50, rotateX: -90, stagger: 0.03, duration: 1, ease: "power3.out", delay: 0.5
-      });
-    }
-    gsap.fromTo(".hero-subtitle", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 1.2 });
-    gsap.fromTo(".hero-buttons", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 1.5 });
-
-    let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, particles: THREE.Points, lines: THREE.LineSegments, group: THREE.Group;
-    const container = heroCanvasRef.current;
-    if (!container) return;
-
-    const mouse = new THREE.Vector2();
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-
-    function init() {
-      scene = new THREE.Scene();
-      group = new THREE.Group();
-      scene.add(group);
-
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.z = 50;
-
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0x000000, 0);
-      container.appendChild(renderer.domElement);
-
-      const particleCount = 200;
-      const positions = new Float32Array(particleCount * 3);
-      const particleVelocities: THREE.Vector3[] = [];
-
-      for (let i = 0; i < particleCount; i++) {
-        positions[i * 3] = (Math.random() - 0.5) * 100;
-        positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
-        positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
-        particleVelocities.push(new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1));
-      }
-
-      const particleGeometry = new THREE.BufferGeometry();
-      particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-      const particleMaterial = new THREE.PointsMaterial({ color: 0xFFCC00, size: 0.5, blending: THREE.AdditiveBlending, transparent: true, sizeAttenuation: true });
-
-      particles = new THREE.Points(particleGeometry, particleMaterial);
-      (particles as any).velocities = particleVelocities;
-      group.add(particles);
-
-      const lineMaterial = new THREE.LineBasicMaterial({ color: 0xFFF0B3, linewidth: 1, transparent: true, opacity: 0.15 });
-      const lineGeometry = new THREE.BufferGeometry();
-      lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(particleCount * particleCount * 6), 3));
-      lines = new THREE.LineSegments(lineGeometry, lineMaterial);
-      group.add(lines);
-
-      window.addEventListener('resize', onWindowResize, false);
-      container.addEventListener('mousemove', onMouseMove, false);
-      container.addEventListener('mousedown', onMouseDown, false);
-      container.addEventListener('mouseup', onMouseUp, false);
-      container.addEventListener('mouseleave', onMouseUp, false);
-    }
-
-    function onWindowResize() {
-      if (!camera || !renderer) return;
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    }
-
-    function onMouseDown(event: MouseEvent) {
-      isDragging = true;
-      previousMousePosition = { x: event.clientX, y: event.clientY };
-    }
-
-    function onMouseUp() {
-      isDragging = false;
-    }
-
-    function onMouseMove(event: MouseEvent) {
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-      if (isDragging) {
-        const deltaMove = {
-          x: event.clientX - previousMousePosition.x,
-          y: event.clientY - previousMousePosition.y
+    const ctx = gsap.context(() => {
+        const header = document.getElementById('header');
+        const handleScroll = () => {
+          if (window.scrollY > 50) {
+            header?.classList.add('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-gray-200', 'shadow-sm');
+          } else {
+            header?.classList.remove('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-gray-200', 'shadow-sm');
+          }
         };
-        group.rotation.y += deltaMove.x * 0.005;
-        group.rotation.x += deltaMove.y * 0.005;
-        previousMousePosition = { x: event.clientX, y: event.clientY };
-      }
-    }
+        window.addEventListener('scroll', handleScroll);
 
-    function animate() {
-      if (!particles || !lines) return;
-      requestAnimationFrame(animate);
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+          const titleText = heroTitle.textContent?.trim() ?? '';
+          heroTitle.innerHTML = '';
+          titleText.split('').forEach(char => {
+            const span = document.createElement('span');
+            span.className = 'hero-title-char';
+            span.style.whiteSpace = char === ' ' ? 'pre' : 'normal';
+            span.textContent = char;
+            heroTitle.appendChild(span);
+          });
 
-      const positions = particles.geometry.attributes.position.array as Float32Array;
-      const linePositions = lines.geometry.attributes.position.array as Float32Array;
-      const velocities = (particles as any).velocities as THREE.Vector3[];
+          gsap.from(".hero-title-char", {
+            opacity: 0, y: 50, rotateX: -90, stagger: 0.03, duration: 1, ease: "power3.out", delay: 0.5
+          });
+        }
+        gsap.from(".hero-subtitle", { opacity: 0, y: 20, duration: 1, ease: "power3.out", delay: 1.2 });
+        gsap.from(".hero-buttons", { opacity: 0, y: 20, duration: 1, ease: "power3.out", delay: 1.5 });
 
-      for (let i = 0; i < particles.geometry.attributes.position.count; i++) {
-        positions[i * 3] += velocities[i].x;
-        positions[i * 3 + 1] += velocities[i].y;
-        positions[i * 3 + 2] += velocities[i].z;
-        if (positions[i * 3 + 1] < -50 || positions[i * 3 + 1] > 50) velocities[i].y = -velocities[i].y;
-        if (positions[i * 3] < -50 || positions[i * 3] > 50) velocities[i].x = -velocities[i].x;
-        if (positions[i * 3 + 2] < -50 || positions[i * 3 + 2] > 50) velocities[i].z = -velocities[i].z;
-      }
+        let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, particles: THREE.Points, lines: THREE.LineSegments, group: THREE.Group;
+        const container = heroCanvasRef.current;
+        if (!container) return;
 
-      const connectDistance = 10;
-      let lineCount = 0;
-      for (let i = 0; i < particles.geometry.attributes.position.count; i++) {
-        for (let j = i + 1; j < particles.geometry.attributes.position.count; j++) {
-          const dx = positions[i * 3] - positions[j * 3];
-          const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-          const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
-          if (dist < connectDistance) {
-            linePositions[lineCount++] = positions[i * 3];
-            linePositions[lineCount++] = positions[i * 3 + 1];
-            linePositions[lineCount++] = positions[i * 3 + 2];
-            linePositions[lineCount++] = positions[j * 3];
-            linePositions[lineCount++] = positions[j * 3 + 1];
-            linePositions[lineCount++] = positions[j * 3 + 2];
+        const mouse = new THREE.Vector2();
+        let isDragging = false;
+        let previousMousePosition = { x: 0, y: 0 };
+
+        function init() {
+          scene = new THREE.Scene();
+          group = new THREE.Group();
+          scene.add(group);
+
+          camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+          camera.position.z = 50;
+
+          renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setClearColor(0x000000, 0);
+          container.appendChild(renderer.domElement);
+
+          const particleCount = 200;
+          const positions = new Float32Array(particleCount * 3);
+          const particleVelocities: THREE.Vector3[] = [];
+
+          for (let i = 0; i < particleCount; i++) {
+            positions[i * 3] = (Math.random() - 0.5) * 100;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 100;
+            particleVelocities.push(new THREE.Vector3((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.1));
+          }
+
+          const particleGeometry = new THREE.BufferGeometry();
+          particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+          const particleMaterial = new THREE.PointsMaterial({ color: 0xFFCC00, size: 0.5, blending: THREE.AdditiveBlending, transparent: true, sizeAttenuation: true });
+
+          particles = new THREE.Points(particleGeometry, particleMaterial);
+          (particles as any).velocities = particleVelocities;
+          group.add(particles);
+
+          const lineMaterial = new THREE.LineBasicMaterial({ color: 0xFFF0B3, linewidth: 1, transparent: true, opacity: 0.15 });
+          const lineGeometry = new THREE.BufferGeometry();
+          lineGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(particleCount * particleCount * 6), 3));
+          lines = new THREE.LineSegments(lineGeometry, lineMaterial);
+          group.add(lines);
+
+          window.addEventListener('resize', onWindowResize, false);
+          container.addEventListener('mousemove', onMouseMove, false);
+          container.addEventListener('mousedown', onMouseDown, false);
+          container.addEventListener('mouseup', onMouseUp, false);
+          container.addEventListener('mouseleave', onMouseUp, false);
+        }
+
+        function onWindowResize() {
+          if (!camera || !renderer) return;
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onMouseDown(event: MouseEvent) {
+          isDragging = true;
+          previousMousePosition = { x: event.clientX, y: event.clientY };
+        }
+
+        function onMouseUp() {
+          isDragging = false;
+        }
+
+        function onMouseMove(event: MouseEvent) {
+          mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+          mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+          if (isDragging) {
+            const deltaMove = {
+              x: event.clientX - previousMousePosition.x,
+              y: event.clientY - previousMousePosition.y
+            };
+            group.rotation.y += deltaMove.x * 0.005;
+            group.rotation.x += deltaMove.y * 0.005;
+            previousMousePosition = { x: event.clientX, y: event.clientY };
           }
         }
-      }
-      for (let i = lineCount; i < linePositions.length; i++) linePositions[i] = 0;
 
-      lines.geometry.attributes.position.needsUpdate = true;
-      particles.geometry.attributes.position.needsUpdate = true;
+        function animate() {
+          if (!particles || !lines) return;
+          requestAnimationFrame(animate);
 
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(mouse, camera);
+          const positions = particles.geometry.attributes.position.array as Float32Array;
+          const linePositions = lines.geometry.attributes.position.array as Float32Array;
+          const velocities = (particles as any).velocities as THREE.Vector3[];
 
-      group.updateMatrixWorld();
-      const worldMatrix = group.matrixWorld;
+          for (let i = 0; i < particles.geometry.attributes.position.count; i++) {
+            positions[i * 3] += velocities[i].x;
+            positions[i * 3 + 1] += velocities[i].y;
+            positions[i * 3 + 2] += velocities[i].z;
+            if (positions[i * 3 + 1] < -50 || positions[i * 3 + 1] > 50) velocities[i].y = -velocities[i].y;
+            if (positions[i * 3] < -50 || positions[i * 3] > 50) velocities[i].x = -velocities[i].x;
+            if (positions[i * 3 + 2] < -50 || positions[i * 3 + 2] > 50) velocities[i].z = -velocities[i].z;
+          }
 
-      const target = new THREE.Vector3();
-      raycaster.ray.at(100, target);
+          const connectDistance = 10;
+          let lineCount = 0;
+          for (let i = 0; i < particles.geometry.attributes.position.count; i++) {
+            for (let j = i + 1; j < particles.geometry.attributes.position.count; j++) {
+              const dx = positions[i * 3] - positions[j * 3];
+              const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+              const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+              const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+              if (dist < connectDistance) {
+                linePositions[lineCount++] = positions[i * 3];
+                linePositions[lineCount++] = positions[i * 3 + 1];
+                linePositions[lineCount++] = positions[i * 3 + 2];
+                linePositions[lineCount++] = positions[j * 3];
+                linePositions[lineCount++] = positions[j * 3 + 1];
+                linePositions[lineCount++] = positions[j * 3 + 2];
+              }
+            }
+          }
+          for (let i = lineCount; i < linePositions.length; i++) linePositions[i] = 0;
 
-      for (let i = 0; i < particles.geometry.attributes.position.count; i++) {
-        const particlePos = new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
-        particlePos.applyMatrix4(worldMatrix);
+          lines.geometry.attributes.position.needsUpdate = true;
+          particles.geometry.attributes.position.needsUpdate = true;
 
-        const distanceToMouse = target.distanceTo(particlePos);
+          const raycaster = new THREE.Raycaster();
+          raycaster.setFromCamera(mouse, camera);
 
-        if (distanceToMouse < 20) {
-          const direction = new THREE.Vector3().subVectors(particlePos, target).normalize();
-          const localDirection = direction.transformDirection(new THREE.Matrix4().copy(worldMatrix).invert());
-          velocities[i].add(localDirection.multiplyScalar(0.1));
+          group.updateMatrixWorld();
+          const worldMatrix = group.matrixWorld;
+
+          const target = new THREE.Vector3();
+          raycaster.ray.at(100, target);
+
+          for (let i = 0; i < particles.geometry.attributes.position.count; i++) {
+            const particlePos = new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]);
+            particlePos.applyMatrix4(worldMatrix);
+
+            const distanceToMouse = target.distanceTo(particlePos);
+
+            if (distanceToMouse < 20) {
+              const direction = new THREE.Vector3().subVectors(particlePos, target).normalize();
+              const localDirection = direction.transformDirection(new THREE.Matrix4().copy(worldMatrix).invert());
+              velocities[i].add(localDirection.multiplyScalar(0.1));
+            }
+            velocities[i].multiplyScalar(0.98);
+          }
+
+          if (!isDragging) {
+            group.rotation.y += 0.0002;
+          }
+
+          camera.position.x += (mouse.x * 5 - camera.position.x) * 0.03;
+          camera.position.y += (-mouse.y * 5 - camera.position.y) * 0.03;
+          camera.lookAt(scene.position);
+
+          renderer.render(scene, camera);
         }
-        velocities[i].multiplyScalar(0.98);
-      }
 
-      if (!isDragging) {
-        group.rotation.y += 0.0002;
-      }
-
-      camera.position.x += (mouse.x * 5 - camera.position.x) * 0.03;
-      camera.position.y += (-mouse.y * 5 - camera.position.y) * 0.03;
-      camera.lookAt(scene.position);
-
-      renderer.render(scene, camera);
-    }
-
-    init();
-    animate();
-    
-    return () => {
-        window.removeEventListener('scroll', handleScroll);
-        window.removeEventListener('resize', onWindowResize);
-        if (container) {
-            container.removeEventListener('mousemove', onMouseMove);
-            container.removeEventListener('mousedown', onMouseDown);
-            container.removeEventListener('mouseup', onMouseUp);
-            container.removeEventListener('mouseleave', onMouseUp);
+        init();
+        animate();
+        
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', onWindowResize);
+            if (container) {
+                container.removeEventListener('mousemove', onMouseMove);
+                container.removeEventListener('mousedown', onMouseDown);
+                container.removeEventListener('mouseup', onMouseUp);
+                container.removeEventListener('mouseleave', onMouseUp);
+            }
         }
-    }
+    }, main);
 
+    return () => ctx.revert();
   }, []);
 
   return (
-    <>
+    <div ref={main}>
       <style>{`
         body {
             font-family: 'Inter', sans-serif;
@@ -258,13 +262,17 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-20">
               <div className="flex items-center">
-                <span className="text-2xl font-bold tracking-tighter text-gray-800">Helix</span>
+                <img src="logo.svg" alt="Helix Logo" className="h-8 w-auto" />
+                <span className="ml-3 text-2xl font-bold tracking-tighter text-gray-800">Helix</span>
               </div>
-              <div className="hidden md:flex items-center">
-                <span className="text-gray-500 font-medium">Humanitarian Economic Logistics & Integrity Xchange</span>
-              </div>
+              <nav className="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#problem" className="text-gray-600 hover:text-yellow-600 transition-colors duration-300">The Problem</a>
+                <a href="#solution" className="text-gray-600 hover:text-yellow-600 transition-colors duration-300">Our Solution</a>
+                <a href="#howitworks" className="text-gray-600 hover:text-yellow-600 transition-colors duration-300">How It Works</a>
+                <a href="#features" className="text-gray-600 hover:text-yellow-600 transition-colors duration-300">Features</a>
+              </nav>
               <div>
-                <button onClick={onGetStarted} className="cta-gradient text-black font-semibold px-5 py-2.5 rounded-lg text-sm hover:opacity-90 transition-all duration-300">Get Started</button>
+                <button onClick={onGetStarted} className="hidden sm:inline-block cta-gradient text-black font-semibold px-5 py-2.5 rounded-lg text-sm hover:opacity-90 transition-all duration-300">Get Started</button>
               </div>
             </div>
           </div>
@@ -296,6 +304,6 @@ export function HeroSection({ onGetStarted }: HeroSectionProps) {
           </section>
         </main>
       </div>
-    </>
+    </div>
   );
 }

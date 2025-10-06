@@ -1,250 +1,294 @@
 import React, { useState } from 'react';
-import { DollarSign, Users, Shield, AlertTriangle, TrendingUp, Building } from 'lucide-react';
+import { DollarSign, Users, Shield, AlertTriangle, TrendingUp, Building, LayoutDashboard, Eye, Mail, Star, BarChart2, FileText } from 'lucide-react';
 import { mockBudgets, mockClaims, mockVendors } from '../../data/mockData';
 import { useToast } from '../common/Toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog';
+import { Vendor } from '../../types';
 
 export function MainGovernmentDashboard() {
-  const [selectedBudget, setSelectedBudget] = useState('');
-  const [budgetAmount, setBudgetAmount] = useState('');
-  const [budgetPurpose, setBudgetPurpose] = useState('');
-  const { showToast } = useToast();
+    const [budgetAmount, setBudgetAmount] = useState('');
+    const [budgetPurpose, setBudgetPurpose] = useState('');
+    const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+    const { showToast } = useToast();
 
-  const handleLockBudget = () => {
-    if (!budgetAmount || !budgetPurpose) {
-      showToast('Please fill in all budget details', 'warning');
-      return;
-    }
-    showToast(`Budget of $${budgetAmount} locked for ${budgetPurpose}`, 'success');
-    setBudgetAmount('');
-    setBudgetPurpose('');
-  };
+    const handleLockBudget = () => {
+        if (!budgetAmount || !budgetPurpose) {
+            showToast('Please fill in all budget details', 'warning');
+            return;
+        }
+        showToast(`Budget of $${budgetAmount} locked for ${budgetPurpose}`, 'success');
+        setBudgetAmount('');
+        setBudgetPurpose('');
+    };
 
-  const handleEmergencyPause = () => {
-    showToast('Emergency pause activated - All payments suspended', 'warning');
-  };
+    const handleEmergencyPause = () => {
+        showToast('Emergency pause activated - All payments suspended', 'warning');
+    };
 
-  const handleApproveVendor = (vendorId: string) => {
-    showToast('Vendor approved and added to registry', 'success');
-  };
+    const handleApproveVendor = (vendorId: string) => {
+        showToast('Vendor approved and added to registry', 'success');
+    };
 
-  const totalBudget = mockBudgets.reduce((sum, budget) => sum + budget.totalAmount, 0);
-  const allocatedBudget = mockBudgets.reduce((sum, budget) => sum + budget.allocatedAmount, 0);
-  const criticalClaims = mockClaims.filter(claim => claim.riskLevel === 'critical').length;
-  const pendingVendors = mockVendors.filter(vendor => vendor.status === 'pending').length;
+    const totalBudget = mockBudgets.reduce((sum, budget) => sum + budget.totalAmount, 0);
+    const allocatedBudget = mockBudgets.reduce((sum, budget) => sum + budget.allocatedAmount, 0);
+    const criticalClaims = mockClaims.filter(claim => claim.riskLevel === 'critical').length;
+    const pendingVendors = mockVendors.filter(vendor => vendor.status === 'pending').length;
 
-  return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header is rendered by DashboardLayout */}
-      <div className="container mx-auto px-6 py-8">
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Total Budget</p>
-                <p className="text-2xl font-bold text-slate-900">${(totalBudget / 1000000).toFixed(1)}M</p>
-              </div>
-              <div className="p-3 bg-blue-50 rounded-xl">
-                <DollarSign className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </div>
+    const stats = {
+        totalBudget: `$${(totalBudget / 1000000).toFixed(1)}M`,
+        allocatedBudget: `$${(allocatedBudget / 1000000).toFixed(1)}M`,
+        criticalAlerts: criticalClaims,
+        pendingVendors: pendingVendors,
+    };
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Allocated Budget</p>
-                <p className="text-2xl font-bold text-slate-900">${(allocatedBudget / 1000000).toFixed(1)}M</p>
-              </div>
-              <div className="p-3 bg-emerald-50 rounded-xl">
-                <TrendingUp className="h-6 w-6 text-emerald-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Critical Alerts</p>
-                <p className="text-2xl font-bold text-red-600">{criticalClaims}</p>
-              </div>
-              <div className="p-3 bg-red-50 rounded-xl">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Pending Vendors</p>
-                <p className="text-2xl font-bold text-amber-600">{pendingVendors}</p>
-              </div>
-              <div className="p-3 bg-amber-50 rounded-xl">
-                <Users className="h-6 w-6 text-amber-600" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Budget Control Panel */}
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200">
-            <div className="p-6 border-b border-slate-100">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center space-x-2">
-                <Shield className="h-6 w-6 text-blue-600" />
-                <span>Budget Control Panel</span>
-              </h2>
-            </div>
-            <div className="p-6 space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Budget Amount ($)
-                </label>
-                <input
-                  type="number"
-                  value={budgetAmount}
-                  onChange={(e) => setBudgetAmount(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Enter amount..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Purpose
-                </label>
-                <input
-                  type="text"
-                  value={budgetPurpose}
-                  onChange={(e) => setBudgetPurpose(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="e.g., Infrastructure Development 2024"
-                />
-              </div>
-
-              <div className="flex space-x-4">
-                <button
-                  onClick={handleLockBudget}
-                  className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-                >
-                  Lock Budget
-                </button>
-                <button
-                  onClick={handleEmergencyPause}
-                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-                >
-                  Emergency Pause
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Vendor Registry */}
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200">
-            <div className="p-6 border-b border-slate-100">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center space-x-2">
-                <Building className="h-6 w-6 text-purple-600" />
-                <span>Vendor Registry</span>
-              </h2>
-            </div>
-            <div className="p-6">
-              <div className="space-y-4 max-h-96 overflow-y-auto">
-                {mockVendors.map((vendor) => (
-                  <div key={vendor.id} className="border border-slate-200 rounded-xl p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <h3 className="font-semibold text-slate-900">{vendor.name}</h3>
-                        <p className="text-sm text-slate-600">{vendor.businessType}</p>
-                      </div>
-                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        vendor.status === 'approved' 
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : vendor.status === 'pending'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}>
-                        {vendor.status.toUpperCase()}
-                      </div>
+    return (
+        <>
+            <style>{`
+                body {
+                    font-family: 'Inter', sans-serif;
+                    background: #F7FAFC;
+                }
+                .card {
+                    background: #FFFFFF;
+                    border: 1px solid #E2E8F0;
+                    transition: all 0.3s ease;
+                    border-radius: 0.75rem;
+                }
+                .card:hover {
+                    border-color: #F59E0B; /* yellow-500 */
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.1), 0 8px 10px -6px rgba(245, 158, 11, 0.1);
+                }
+                .cta-gradient {
+                    background: linear-gradient(90deg, #FBBF24, #F59E0B); /* yellow-400 to yellow-500 */
+                    color: white;
+                    transition: opacity 0.3s ease;
+                }
+                .cta-gradient:hover {
+                    opacity: 0.9;
+                }
+                .table-row-hover:hover {
+                  background-color: #F7FAFC;
+                }
+              `}</style>
+            <div className="min-h-screen bg-gray-50 font-sans">
+                <main className="container mx-auto max-w-7xl px-4 py-8">
+                    {/* Header */}
+                    <div className="mb-12 text-center">
+                        <div className="mb-6 inline-flex rounded-full bg-yellow-100 p-4">
+                            <LayoutDashboard className="h-10 w-10 text-yellow-600" />
+                        </div>
+                        <h1 className="text-4xl font-black tracking-tighter text-gray-900 md:text-6xl">
+                            Government Dashboard
+                        </h1>
+                        <p className="mx-auto max-w-2xl text-lg text-gray-600">
+                            Oversee budgets, vendors, and claims with precision.
+                        </p>
                     </div>
+
+                    {/* Stats Grid */}
+                    <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-gray-600">Total Budget</CardTitle>
+                                <DollarSign className="h-5 w-5 text-gray-400" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-3xl font-bold text-gray-900">{stats.totalBudget}</div>
+                                <p className="text-xs text-gray-500">Fiscal Year 2024</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-gray-600">Allocated Budget</CardTitle>
+                                <TrendingUp className="h-5 w-5 text-gray-400" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-3xl font-bold text-gray-900">{stats.allocatedBudget}</div>
+                                <p className="text-xs text-gray-500">Across all projects</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-gray-600">Critical Alerts</CardTitle>
+                                <AlertTriangle className="h-5 w-5 text-red-500" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-3xl font-bold text-red-600">{stats.criticalAlerts}</div>
+                                <p className="text-xs text-gray-500">High-risk claims detected</p>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between pb-2">
+                                <CardTitle className="text-sm font-medium text-gray-600">Pending Vendors</CardTitle>
+                                <Users className="h-5 w-5 text-gray-400" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="text-3xl font-bold text-gray-900">{stats.pendingVendors}</div>
+                                <p className="text-xs text-gray-500">Awaiting approval</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* Budget Control Panel */}
+                    <Card className="mb-8">
+                        <CardHeader>
+                            <CardTitle className="text-xl font-bold">Budget Control Panel</CardTitle>
+                            <CardDescription className="text-gray-600">Allocate and manage funds securely.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                                <input
+                                    type="number"
+                                    value={budgetAmount}
+                                    onChange={(e) => setBudgetAmount(e.target.value)}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                                    placeholder="Enter amount ($)"
+                                />
+                                <input
+                                    type="text"
+                                    value={budgetPurpose}
+                                    onChange={(e) => setBudgetPurpose(e.target.value)}
+                                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                                    placeholder="Purpose, e.g., Infrastructure 2024"
+                                />
+                                <Button onClick={handleLockBudget} className="w-full cta-gradient font-semibold" size="lg">
+                                    <Shield className="mr-2 h-5 w-5" />
+                                    Lock Budget
+                                </Button>
+                                <Button onClick={handleEmergencyPause} variant="destructive" size="lg" className="w-full font-semibold">
+                                    <AlertTriangle className="mr-2 h-5 w-5" />
+                                    Emergency Pause
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
                     
-                    <div className="grid grid-cols-2 gap-4 text-sm text-slate-600 mb-3">
-                      <div>Projects: {vendor.completedProjects}</div>
-                      <div>Rating: {vendor.averageRating}/5</div>
-                      <div>Risk Score: {vendor.riskScore}</div>
-                      <div className="col-span-2">Email: {vendor.contactEmail}</div>
-                    </div>
+                    {/* Recent Claims Table */}
+                    <Card className="mb-8">
+                        <CardHeader>
+                            <CardTitle className="text-xl font-bold">Recent Claims & Corruption Alerts</CardTitle>
+                            <CardDescription className="text-gray-600">Monitor the latest claims and their risk levels.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Claim ID</TableHead>
+                                        <TableHead>Amount</TableHead>
+                                        <TableHead>Risk Level</TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Action</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {mockClaims.slice(0, 5).map((claim) => (
+                                        <TableRow key={claim.id} className="table-row-hover">
+                                            <TableCell className="font-mono text-sm">{claim.id}</TableCell>
+                                            <TableCell className="font-medium">${claim.amount.toLocaleString()}</TableCell>
+                                            <TableCell>
+                                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                    claim.riskLevel === 'critical' ? 'bg-red-100 text-red-800' :
+                                                    claim.riskLevel === 'high' ? 'bg-orange-100 text-orange-800' :
+                                                    'bg-emerald-100 text-emerald-800'
+                                                }`}>
+                                                  {claim.riskLevel}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>
+                                                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                    claim.status === 'approved' ? 'bg-emerald-100 text-emerald-800' :
+                                                    claim.status === 'blocked' ? 'bg-red-100 text-red-800' :
+                                                    'bg-amber-100 text-amber-800'
+                                                }`}>
+                                                  {claim.status}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Button variant="ghost" size="sm" className="text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700">
+                                                    <Eye className="mr-1 h-4 w-4" /> Review
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </CardContent>
+                    </Card>
 
-                    {vendor.status === 'pending' && (
-                      <button
-                        onClick={() => handleApproveVendor(vendor.id)}
-                        className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300"
-                      >
-                        Approve Vendor
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+                    {/* Vendor Registry */}
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="text-xl font-bold flex items-center"><Building className="mr-2 h-6 w-6 text-purple-600" />Vendor Registry</CardTitle>
+                            <CardDescription>Manage and approve vendors.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                                {mockVendors.map((vendor) => (
+                                    <div key={vendor.id} className="rounded-xl border p-4 space-y-3 hover:border-yellow-500 transition-colors cursor-pointer" onClick={() => setSelectedVendor(vendor)}>
+                                        <div className="flex items-start justify-between">
+                                            <div>
+                                                <h3 className="font-semibold text-gray-900">{vendor.name}</h3>
+                                                <p className="text-sm text-gray-600">{vendor.businessType}</p>
+                                            </div>
+                                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                vendor.status === 'approved' ? 'bg-emerald-100 text-emerald-800' :
+                                                vendor.status === 'suspended' ? 'bg-red-100 text-red-800' :
+                                                'bg-amber-100 text-amber-800'
+                                            }`}>
+                                                {vendor.status}
+                                            </span>
+                                        </div>
+                                        {vendor.status === 'pending' && (
+                                            <Button onClick={(e) => { e.stopPropagation(); handleApproveVendor(vendor.id);}} className="w-full" size="sm">
+                                                Approve Vendor
+                                            </Button>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </main>
 
-        {/* Recent Claims */}
-        <div className="mt-8 bg-white rounded-2xl shadow-xl border border-slate-200">
-          <div className="p-6 border-b border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900">Recent Claims & Corruption Alerts</h2>
-          </div>
-          <div className="p-6">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Claim ID</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Amount</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Risk Level</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Status</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {mockClaims.map((claim) => (
-                    <tr key={claim.id} className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="py-3 px-4 font-mono text-sm">{claim.id}</td>
-                      <td className="py-3 px-4 font-semibold">${claim.amount.toLocaleString()}</td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          claim.riskLevel === 'critical' ? 'bg-red-100 text-red-800' :
-                          claim.riskLevel === 'high' ? 'bg-orange-100 text-orange-800' :
-                          claim.riskLevel === 'medium' ? 'bg-amber-100 text-amber-800' :
-                          'bg-emerald-100 text-emerald-800'
-                        }`}>
-                          {claim.riskLevel.toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          claim.status === 'approved' ? 'bg-emerald-100 text-emerald-800' :
-                          claim.status === 'blocked' ? 'bg-red-100 text-red-800' :
-                          claim.status === 'under-review' ? 'bg-amber-100 text-amber-800' :
-                          'bg-slate-100 text-slate-800'
-                        }`}>
-                          {claim.status.replace('-', ' ').toUpperCase()}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <button className="text-blue-600 hover:text-blue-800 font-medium text-sm">
-                          Review
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                {selectedVendor && (
+                <Dialog open={!!selectedVendor} onOpenChange={() => setSelectedVendor(null)}>
+                    <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                            <DialogTitle className="text-2xl font-bold">{selectedVendor.name}</DialogTitle>
+                            <DialogDescription>{selectedVendor.businessType}</DialogDescription>
+                        </DialogHeader>
+                        <div className="grid gap-4 py-4">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-500 flex items-center"><FileText className="w-4 h-4 mr-2" />Projects</span>
+                                <span className="text-sm font-bold">{selectedVendor.completedProjects}</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-500 flex items-center"><Star className="w-4 h-4 mr-2" />Rating</span>
+                                <span className="text-sm font-bold">{selectedVendor.averageRating}/5</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-500 flex items-center"><BarChart2 className="w-4 h-4 mr-2" />Risk Score</span>
+                                <span className="text-sm font-bold">{selectedVendor.riskScore}</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-500 flex items-center"><Mail className="w-4 h-4 mr-2" />Email</span>
+                                <span className="text-sm font-bold">{selectedVendor.contactEmail}</span>
+                            </div>
+                        </div>
+                        <DialogFooter>
+                            <Button onClick={() => setSelectedVendor(null)}>Close</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+        </>
+    );
 }

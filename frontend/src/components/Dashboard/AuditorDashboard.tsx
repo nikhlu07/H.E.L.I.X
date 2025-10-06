@@ -1,126 +1,212 @@
-import React from 'react';
-import { Search, Shield, FileText, TrendingUp } from 'lucide-react';
-
-// Mock data for an Auditor's perspective
-const auditData = {
-  transactionsAudited: 1250,
-  highRiskFlags: 42,
-  openInvestigations: 5,
-  complianceRate: 99.1,
-};
-
-const transactions = [
-  { id: 'TXN-001', type: 'Fund Transfer', from: 'Lead Agency', to: 'Field Director - EA', amount: 500000, status: 'cleared', risk: 'low' },
-  { id: 'TXN-002', type: 'Payment', from: 'Program Manager - Tigray', to: 'Local Supplier - ABC', amount: 20000, status: 'flagged', risk: 'high' },
-  { id: 'TXN-003', type: 'Shipment', from: 'Logistics Partner - GT', to: 'Warehouse - Adigrat', amount: 0, status: 'cleared', risk: 'low' },
-];
+import React, { useState } from 'react';
+import { Search, Shield, FileText, TrendingUp, ChevronDown, Eye } from 'lucide-react';
+import { useToast } from '../common/Toast';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 export function AuditorDashboard() {
+  const [expandedTxnId, setExpandedTxnId] = useState<string | null>(null);
+  const { showToast } = useToast();
+
+  const auditData = {
+    transactionsAudited: 1250,
+    highRiskFlags: 42,
+    openInvestigations: 5,
+    complianceRate: 99.1,
+  };
+
+  const transactions = [
+    { id: 'TXN-001', type: 'Fund Transfer', from: 'Lead Agency', to: 'Field Director - EA', amount: 500000, status: 'cleared', risk: 'low', date: '2024-01-15', description: 'Monthly operational fund for Eastern Amhara.' },
+    { id: 'TXN-002', type: 'Payment', from: 'Program Manager - Tigray', to: 'Local Supplier - ABC', amount: 20000, status: 'flagged', risk: 'high', date: '2024-01-18', description: 'Urgent procurement of medical supplies.' },
+    { id: 'TXN-003', type: 'Shipment', from: 'Logistics Partner - GT', to: 'Warehouse - Adigrat', amount: 0, status: 'cleared', risk: 'low', date: '2024-01-20', description: 'Shipment of 500 metric tons of grain.' },
+    { id: 'TXN-004', type: 'Payment', from: 'Field Director - Oromia', to: 'Construction Co - XYZ', amount: 120000, status: 'pending', risk: 'medium', date: '2024-01-22', description: 'Initial payment for new school construction.' },
+  ];
+
+  const handleInvestigation = (txnId: string) => {
+    showToast(`Transaction ${txnId} has been flagged for a full investigation.`, 'warning');
+  };
+
+  const toggleTxnExpansion = (txnId: string) => {
+    setExpandedTxnId(prevId => (prevId === txnId ? null : txnId));
+  };
+
+  const RiskBadge = ({ risk }: { risk: 'low' | 'medium' | 'high' }) => {
+    const riskStyles = {
+      low: 'bg-emerald-100 text-emerald-800',
+      medium: 'bg-amber-100 text-amber-800',
+      high: 'bg-red-100 text-red-800',
+    };
+    return (
+      <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${riskStyles[risk]}`}>
+        {risk.toUpperCase()}
+      </span>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="container mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="bg-helix-gray-900 border border-helix-gray-800 rounded-2xl p-8 mb-8">
-          <h1 className="text-3xl font-bold mb-2">Auditor Dashboard</h1>
-          <p className="text-helix-gray-300 text-lg">Independent Oversight & Compliance</p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <StatCard icon={FileText} title="Transactions Audited" value={auditData.transactionsAudited.toLocaleString()} color="primary" />
-          <StatCard icon={TrendingUp} title="Network Compliance" value={`${auditData.complianceRate}%`} color="green" />
-          <StatCard icon={Shield} title="High-Risk Flags" value={auditData.highRiskFlags} color="yellow" />
-          <StatCard icon={Search} title="Open Investigations" value={auditData.openInvestigations} color="red" />
-        </div>
-
-        {/* Transaction Explorer */}
-        <DashboardCard title="Transaction Explorer" icon={Search}>
-          <div className="mb-4">
-            <input
-              type="text"
-              className="w-full bg-helix-gray-800 border border-helix-gray-700 rounded-lg px-4 py-2 focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder="Search by Transaction ID, Partner, or Amount..."
-            />
+    <>
+      <style>{`
+          body {
+              font-family: 'Inter', sans-serif;
+              background: #F7FAFC;
+          }
+          .card {
+              background: #FFFFFF;
+              border: 1px solid #E2E8F0;
+              transition: all 0.3s ease;
+              border-radius: 0.75rem;
+          }
+          .card:hover {
+              border-color: #F59E0B; /* yellow-500 */
+              transform: translateY(-5px);
+              box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.1), 0 8px 10px -6px rgba(245, 158, 11, 0.1);
+          }
+          .table-row-hover:hover {
+            background-color: #F7FAFC;
+          }
+        `}</style>
+      <div className="min-h-screen bg-gray-50 font-sans">
+        <main className="container mx-auto max-w-7xl px-4 py-8">
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <div className="mb-6 inline-flex rounded-full bg-yellow-100 p-4">
+              <Shield className="h-10 w-10 text-yellow-600" />
+            </div>
+            <h1 className="text-4xl font-black tracking-tighter text-gray-900 md:text-6xl">
+              Auditor Dashboard
+            </h1>
+            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+              Independent Oversight & Compliance Monitoring
+            </p>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-helix-gray-700">
-                  <th className="text-left py-3 px-4 font-semibold">Transaction ID</th>
-                  <th className="text-left py-3 px-4 font-semibold">Type</th>
-                  <th className="text-left py-3 px-4 font-semibold">Amount</th>
-                  <th className="text-left py-3 px-4 font-semibold">Status</th>
-                  <th className="text-left py-3 px-4 font-semibold">Risk</th>
-                </tr>
-              </thead>
-              <tbody>
-                {transactions.map(txn => (
-                  <tr key={txn.id} className="border-b border-helix-gray-800 hover:bg-helix-gray-800/50">
-                    <td className="py-3 px-4 font-mono text-sm">{txn.id}</td>
-                    <td className="py-3 px-4">{txn.type}</td>
-                    <td className="py-3 px-4">{txn.amount > 0 ? `$${txn.amount.toLocaleString()}` : 'N/A'}</td>
-                    <td className="py-3 px-4"><StatusBadge status={txn.status} /></td>
-                    <td className="py-3 px-4"><StatusBadge status={txn.risk} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+
+          {/* Audit Stats */}
+          <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">Transactions Audited</CardTitle>
+                <FileText className="h-5 w-5 text-gray-400" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-gray-900">{auditData.transactionsAudited.toLocaleString()}</div>
+                <p className="text-xs text-gray-500">In the last 90 days</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">Network Compliance</CardTitle>
+                <TrendingUp className="h-5 w-5 text-emerald-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-emerald-600">{auditData.complianceRate}%</div>
+                <p className="text-xs text-gray-500">Overall compliance rate</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">High-Risk Flags</CardTitle>
+                <Shield className="h-5 w-5 text-red-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-red-600">{auditData.highRiskFlags}</div>
+                <p className="text-xs text-gray-500">Require investigation</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">Open Investigations</CardTitle>
+                <Search className="h-5 w-5 text-amber-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-amber-600">{auditData.openInvestigations}</div>
+                <p className="text-xs text-gray-500">Currently under review</p>
+              </CardContent>
+            </Card>
           </div>
-        </DashboardCard>
+
+          {/* Transaction Explorer */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">Transaction Explorer</CardTitle>
+              <p className="text-gray-600">Search, filter, and investigate transactions across the network.</p>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-4">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    className="w-full bg-white border border-gray-200 rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    placeholder="Search by Transaction ID, Partner, or Amount..."
+                  />
+                </div>
+              </div>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Transaction</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Risk</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {transactions.map(txn => (
+                    <React.Fragment key={txn.id}>
+                      <TableRow className="table-row-hover cursor-pointer" onClick={() => toggleTxnExpansion(txn.id)}>
+                        <TableCell>
+                          <div className="font-semibold">{txn.type}</div>
+                          <div className="text-sm text-gray-600">{txn.id}</div>
+                        </TableCell>
+                        <TableCell>
+                          {txn.amount > 0 ? `₹${txn.amount.toLocaleString()}` : 'N/A'}
+                        </TableCell>
+                        <TableCell>{txn.date}</TableCell>
+                        <TableCell>
+                          <RiskBadge risk={txn.risk as 'low' | 'medium' | 'high'} />
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <ChevronDown className={`h-5 w-5 text-gray-500 transform transition-transform ${expandedTxnId === txn.id ? 'rotate-180' : ''}`} />
+                        </TableCell>
+                      </TableRow>
+                      {expandedTxnId === txn.id && (
+                        <TableRow>
+                          <TableCell colSpan={5} className="p-0">
+                            <div className="p-4 bg-gray-100">
+                              <h4 className="font-bold mb-2">Transaction Details</h4>
+                              <p className="text-sm text-gray-700 mb-3">{txn.description}</p>
+                              <div className="grid grid-cols-2 gap-2 text-sm">
+                                <div><strong>From:</strong> {txn.from}</div>
+                                <div><strong>To:</strong> {txn.to}</div>
+                                <div><strong>Status:</strong> <span className="font-medium">{txn.status.toUpperCase()}</span></div>
+                              </div>
+                              <div className="mt-4 flex justify-end">
+                                <Button
+                                  onClick={() => handleInvestigation(txn.id)}
+                                  size="sm"
+                                  className="bg-amber-600 hover:bg-amber-700 text-white"
+                                >
+                                  <Search className="mr-2 h-4 w-4" />
+                                  Initiate Investigation
+                                </Button>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </main>
       </div>
-    </div>
+    </>
   );
 }
-
-// --- Reusable Components ---
-
-const DashboardCard = ({ title, icon: Icon, children }) => (
-  <div className="bg-helix-gray-900 rounded-2xl shadow-lg border border-helix-gray-800 h-full">
-    <div className="p-6 border-b border-helix-gray-800">
-      <h2 className="text-xl font-bold flex items-center space-x-2">
-        <Icon className="h-6 w-6 text-primary" />
-        <span>{title}</span>
-      </h2>
-    </div>
-    <div className="p-6">{children}</div>
-  </div>
-);
-
-const StatCard = ({ icon: Icon, title, value, color }) => {
-  const colors = {
-    primary: 'text-primary',
-    green: 'text-green-400',
-    red: 'text-red-400',
-    yellow: 'text-yellow-400',
-  };
-
-  return (
-    <div className="bg-helix-gray-900 rounded-2xl p-6 shadow-lg border border-helix-gray-800">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-helix-gray-400 text-sm font-medium">{title}</p>
-          <p className={`text-2xl font-bold ${colors[color]}`}>{value}</p>
-        </div>
-        <div className={`p-3 bg-helix-gray-800 rounded-xl`}>
-          <Icon className={`h-6 w-6 ${colors[color]}`} />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const StatusBadge = ({ status }) => {
-  const statusStyles = {
-    cleared: 'bg-green-900/50 text-green-300 border-green-700',
-    flagged: 'bg-yellow-900/50 text-yellow-300 border-yellow-700',
-    low: 'bg-green-900/50 text-green-300 border-green-700',
-    medium: 'bg-yellow-900/50 text-yellow-300 border-yellow-700',
-    high: 'bg-red-900/50 text-red-300 border-red-700',
-  };
-
-  return (
-    <div className={`px-3 py-1 rounded-full text-xs font-medium border inline-block ${statusStyles[status] || 'bg-helix-gray-700'}`}>
-      {status.toUpperCase()}
-    </div>
-  );
-};

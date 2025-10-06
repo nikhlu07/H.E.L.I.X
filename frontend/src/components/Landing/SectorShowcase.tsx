@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import { Building2, Heart, Code } from 'lucide-react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export function SectorShowcase() {
+  const main = useRef<HTMLElement>(null);
+
   const sectors = [
     {
       icon: Building2,
@@ -23,8 +27,37 @@ export function SectorShowcase() {
     }
   ];
 
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const ctx = gsap.context(() => {
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: main.current,
+                start: "top 80%",
+                toggleActions: "play none none none"
+            }
+        });
+
+        tl.from(".text-center.max-w-3xl", {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power3.out",
+        })
+        .from(".grid.md\\:grid-cols-3", {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power3.out",
+        }, "-=0.7");
+    }, main);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="howitworks" className="py-20 lg:py-32">
+    <section id="howitworks" className="py-20 lg:py-32 bg-gray-50" ref={main}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">A Unified Platform for Every Role.</h2>

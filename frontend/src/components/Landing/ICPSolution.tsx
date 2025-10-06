@@ -1,7 +1,60 @@
 import { Shield, Lock, Eye, Zap, CheckCircle, Globe } from 'lucide-react';
-import React from "react";
+import React, { useLayoutEffect, useRef } from "react";
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export function ICPSolution() {
+  const main = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+        const tlSolution = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#solution",
+                start: "top 80%",
+                toggleActions: "play none none none"
+            }
+        });
+        tlSolution.from("#solution .text-center.max-w-3xl", {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power3.out",
+        })
+        .from(gsap.utils.toArray('#solution .grid.md\\:grid-cols-2'), {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power3.out",
+            stagger: 0.3
+        }, "-=0.5");
+
+        const tlFeatures = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#features",
+                start: "top 80%",
+                toggleActions: "play none none none",
+            }
+        });
+        tlFeatures.from("#features .text-center.max-w-3xl", {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: "power3.out",
+        })
+        .from(gsap.utils.toArray('#features .feature-card'), {
+            opacity: 0,
+            y: 50,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.1,
+        }, "-=0.5");
+    }, main);
+
+    return () => ctx.revert();
+  }, []);
+
   const howItWorks = [
     {
       step: '1',
@@ -69,12 +122,12 @@ export function ICPSolution() {
   ];
 
   return (
-    <>
+    <div ref={main}>
       <section id="solution" className="py-20 lg:py-32 bg-white">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">An Immutable Chain of Trust.</h2>
-            <p className="text-lg text-gray-600">Red Médica provides a digital passport for every medical product, creating an unforgeable record of its journey from the factory to your hands. We turn opacity into transparency.</p>
+            <p className="text-lg text-gray-600">H.E.L.I.X. provides a digital passport for every medical product, creating an unforgeable record of its journey from the factory to your hands. We turn opacity into transparency.</p>
           </div>
           <div className="space-y-16">
             {howItWorks.map((item, index) => (
@@ -124,6 +177,6 @@ export function ICPSolution() {
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

@@ -9,12 +9,16 @@ import { StateHeadDashboard } from './components/Dashboard/StateHeadDashboard';
 import { DeputyDashboard } from './components/Dashboard/DeputyDashboard';
 import { Header } from './components/Dashboard/Header';
 import { AuthProvider } from './contexts/AuthContext';
+import {SubSupplierDashboard} from "./components/Dashboard/SubSupplierDashboard.tsx";
+import {AuditorDashboard} from "./components/Dashboard/AuditorDashboard.tsx";
 
 function DashboardLayout() {
   return (
     <>
       <Header />
-      <Outlet />
+      <main className="pt-20">
+        <Outlet />
+      </main>
     </>
   );
 }
@@ -33,7 +37,9 @@ function App() {
       'state_head': '/dashboard/state-head',
       'deputy': '/dashboard/deputy',
       'vendor': '/dashboard/vendor',
-      'citizen': '/dashboard/citizen'
+        'sub_supplier': '/dashboard/sub-supplier',
+      'citizen': '/dashboard/citizen',
+        'auditor': '/dashboard/auditor',
     };
 
     const dashboardPath = dashboardMap[role] || '/dashboard/government';
@@ -61,10 +67,12 @@ function App() {
           {/* Dashboard routes wrapped with common header */}
           <Route path="/dashboard" element={<DashboardLayout />}>
             <Route path="government" element={<MainGovernmentDashboard />} />
+              <Route path="sub-supplier" element={<SubSupplierDashboard />} />
             <Route path="citizen" element={<CitizenDashboard />} />
             <Route path="vendor" element={<VendorDashboard />} />
             <Route path="state-head" element={<StateHeadDashboard />} />
             <Route path="deputy" element={<DeputyDashboard />} />
+              <Route path="auditor" element={<AuditorDashboard />} />
           </Route>
         </Routes>
       </div>

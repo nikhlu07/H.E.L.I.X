@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { Users, MapPin, DollarSign, AlertTriangle, UserPlus, Settings, BarChart3, Shield } from 'lucide-react';
+import { Users, MapPin, DollarSign, AlertTriangle, UserPlus, Settings, BarChart3, Shield, LayoutDashboard, Eye, FileText } from 'lucide-react';
 import { useToast } from '../common/Toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog';
 
 export function StateHeadDashboard() {
   const [budgetAmount, setBudgetAmount] = useState('');
@@ -81,240 +85,264 @@ export function StateHeadDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* Header is rendered by DashboardLayout */}
-      <div className="container mx-auto px-6 py-8">
-        {/* State Header */}
-        <div className="bg-gradient-to-r from-emerald-700 to-emerald-800 rounded-2xl p-8 mb-8 text-white">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">State Head Dashboard</h1>
-              <p className="text-emerald-200 text-lg">
-                Managing {stateData.stateName} State Procurement & Regional Development
-              </p>
+    <>
+      <style>{`
+          body {
+              font-family: 'Inter', sans-serif;
+              background: #F7FAFC;
+          }
+          .card {
+              background: #FFFFFF;
+              border: 1px solid #E2E8F0;
+              transition: all 0.3s ease;
+              border-radius: 0.75rem;
+          }
+          .card:hover {
+              border-color: #F59E0B; /* yellow-500 */
+              transform: translateY(-5px);
+              box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.1), 0 8px 10px -6px rgba(245, 158, 11, 0.1);
+          }
+          .cta-gradient {
+              background: linear-gradient(90deg, #FBBF24, #F59E0B); /* yellow-400 to yellow-500 */
+              color: white;
+              transition: opacity 0.3s ease;
+          }
+          .cta-gradient:hover {
+              opacity: 0.9;
+          }
+          .table-row-hover:hover {
+            background-color: #F7FAFC;
+          }
+        `}</style>
+      <div className="min-h-screen bg-gray-50 font-sans">
+        <main className="container mx-auto max-w-7xl px-4 py-8">
+          {/* Header */}
+          <div className="mb-12 text-center">
+            <div className="mb-6 inline-flex rounded-full bg-yellow-100 p-4">
+              <MapPin className="h-10 w-10 text-yellow-600" />
             </div>
-            <div className="text-6xl opacity-20">🏛️</div>
-          </div>
-        </div>
-
-        {/* State Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Total State Budget</p>
-                <p className="text-2xl font-bold text-emerald-600">₹{(stateData.totalBudget / 1000000).toFixed(1)}M</p>
-              </div>
-              <div className="p-3 bg-emerald-50 rounded-xl">
-                <DollarSign className="h-6 w-6 text-emerald-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Active Deputies</p>
-                <p className="text-2xl font-bold text-blue-600">{stateData.deputiesCount}</p>
-              </div>
-              <div className="p-3 bg-blue-50 rounded-xl">
-                <Users className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Active Projects</p>
-                <p className="text-2xl font-bold text-purple-600">{stateData.activeProjects}</p>
-              </div>
-              <div className="p-3 bg-purple-50 rounded-xl">
-                <BarChart3 className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
+            <h1 className="text-4xl font-black tracking-tighter text-gray-900 md:text-6xl">
+              State Head Dashboard
+            </h1>
+            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+              Overseeing {stateData.stateName} State Procurement & Regional Development
+            </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-600 text-sm font-medium">Avg Risk Score</p>
-                <p className="text-2xl font-bold text-amber-600">{stateData.averageRiskScore}</p>
-              </div>
-              <div className="p-3 bg-amber-50 rounded-xl">
-                <Shield className="h-6 w-6 text-amber-600" />
-              </div>
-            </div>
-          </div>
-        </div>
+          {/* State Overview Stats */}
+          <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">Total State Budget</CardTitle>
+                <DollarSign className="h-5 w-5 text-gray-400" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-gray-900">₹{(stateData.totalBudget / 1000000).toFixed(1)}M</div>
+                <p className="text-xs text-gray-500">Fiscal Year 2024</p>
+              </CardContent>
+            </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Budget Allocation */}
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200">
-            <div className="p-6 border-b border-slate-100">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center space-x-2">
-                <DollarSign className="h-6 w-6 text-emerald-600" />
-                <span>Allocate State Budget</span>
-              </h2>
-            </div>
-            <div className="p-6 space-y-6">
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
-                <div className="text-sm text-emerald-700">
-                  <strong>Available Budget:</strong> ₹{(stateData.remainingBudget / 1000000).toFixed(1)}M
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">Active Deputies</CardTitle>
+                <Users className="h-5 w-5 text-gray-400" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-gray-900">{stateData.deputiesCount}</div>
+                <p className="text-xs text-gray-500">Across all districts</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">Active Projects</CardTitle>
+                <BarChart3 className="h-5 w-5 text-gray-400" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-gray-900">{stateData.activeProjects}</div>
+                <p className="text-xs text-gray-500">Currently underway</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between pb-2">
+                <CardTitle className="text-sm font-medium text-gray-600">Avg Risk Score</CardTitle>
+                <Shield className="h-5 w-5 text-red-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold text-red-600">{stateData.averageRiskScore}</div>
+                <p className="text-xs text-gray-500">Across all projects</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Budget Allocation */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Allocate State Budget</CardTitle>
+                <CardDescription className="text-gray-600">Distribute funds to projects and deputies.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                  <div className="text-sm text-yellow-700">
+                    <strong>Available Budget:</strong> ₹{(stateData.remainingBudget / 1000000).toFixed(1)}M
+                  </div>
+                  <div className="text-sm text-yellow-600 mt-1">
+                    Allocated: ₹{(stateData.allocatedBudget / 1000000).toFixed(1)}M / ₹{(stateData.totalBudget / 1000000).toFixed(1)}M
+                  </div>
                 </div>
-                <div className="text-sm text-emerald-600 mt-1">
-                  Allocated: ₹{(stateData.allocatedBudget / 1000000).toFixed(1)}M / ₹{(stateData.totalBudget / 1000000).toFixed(1)}M
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Allocation Amount (₹)
+                  </label>
+                  <input
+                    type="number"
+                    value={budgetAmount}
+                    onChange={(e) => setBudgetAmount(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    placeholder="Enter allocation amount..."
+                  />
                 </div>
-              </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Allocation Amount (₹)
-                </label>
-                <input
-                  type="number"
-                  value={budgetAmount}
-                  onChange={(e) => setBudgetAmount(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder="Enter allocation amount..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Project Area/Description
-                </label>
-                <input
-                  type="text"
-                  value={projectArea}
-                  onChange={(e) => setProjectArea(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder="e.g., Highway Development Phase 2"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Assign to Deputy
-                </label>
-                <select
-                  value={selectedDeputy}
-                  onChange={(e) => setSelectedDeputy(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                >
-                  <option value="">Select Deputy...</option>
-                  {deputies.map((deputy) => (
-                    <option key={deputy.id} value={deputy.name}>
-                      {deputy.name} - {deputy.district}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <button
-                onClick={handleAllocateBudget}
-                className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-              >
-                Allocate Budget
-              </button>
-            </div>
-          </div>
-
-          {/* Deputy Management */}
-          <div className="bg-white rounded-2xl shadow-xl border border-slate-200">
-            <div className="p-6 border-b border-slate-100">
-              <h2 className="text-xl font-bold text-slate-900 flex items-center space-x-2">
-                <UserPlus className="h-6 w-6 text-blue-600" />
-                <span>Deputy Management</span>
-              </h2>
-            </div>
-            <div className="p-6 space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Propose New Deputy
-                </label>
-                <input
-                  type="text"
-                  value={newDeputyId}
-                  onChange={(e) => setNewDeputyId(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent font-mono text-sm"
-                  placeholder="Enter deputy principal ID..."
-                />
-                <button
-                  onClick={handleProposeDeputy}
-                  className="w-full mt-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                >
-                  Propose Deputy
-                </button>
-              </div>
-
-              <div className="border-t border-slate-200 pt-6">
-                <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Remove Deputy
-                </label>
-                <select
-                  value={deputyToRemove}
-                  onChange={(e) => setDeputyToRemove(e.target.value)}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                >
-                  <option value="">Select deputy to remove...</option>
-                  {deputies.map((deputy) => (
-                    <option key={deputy.id} value={deputy.name}>
-                      {deputy.name} - {deputy.district}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  onClick={handleRemoveDeputy}
-                  className="w-full mt-3 bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                >
-                  Remove Deputy
-                </button>
-              </div>
-
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <div className="text-sm text-amber-700">
-                  <strong>Note:</strong> Deputy proposals require confirmation after 24-hour review period for security.
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Area/Description
+                  </label>
+                  <input
+                    type="text"
+                    value={projectArea}
+                    onChange={(e) => setProjectArea(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                    placeholder="e.g., Highway Development Phase 2"
+                  />
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Deputy Performance Overview */}
-        <div className="mt-8 bg-white rounded-2xl shadow-xl border border-slate-200">
-          <div className="p-6 border-b border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center space-x-2">
-              <Users className="h-6 w-6 text-purple-600" />
-              <span>Deputy Performance Dashboard</span>
-            </h2>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Assign to Deputy
+                  </label>
+                  <select
+                    value={selectedDeputy}
+                    onChange={(e) => setSelectedDeputy(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  >
+                    <option value="">Select Deputy...</option>
+                    {deputies.map((deputy) => (
+                      <option key={deputy.id} value={deputy.name}>
+                        {deputy.name} - {deputy.district}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <Button
+                  onClick={handleAllocateBudget}
+                  className="w-full cta-gradient font-semibold"
+                  size="lg"
+                >
+                  <DollarSign className="mr-2 h-5 w-5" />
+                  Allocate Budget
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Deputy Management */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl font-bold">Deputy Management</CardTitle>
+                <CardDescription className="text-gray-600">Add or remove deputies from your state.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Propose New Deputy
+                  </label>
+                  <input
+                    type="text"
+                    value={newDeputyId}
+                    onChange={(e) => setNewDeputyId(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent font-mono text-sm"
+                    placeholder="Enter deputy principal ID..."
+                  />
+                  <Button
+                    onClick={handleProposeDeputy}
+                    className="w-full mt-3 cta-gradient font-semibold"
+                    size="lg"
+                  >
+                    <UserPlus className="mr-2 h-5 w-5" />
+                    Propose Deputy
+                  </Button>
+                </div>
+
+                <div className="border-t border-gray-200 pt-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Remove Deputy
+                  </label>
+                  <select
+                    value={deputyToRemove}
+                    onChange={(e) => setDeputyToRemove(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                  >
+                    <option value="">Select deputy to remove...</option>
+                    {deputies.map((deputy) => (
+                      <option key={deputy.id} value={deputy.name}>
+                        {deputy.name} - {deputy.district}
+                      </option>
+                    ))}
+                  </select>
+                  <Button
+                    onClick={handleRemoveDeputy}
+                    variant="destructive"
+                    className="w-full mt-3 font-semibold"
+                    size="lg"
+                  >
+                    <Users className="mr-2 h-5 w-5" />
+                    Remove Deputy
+                  </Button>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                  <div className="text-sm text-yellow-700">
+                    <strong>Note:</strong> Deputy proposals require confirmation after 24-hour review period for security.
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          <div className="p-6">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Deputy</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">District</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Active Projects</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Performance</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Risk Score</th>
-                    <th className="text-left py-3 px-4 font-semibold text-slate-700">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
+
+          {/* Deputy Performance Overview */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">Deputy Performance Dashboard</CardTitle>
+              <CardDescription className="text-gray-600">Monitor the performance and risk scores of your deputies.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Deputy</TableHead>
+                    <TableHead>District</TableHead>
+                    <TableHead>Active Projects</TableHead>
+                    <TableHead>Performance</TableHead>
+                    <TableHead>Risk Score</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {deputies.map((deputy) => (
-                    <tr key={deputy.id} className="border-b border-slate-100 hover:bg-slate-50">
-                      <td className="py-3 px-4 font-semibold">{deputy.name}</td>
-                      <td className="py-3 px-4 text-slate-600">{deputy.district}</td>
-                      <td className="py-3 px-4 text-center">{deputy.projects}</td>
-                      <td className="py-3 px-4">
+                    <TableRow key={deputy.id} className="table-row-hover">
+                      <TableCell className="font-semibold">{deputy.name}</TableCell>
+                      <TableCell className="text-gray-600">{deputy.district}</TableCell>
+                      <TableCell className="text-center">{deputy.projects}</TableCell>
+                      <TableCell>
                         <div className="flex items-center space-x-1">
                           <span className="font-medium">{deputy.performance}</span>
-                          <span className="text-amber-500">★</span>
+                          <span className="text-yellow-500">★</span>
                         </div>
-                      </td>
-                      <td className="py-3 px-4">
+                      </TableCell>
+                      <TableCell>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           deputy.riskScore < 30 ? 'bg-emerald-100 text-emerald-800' :
                           deputy.riskScore < 50 ? 'bg-amber-100 text-amber-800' :
@@ -322,88 +350,87 @@ export function StateHeadDashboard() {
                         }`}>
                           {deputy.riskScore}
                         </span>
-                      </td>
-                      <td className="py-3 px-4">
-                        <button className="text-blue-600 hover:text-blue-800 text-sm font-medium">
-                          View Details
-                        </button>
-                      </td>
-                    </tr>
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="sm" className="text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700">
+                          <Eye className="mr-1 h-4 w-4" /> View Details
+                        </Button>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
 
-        {/* Pending Allocations */}
-        <div className="mt-8 bg-white rounded-2xl shadow-xl border border-slate-200">
-          <div className="p-6 border-b border-slate-100">
-            <h2 className="text-xl font-bold text-slate-900 flex items-center space-x-2">
-              <Settings className="h-6 w-6 text-amber-600" />
-              <span>Pending Budget Allocations</span>
-            </h2>
-          </div>
-          <div className="p-6">
-            <div className="space-y-4">
-              {pendingAllocations.map((allocation) => (
-                <div key={allocation.id} className="border border-slate-200 rounded-xl p-4">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-slate-900">{allocation.project}</h3>
-                      <p className="text-sm text-slate-600">Requested: ₹{allocation.requestedAmount.toLocaleString()}</p>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        allocation.priority === 'high' ? 'bg-red-100 text-red-800' :
-                        allocation.priority === 'medium' ? 'bg-amber-100 text-amber-800' :
-                        'bg-green-100 text-green-800'
-                      }`}>
-                        {allocation.priority.toUpperCase()}
-                      </span>
-                      <button
-                        onClick={() => handleApproveAllocation(allocation.id, allocation.requestedAmount)}
-                        className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                      >
-                        Approve
-                      </button>
+          {/* Pending Allocations */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">Pending Budget Allocations</CardTitle>
+              <CardDescription className="text-gray-600">Review and approve budget requests from deputies.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {pendingAllocations.map((allocation) => (
+                  <div key={allocation.id} className="rounded-xl border p-4 space-y-3 hover:border-yellow-500 transition-colors cursor-pointer">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{allocation.project}</h3>
+                        <p className="text-sm text-gray-600">Requested: ₹{allocation.requestedAmount.toLocaleString()}</p>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          allocation.priority === 'high' ? 'bg-red-100 text-red-800' :
+                          allocation.priority === 'medium' ? 'bg-amber-100 text-amber-800' :
+                          'bg-emerald-100 text-emerald-800'
+                        }`}>
+                          {allocation.priority.toUpperCase()}
+                        </span>
+                        <Button
+                          onClick={() => handleApproveAllocation(allocation.id, allocation.requestedAmount)}
+                          className="cta-gradient text-sm font-medium"
+                          size="sm"
+                        >
+                          Approve
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Regional Alerts */}
-        <div className="mt-8 bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-8 border border-red-100">
-          <div className="mb-6">
-            <h3 className="text-2xl font-bold text-slate-900 mb-4 flex items-center space-x-2">
-              <AlertTriangle className="h-6 w-6 text-red-600" />
-              <span>Regional Corruption Alerts</span>
-            </h3>
-          </div>
-          <div className="space-y-4">
-            {regionalAlerts.map((alert) => (
-              <div key={alert.id} className="bg-white rounded-xl p-4 border border-slate-200">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h4 className="font-semibold text-slate-900">{alert.description}</h4>
-                    <p className="text-sm text-slate-600">Deputy: {alert.deputy}</p>
-                  </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    alert.severity === 'high' ? 'bg-red-100 text-red-800' :
-                    alert.severity === 'medium' ? 'bg-amber-100 text-amber-800' :
-                    'bg-blue-100 text-blue-800'
-                  }`}>
-                    {alert.severity.toUpperCase()}
-                  </span>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </CardContent>
+          </Card>
+
+          {/* Regional Alerts */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />Regional Corruption Alerts</CardTitle>
+              <CardDescription className="text-gray-600">Critical alerts requiring immediate attention.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4">
+                {regionalAlerts.map((alert) => (
+                  <div key={alert.id} className="rounded-xl border p-4 space-y-3 hover:border-red-500 transition-colors cursor-pointer">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-semibold text-gray-900">{alert.description}</h4>
+                        <p className="text-sm text-gray-600">Deputy: {alert.deputy}</p>
+                      </div>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        alert.severity === 'high' ? 'bg-red-100 text-red-800' :
+                        alert.severity === 'medium' ? 'bg-amber-100 text-amber-800' :
+                        'bg-blue-100 text-blue-800'
+                      }`}>
+                        {alert.severity.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </main>
       </div>
-    </div>
+    </>
   );
 }

@@ -8,6 +8,8 @@
     --foreground: theme('colors.helix-dark');
     --primary: theme('colors.helix-accent');
     --primary-foreground: theme('colors.helix-dark');
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
   }
 
   .dark {
@@ -15,6 +17,8 @@
     --foreground: theme('colors.helix-light');
     --primary: theme('colors.helix-accent');
     --primary-foreground: theme('colors.helix-light');
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
   }
 
   body {
