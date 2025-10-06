@@ -2,152 +2,128 @@ import { Shield, Lock, Eye, Zap, CheckCircle, Globe } from 'lucide-react';
 import React from "react";
 
 export function ICPSolution() {
-  const features = [
-    {
-      icon: Lock,
-      title: 'Immutable Records',
-      description: 'Once aid data is on the blockchain, it cannot be altered or deleted.',
-      example: 'No more \"lost\" shipping manifests or altered delivery confirmations.',
-    },
-    {
-      icon: Eye,
-      title: 'Radical Transparency',
-      description: 'Every step of the aid journey is visible to all stakeholders.',
-      example: 'Donors can track their contributions directly to the communities in need.',
-    },
-    {
-      icon: Zap,
-      title: 'Real-time Analytics',
-      description: 'AI monitors the supply chain to flag bottlenecks and inefficiencies.',
-      example: 'Instantly identify a stalled shipment and reroute supplies.',
-    },
-    {
-      icon: Shield,
-      title: 'Unstoppable & Sovereign',
-      description: 'Runs on a decentralized network, immune to local interference.',
-      example: 'Ensures aid delivery continues even in unstable environments.',
-    }
-  ];
-
   const howItWorks = [
     {
       step: '1',
-      title: 'Digital Twinning',
-      description: 'Physical aid is assigned a unique digital identity on the blockchain, creating an immutable link from the start of its journey.',
-      icon: CheckCircle
+      title: 'Register on the Blockchain',
+      description: 'Manufacturers register each batch, creating a unique, tamper-proof digital identity. Secure QR codes are generated for every single item, linking the physical to the digital.',
+      image: '/Batch Registration UI.png',
+      points: [
+        'Tamper-proof digital identity',
+        'Secure QR code generation'
+      ]
     },
     {
       step: '2',
-      title: 'Real-Time Tracking',
-      description: 'As aid moves through the supply chain, every scan and handover is recorded, providing a live, end-to-end view of its location.',
-      icon: Globe
+      title: 'Track in Real-Time',
+      description: 'Every handover is recorded as a secure transaction. Our live dashboard tracks location, temperature (via IoT), and custody, providing unparalleled visibility.',
+      image: '/Live Tracking Dashboard.png',
+      points: [
+        'Complete chain of custody',
+        'Real-time condition monitoring'
+      ]
     },
     {
       step: '3',
-      title: 'Automated Verification',
-      description: 'Smart contracts automatically verify and process customs, vendor payments, and other logistical steps, reducing delays and human error.',
-      icon: Zap
+      title: 'Verify with a Scan',
+      description: 'With a simple smartphone scan, anyone—from pharmacists to patients—can instantly view the entire history of their medication, ensuring it\'s genuine and safe before use.',
+      image: '/QR Scan Result.png',
+      points: [
+        'Empowering patients and providers',
+        'Instant peace of mind'
+      ]
+    }
+  ];
+
+  const features = [
+    {
+      icon: Lock,
+      title: 'Blockchain Integrity',
+      description: 'Powered by Polkadot for robust security and interoperability, ensuring every record is immutable.',
     },
     {
-      step: '4',
-      title: 'Proof of Delivery',
-      description: 'Recipients confirm arrival with a secure digital signature, closing the loop and providing undeniable proof that aid reached its destination.',
-      icon: Eye
+      icon: Eye,
+      title: 'Instant QR Verification',
+      description: 'Our dynamic QR system connects physical products to their digital twins for foolproof verification.',
+    },
+    {
+      icon: Zap,
+      title: 'Real-Time Alerts',
+      description: 'Integrate with IoT sensors and receive automated alerts for any deviation or unauthorized activity.',
+    },
+    {
+      icon: Shield,
+      title: 'Decentralized Storage',
+      description: 'Critical metadata is stored on IPFS, ensuring data permanence and censorship resistance.',
+    },
+    {
+      icon: Globe,
+      title: 'Advanced Analytics',
+      description: 'Gain insights into your supply chain, predict shortages, and optimize logistics with our data dashboard.',
+    },
+    {
+      icon: CheckCircle,
+      title: 'Enterprise Scalability',
+      description: 'Built with a modern stack designed for high performance, security, and global scale from day one.',
     }
   ];
 
   return (
-    <section id="protocol" className="py-20 bg-helix-gray-900">
-      <div className="container mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-3 mb-6">
-            <h2 className="text-4xl font-bold text-white">
-              The H<span className="text-primary">.</span>E<span className="text-primary">.</span>L<span className="text-primary">.</span>I<span className="text-primary">.</span>X<span className="text-primary">.</span> Protocol
-            </h2>
+    <>
+      <section id="solution" className="py-20 lg:py-32 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">An Immutable Chain of Trust.</h2>
+            <p className="text-lg text-gray-600">Red Médica provides a digital passport for every medical product, creating an unforgeable record of its journey from the factory to your hands. We turn opacity into transparency.</p>
           </div>
-          <p className="text-xl text-helix-gray-300 max-w-3xl mx-auto">
-            Built on the Internet Computer, H.E.L.I.X. makes aid delivery transparent and accountable.
-          </p>
-        </div>
-
-        {/* Core Features */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div key={index} className="text-center bg-background p-6 rounded-lg border border-helix-gray-800">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center bg-primary">
-                  <Icon className="h-8 w-8 text-primary-foreground" />
+          <div className="space-y-16">
+            {howItWorks.map((item, index) => (
+              <div key={index} className="grid md:grid-cols-2 gap-10 items-center">
+                <div className={index % 2 !== 0 ? 'md:order-last' : ''}>
+                  <span className="inline-block bg-yellow-100 text-yellow-600 font-semibold px-4 py-1 rounded-full mb-4">Step {item.step}</span>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">{item.title}</h3>
+                  <p className="text-gray-600 mb-6">{item.description}</p>
+                  <ul className="space-y-2 text-gray-700">
+                    {item.points.map((point, pIndex) => (
+                      <li key={pIndex} className="flex items-center">
+                        <svg className="w-5 h-5 text-yellow-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+                        {point}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">{feature.title}</h3>
-                <p className="text-helix-gray-400 mb-3">{feature.description}</p>
-                <div className="text-sm font-medium p-3 rounded-lg bg-primary text-black">
-                  {feature.example}
+                <div className="bg-gray-50 rounded-xl p-8 border">
+                  <img src={item.image} alt={item.title} className="rounded-lg shadow-lg border border-gray-200 w-full" />
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
+      </section>
 
-        {/* How It Works */}
-        <div className="mb-20">
-          <h3 className="text-3xl font-bold text-white text-center mb-12">
-            How H.E.L.I.X. Ensures Integrity
-          </h3>
-          <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {howItWorks.map((item, index) => {
-              const Icon = item.icon;
+      <section id="features" className="py-20 lg:py-32 bg-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">Built for Trust and Scale.</h2>
+            <p className="text-lg text-gray-600">Our enterprise-grade architecture combines the best of blockchain and modern web technologies to deliver a robust and reliable platform.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
               return (
-                <div key={index} className="flex space-x-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                      <span className="text-primary-foreground font-bold">{item.step}</span>
-                    </div>
+                <div key={index} className="feature-card text-center p-8 rounded-xl">
+                  <div className="flex items-center justify-center h-16 w-16 rounded-full bg-white text-yellow-600 mx-auto mb-4 border-2 border-yellow-200">
+                    <Icon className="h-8 w-8" />
                   </div>
-                  <div>
-                    <h4 className="text-xl font-bold text-white mb-2 flex items-center space-x-2">
-                      <Icon className="h-5 w-5 text-primary" />
-                      <span>{item.title}</span>
-                    </h4>
-                    <p className="text-helix-gray-400">{item.description}</p>
-                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
+                  <p className="text-gray-600 text-sm">{feature.description}</p>
                 </div>
               );
             })}
           </div>
         </div>
-
-        {/* Technical Benefits */}
-        <div className="text-center">
-          <h3 className="text-2xl font-bold text-white mb-8">
-            Why the Internet Computer?
-          </h3>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Globe className="h-8 w-8 text-primary-foreground" />
-              </div>
-              <h4 className="font-bold text-primary mb-2">True Decentralization</h4>
-              <p className="text-helix-gray-400">No single entity can control the data, ensuring neutrality.</p>
-            </div>
-            <div>
-              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Zap className="h-8 w-8 text-primary-foreground" />
-              </div>
-              <h4 className="font-bold text-primary mb-2">Web Speed</h4>
-              <p className="text-helix-gray-400">Real-time updates and instant analytics at scale.</p>
-            </div>
-            <div>
-              <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8 text-primary-foreground" />
-              </div>
-              <h4 className="font-bold text-primary mb-2">Chain-Key Cryptography</h4>
-              <p className="text-helix-gray-400">Airtight security that ensures data integrity and authenticity.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

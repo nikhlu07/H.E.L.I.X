@@ -37,75 +37,59 @@ export function CorruptionCases() {
     },
   ];
 
-  return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
-            The Trust Deficit in Legacy Systems
-          </h2>
-          <p className="text-xl text-helix-gray-300 max-w-3xl mx-auto">
-            From global security to local education, legacy systems are failing. Opaque processes, backroom deals, and a lack of accountability create a breeding ground for corruption.
-            <span className="block mt-2 text-primary font-semibold">
-              Every case below highlights a problem that H.E.L.I.X. is designed to solve.
-            </span>
-          </p>
-        </div>
+  const toggleCase = (id: string) => {
+    if (expandedCase === id) {
+      setExpandedCase(null);
+    } else {
+      setExpandedCase(id);
+    }
+  };
 
-        <div className="grid gap-6 max-w-4xl mx-auto">
-          {cases.map((case_) => {
-            const Icon = case_.icon;
-            const isExpanded = expandedCase === case_.id;
-            
-            return (
-              <div
-                key={case_.id}
-                className={`bg-helix-gray-900 rounded-2xl shadow-md border-2 transition-all duration-300 ${
-                  isExpanded ? 'border-primary' : 'border-helix-gray-800 hover:border-helix-gray-700'
-                }`}
-              >
+  return (
+    <section id="problem" className="py-20 lg:py-32 bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">Corruption is a Systemic Failure.</h2>
+          <p className="text-lg text-gray-600 mb-12">From defense contracts to educational accreditations, opaque systems are vulnerable to manipulation. We need a new foundation of transparency to restore trust.</p>
+        </div>
+        <div className="max-w-4xl mx-auto">
+          <div className="space-y-6">
+            {cases.map((caseItem) => (
+              <div key={caseItem.id} className="card bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:border-yellow-500 hover:shadow-lg">
                 <button
-                  onClick={() => setExpandedCase(isExpanded ? null : case_.id)}
-                  className="w-full p-6 text-left"
+                  onClick={() => toggleCase(caseItem.id)}
+                  className="w-full text-left p-6 flex items-center justify-between"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="p-3 rounded-xl bg-primary">
-                        <Icon className="h-6 w-6 text-primary-foreground" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white">{case_.title}</h3>
-                        <p className="text-helix-gray-400">{case_.impact}</p>
-                      </div>
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center">
+                      <caseItem.icon className="w-6 h-6" />
                     </div>
-                    <div className="text-right">
-                      {isExpanded ? (
-                        <ChevronUp className="h-5 w-5 text-helix-gray-400 mt-2" />
-                      ) : (
-                        <ChevronDown className="h-5 w-5 text-helix-gray-400 mt-2" />
-                      )}
+                    <div className="ml-4">
+                      <h3 className="text-lg font-bold text-gray-900">{caseItem.title}</h3>
+                      <p className="text-sm text-gray-500">{caseItem.impact}</p>
                     </div>
                   </div>
+                  <div className="ml-6">
+                    {expandedCase === caseItem.id ? <ChevronUp className="w-6 h-6 text-gray-500" /> : <ChevronDown className="w-6 h-6 text-gray-500" />}
+                  </div>
                 </button>
-
-                {isExpanded && (
-                  <div className="px-6 pb-6 border-t border-helix-gray-800">
-                    <div className="grid md:grid-cols-2 gap-6 mt-6">
+                {expandedCase === caseItem.id && (
+                  <div className="px-6 pb-6 border-t border-gray-200">
+                    <div className="grid md:grid-cols-2 gap-6 mt-4">
                       <div>
-                        <h4 className="font-semibold text-white mb-2">What Happened</h4>
-                        <p className="text-sm text-helix-gray-400">{case_.details.problem}</p>
+                        <h4 className="font-semibold text-gray-800 mb-2">The Problem</h4>
+                        <p className="text-gray-600 text-sm">{caseItem.details.problem}</p>
                       </div>
-                      
                       <div>
-                        <h4 className="font-semibold text-primary mb-2">The H.E.L.I.X. Solution</h4>
-                        <p className="text-sm text-helix-gray-300 font-medium">{case_.details.solution}</p>
+                        <h4 className="font-semibold text-yellow-600 mb-2">The Blockchain Solution</h4>
+                        <p className="text-gray-600 text-sm">{caseItem.details.solution}</p>
                       </div>
                     </div>
                   </div>
                 )}
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </div>
     </section>

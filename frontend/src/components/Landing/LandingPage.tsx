@@ -10,7 +10,7 @@ interface LandingPageProps {
 
 export function LandingPage({ onGetStarted }: LandingPageProps) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-white">
       <HeroSection onGetStarted={onGetStarted} />
       <CorruptionCases />
       <ICPSolution />

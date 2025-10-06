@@ -50,72 +50,32 @@ export function StatsDashboard() {
   ];
 
   return (
-    <div className="py-20 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-foreground mb-4">
-            Platform Impact
-          </h2>
-          <p className="text-xl text-helix-gray-300 max-w-3xl mx-auto">
-            Real-time statistics showing the effectiveness of the H.E.L.I.X. network.
-          </p>
+    <section id="features" className="py-20 lg:py-32 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">Platform Impact by the Numbers</h2>
+          <p className="text-lg text-gray-600">Real-time statistics showing the effectiveness and transparency of the Red Médica network.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="group bg-helix-gray-900 rounded-2xl p-8 shadow-md hover:shadow-primary/20 hover:shadow-lg transition-all duration-300 border border-helix-gray-800 hover:border-primary hover:scale-105"
-            >
-              <div className="flex items-start justify-between mb-6">
-                <div className="p-3 rounded-xl bg-primary">
-                  <stat.icon className="h-8 w-8 text-primary-foreground" />
-                </div>
-                <div className="text-right">
-                  <div className="text-3xl font-bold text-primary">
-                    <AnimatedCounter
-                      target={stat.value}
-                      prefix={stat.prefix}
-                      suffix={stat.suffix}
-                    />
-                  </div>
-                </div>
+            <div key={index} className="feature-card text-center p-8 rounded-xl">
+              <div className="flex items-center justify-center h-16 w-16 rounded-full bg-white text-yellow-600 mx-auto mb-4 border-2 border-yellow-200">
+                <stat.icon className="h-8 w-8" />
               </div>
-              <h3 className="text-lg font-semibold text-white group-hover:text-helix-gray-200 transition-colors mb-2">
-                {stat.label}
-              </h3>
-              {stat.description && (
-                <p className="text-sm text-helix-gray-400">{stat.description}</p>
-              )}
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{stat.label}</h3>
+              <div className="text-4xl font-bold text-yellow-600 my-4">
+                <AnimatedCounter
+                  target={stat.value}
+                  prefix={stat.prefix}
+                  suffix={stat.suffix}
+                />
+              </div>
+              <p className="text-gray-600 text-sm">{stat.description}</p>
             </div>
           ))}
         </div>
-
-        <div className="mt-16 bg-helix-gray-900 rounded-2xl p-8 border border-helix-gray-800">
-          <div className="text-center">
-            <h3 className="text-2xl font-bold text-primary mb-4">
-              A New Standard for Transparency
-            </h3>
-            <p className="text-helix-gray-300 mb-6 max-w-2xl mx-auto">
-              H.E.L.I.X. is built on open-source principles to be a global public good. We invite all organizations to join us in building a new, trustworthy foundation for humanitarian aid.
-            </p>
-            <div className="flex items-center justify-center space-x-8 text-sm text-helix-gray-300">
-              <span className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <span>Open Source</span>
-              </span>
-              <span className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <span>Built on ICP</span>
-              </span>
-              <span className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <span>Community Governed</span>
-              </span>
-            </div>
-          </div>
-        </div>
       </div>
-    </div>
+    </section>
   );
 }
