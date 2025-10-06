@@ -11,6 +11,7 @@ import { Header } from './components/Dashboard/Header';
 import { AuthProvider } from './contexts/AuthContext';
 import {SubSupplierDashboard} from "./components/Dashboard/SubSupplierDashboard.tsx";
 import {AuditorDashboard} from "./components/Dashboard/AuditorDashboard.tsx";
+import Profile from './components/Dashboard/Profile.tsx';
 
 function DashboardLayout() {
   return (
@@ -40,6 +41,7 @@ function App() {
         'sub_supplier': '/dashboard/sub-supplier',
       'citizen': '/dashboard/citizen',
         'auditor': '/dashboard/auditor',
+        'profile':'/dashboard/profile'
     };
 
     const dashboardPath = dashboardMap[role] || '/dashboard/government';
@@ -61,6 +63,7 @@ function App() {
               onBackToLanding={() => navigate('/')}
             />
           } />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/demo" element={<div className="p-8 text-center"><h1 className="text-2xl">Demo Mode Coming Soon!</h1></div>} />
           <Route path="/role-selection" element={<div className="p-8 text-center"><h1 className="text-2xl">Role Selection Coming Soon!</h1></div>} />
 
@@ -73,6 +76,7 @@ function App() {
             <Route path="state-head" element={<StateHeadDashboard />} />
             <Route path="deputy" element={<DeputyDashboard />} />
               <Route path="auditor" element={<AuditorDashboard />} />
+              <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>
       </div>
