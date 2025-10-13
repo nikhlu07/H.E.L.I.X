@@ -9,7 +9,7 @@ import { useAuth } from '../../contexts/AuthContext.tsx';
 import { Copy, Check, User, Shield, Bell, Settings as SettingsIcon, Edit } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs.tsx';
 import { Switch } from '../ui/switch.tsx';
-import { toast } from 'sonner';
+import { Toaster, toast } from 'sonner';
 
 const Profile = () => {
   const { user, loading } = useAuth();
@@ -97,6 +97,7 @@ const Profile = () => {
         }
       `}</style>
       <div className="min-h-screen bg-gray-50 font-sans">
+        <Toaster />
         <Header />
 
         <main className="container mx-auto max-w-7xl px-4 pt-28 pb-8">
