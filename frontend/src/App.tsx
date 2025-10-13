@@ -53,9 +53,7 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/" element={
-            <LandingPage
-              onGetStarted={handleGetStarted}
-            />
+            <LandingPage/>
           } />
           <Route path="/login" element={
             <LoginPage

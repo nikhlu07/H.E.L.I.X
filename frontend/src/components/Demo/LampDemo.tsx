@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { LampContainer } from "@/components/ui/lamp";
 import { Button } from "@/components/ui/button";
 import {ArrowRight} from "lucide-react";
+import {Link} from "react-router-dom";
 
 export function LampDemo() {
   return (
@@ -35,10 +36,11 @@ export function LampDemo() {
                 {/*  <span>Try ICP Demo</span>*/}
                 {/*  <ArrowRight className="w-5 h-5" />*/}
                 {/*</button>*/}
-                <a href="https://github.com/nikhlu07/H.E.L.I.X." target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 rounded-lg border-2 border-yellow-400/80 bg-yellow-400/10 px-6 py-3 text-sm font-semibold text-yellow-500 shadow-sm backdrop-blur-sm transition-all hover:border-yellow-400 hover:bg-yellow-400/20 hover:shadow-md">
+                <Link to="/login" target="_blank" rel="noopener noreferrer"
+                      className="group flex items-center gap-2 rounded-lg border-2 border-yellow-400/80 bg-yellow-400/10 px-6 py-3 text-sm font-semibold text-yellow-500 shadow-sm backdrop-blur-sm transition-all hover:border-yellow-400 hover:bg-yellow-400/20 hover:shadow-md">
                    {/*<img src="logo.svg" alt="Helix Logo" className="h-5 w-auto"/>*/}
                     <span >Access Now</span>
-                </a>
+                </Link>
               </div>
       </motion.div>
     </LampContainer>
