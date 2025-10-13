@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { PackageSearch, CircleDollarSign, ClipboardCheck, ChevronDown, ChevronUp } from 'lucide-react';
+import { PackageSearch, CircleDollarSign, ClipboardCheck } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 export function CorruptionCases() {
-  const [expandedCase, setExpandedCase] = useState<string | null>('nato-procurement-probe');
+  const [selectedCase, setSelectedCase] = useState<string>('nato-procurement-probe');
   const main = useRef<HTMLElement>(null);
 
   const cases = [
@@ -40,9 +40,7 @@ export function CorruptionCases() {
     },
   ];
 
-  const toggleCase = (id: string) => {
-    setExpandedCase(expandedCase === id ? null : id);
-  };
+  const selectedCaseDetails = cases.find(c => c.id === selectedCase);
 
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -61,7 +59,7 @@ export function CorruptionCases() {
         duration: 1,
         ease: "power3.out",
       })
-      .from(".max-w-4xl", {
+      .from(".cases-grid", {
         opacity: 0,
         y: 50,
         duration: 1,
@@ -73,49 +71,64 @@ export function CorruptionCases() {
   }, []);
 
   return (
-    <section id="problem" className="py-20 lg:py-32 bg-gray-50" ref={main}>
+    <section id="problem" className="py-20 lg:py-32 bg-white" ref={main}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tighter text-gray-900 mb-4">Corruption is a Systemic Failure.</h2>
           <p className="text-lg text-gray-600 mb-12">From defense contracts to educational accreditations, opaque systems are vulnerable to manipulation. We need a new foundation of transparency to restore trust.</p>
         </div>
-        <div className="max-w-4xl mx-auto">
-          <div className="space-y-6">
-            {cases.map((caseItem) => (
-              <div key={caseItem.id} className="card bg-white border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 hover:border-yellow-500 hover:shadow-lg">
+        
+        <div className="cases-grid max-w-6xl mx-auto grid lg:grid-cols-3 gap-12 items-start">
+          <div className="lg:col-span-1">
+            <div className="space-y-4">
+              {cases.map((caseItem) => (
                 <button
-                  onClick={() => toggleCase(caseItem.id)}
-                  className="w-full text-left p-6 flex items-center justify-between"
+                  key={caseItem.id}
+                  onClick={() => setSelectedCase(caseItem.id)}
+                  className={`w-full text-left p-4 rounded-lg transition-all duration-300 flex items-center ${
+                    selectedCase === caseItem.id
+                      ? 'bg-white shadow-lg border border-yellow-500'
+                      : 'bg-white/50 hover:bg-white hover:shadow-md'
+                  }`}
                 >
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center">
-                      <caseItem.icon className="w-6 h-6" />
-                    </div>
-                    <div className="ml-4">
-                      <h3 className="text-lg font-bold text-gray-900">{caseItem.title}</h3>
-                      <p className="text-sm text-gray-500">{caseItem.impact}</p>
-                    </div>
+                  <div className={`flex-shrink-0 w-10 h-10 rounded-md flex items-center justify-center ${
+                    selectedCase === caseItem.id ? 'bg-yellow-100 text-yellow-600' : 'bg-gray-200 text-gray-600'
+                  }`}>
+                    <caseItem.icon className="w-5 h-5" />
                   </div>
-                  <div className="ml-6">
-                    {expandedCase === caseItem.id ? <ChevronUp className="w-6 h-6 text-gray-500" /> : <ChevronDown className="w-6 h-6 text-gray-500" />}
+                  <div className="ml-4">
+                    <h3 className="text-base font-bold text-gray-900">{caseItem.title}</h3>
+                    <p className="text-xs text-gray-500">{caseItem.impact}</p>
                   </div>
                 </button>
-                {expandedCase === caseItem.id && (
-                  <div className="px-6 pb-6 border-t border-gray-200">
-                    <div className="grid md:grid-cols-2 gap-6 mt-4">
-                      <div>
-                        <h4 className="font-semibold text-gray-800 mb-2">The Problem</h4>
-                        <p className="text-gray-600 text-sm">{caseItem.details.problem}</p>
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-yellow-600 mb-2">The Blockchain Solution</h4>
-                        <p className="text-gray-600 text-sm">{caseItem.details.solution}</p>
-                      </div>
-                    </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="lg:col-span-2">
+            {selectedCaseDetails && (
+              <div className="bg-white p-8 rounded-xl shadow-xl border border-gray-200">
+                <div className="flex items-center mb-6">
+                  <div className="flex-shrink-0 w-12 h-12 bg-yellow-100 text-yellow-600 rounded-lg flex items-center justify-center">
+                    <selectedCaseDetails.icon className="w-6 h-6" />
                   </div>
-                )}
+                  <div className="ml-4">
+                    <h3 className="text-2xl font-bold text-gray-900">{selectedCaseDetails.title}</h3>
+                    <p className="text-md text-gray-500">{selectedCaseDetails.impact}</p>
+                  </div>
+                </div>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h4 className="font-semibold text-gray-800 mb-2 text-lg">The Problem</h4>
+                    <p className="text-gray-600">{selectedCaseDetails.details.problem}</p>
+                  </div>
+                  <div className="bg-yellow-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-yellow-700 mb-2 text-lg">The Blockchain Solution</h4>
+                    <p className="text-yellow-900">{selectedCaseDetails.details.solution}</p>
+                  </div>
+                </div>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
