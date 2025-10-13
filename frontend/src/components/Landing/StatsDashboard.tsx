@@ -141,12 +141,12 @@ export function StatsDashboard() {
           <div className="text-center">
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-8">Powered By Enterprise-Grade Technology</h3>
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-6 max-w-4xl mx-auto">
-              <div className="flex items-center gap-3 text-gray-500" title="Internet Computer"><img src="https://cryptologos.cc/logos/internet-computer-icp-logo.svg" className="h-7 w-7" alt="Internet Computer" /> Internet Computer</div>
+              <div className="flex items-center gap-3 text-gray-500" title="Internet Computer"><img src="internet-computer-icp-logo.svg" className="h-7 w-7" alt="Internet Computer" /> Internet Computer</div>
               <div className="flex items-center gap-3 text-gray-500" title="React"><img src="https://www.vectorlogo.zone/logos/reactjs/reactjs-icon.svg" className="h-7 w-7" alt="React" /> React</div>
               <div className="flex items-center gap-3 text-gray-500" title="Node.js"><img src="https://www.vectorlogo.zone/logos/nodejs/nodejs-icon.svg" className="h-7 w-7" alt="Node.js" /> Node.js</div>
               <div className="flex items-center gap-3 text-gray-500" title="Rust"><img src="https://www.vectorlogo.zone/logos/rust-lang/rust-lang-icon.svg" className="h-7 w-7" alt="Rust" /> Rust</div>
               <div className="flex items-center gap-3 text-gray-500" title="MongoDB"><img src="https://www.vectorlogo.zone/logos/mongodb/mongodb-icon.svg" className="h-7 w-7" alt="MongoDB" /> MongoDB</div>
-              <div className="flex items-center gap-3 text-gray-500" title="IPFS"><img src="https://www.vectorlogo.zone/logos/ipfs/ipfs-icon.svg" className="h-7 w-7" alt="IPFS" /> IPFS</div>
+              <div className="flex items-center gap-3 text-gray-500" title="IPFS"><img src="ipfs-icon.svg" className="h-7 w-7" alt="IPFS" /> IPFS</div>
             </div>
           </div>
         </div>

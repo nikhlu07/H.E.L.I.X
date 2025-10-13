@@ -1,17 +1,16 @@
-import { HeroSection } from './HeroSection';
+import { Header } from './Header';
+import { LampDemo } from '../Demo/LampDemo';
+// import { DemoOne } from '../Demo/DemoOne';
 import { SectorShowcase } from './SectorShowcase';
 import { CorruptionCases } from './CorruptionCases';
 import { ICPSolution } from './ICPSolution';
 import { StatsDashboard } from './StatsDashboard';
 
-interface LandingPageProps {
-  onGetStarted: () => void;
-}
-
-export function LandingPage({ onGetStarted }: LandingPageProps) {
+export function LandingPage() {
   return (
-    <div className="min-h-screen bg-white">
-      <HeroSection onGetStarted={onGetStarted} />
+    <div className="">
+      <Header />
+      <LampDemo />
       <CorruptionCases />
       <ICPSolution />
       <SectorShowcase />
