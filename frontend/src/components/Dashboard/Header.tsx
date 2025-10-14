@@ -129,9 +129,9 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <Settings className="h-5 w-5" />
-            </Button>
+            {/*<Button variant="ghost" size="icon">*/}
+            {/*  <Settings className="h-5 w-5" />*/}
+            {/*</Button>*/}
 
             <div className="w-px h-6 bg-gray-200 mx-2" />
 
