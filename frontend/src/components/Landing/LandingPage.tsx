@@ -1,19 +1,18 @@
 import { Header } from './Header';
 import { LampDemo } from '../Demo/LampDemo';
-// import { DemoOne } from '../Demo/DemoOne';
-import { SectorShowcase } from './SectorShowcase';
-import { CorruptionCases } from './CorruptionCases';
+import  PricingSection3  from '../ui/pricing-section-2';
+import CaseStudies from '../ui/case-studies';
 import { ICPSolution } from './ICPSolution';
 import { StatsDashboard } from './StatsDashboard';
 
 export function LandingPage() {
   return (
-    <div className="">
+    <div>
       <Header />
       <LampDemo />
-      <CorruptionCases />
+      <CaseStudies />
       <ICPSolution />
-      <SectorShowcase />
+      <PricingSection3 />
       <StatsDashboard />
     </div>
   );

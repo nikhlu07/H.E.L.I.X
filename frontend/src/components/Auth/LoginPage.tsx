@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Building2, Heart, Factory, ArrowLeft, Shield, Globe, Zap, Key, Truck, ArrowRight } from 'lucide-react';
+import { Landmark, Map, UserCheck, Factory, ArrowLeft, Shield, Key, Truck, ArrowRight, Eye } from 'lucide-react';
 import helixService from '../../services/helixService';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -12,17 +12,17 @@ const roleConfig = {
   'main_government': {
     title: 'Government Official',
     description: 'National oversight and policy control',
-    icon: Building2,
+    icon: Landmark,
   },
   'state_head': {
     title: 'State Head',
     description: 'Regional management and coordination',
-    icon: Heart,
+    icon: Map,
   },
   'deputy': {
     title: 'Deputy Officer',
     description: 'District-level execution and monitoring',
-    icon: Heart,
+    icon: UserCheck,
   },
   'vendor': {
     title: 'Vendor/Contractor',
@@ -37,7 +37,7 @@ const roleConfig = {
   'citizen': {
     title: 'Citizen Observer',
     description: 'Transparency monitoring and reporting',
-    icon: Shield,
+    icon: Eye,
   }
 };
 
@@ -45,7 +45,7 @@ type RoleType = keyof typeof roleConfig;
 
 export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
   const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
-  const [authMethod, setAuthMethod] = useState<'demo' | 'icp' | 'simple-ii' | null>('icp');
+  const [authMethod, setAuthMethod] = useState<'icp'>('icp');
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -54,7 +54,7 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
     setError(null);
   };
 
-  const handleAuthMethodSelect = (method: 'demo' | 'icp' | 'simple-ii') => {
+  const handleAuthMethodSelect = (method: 'icp') => {
     setAuthMethod(method);
     setError(null);
   };
@@ -68,11 +68,6 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
       if (authMethod === 'icp') {
         await helixService.init();
         await helixService.loginWithICP();
-      } else if (authMethod === 'simple-ii') {
-        await helixService.loginWithSimpleII(selectedRole);
-      } else {
-        // Demo mode
-        // await authLogin('demo', selectedRole);
       }
 
       setTimeout(() => {
@@ -81,7 +76,7 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
       }, 500);
     } catch (error) {
       console.error('Authentication failed:', error);
-      setError(authMethod === 'icp' ? 'ICP authentication failed. Please try again.' : 'Demo authentication failed. Please try again.');
+      setError('ICP authentication failed. Please try again.');
       setIsConnecting(false);
     }
   };
@@ -166,25 +161,11 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
 
           <div className="mb-12">
             <h2 className="text-xl font-bold text-center mb-6 text-gray-700">2. Choose Authentication Method</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 max-w-4xl mx-auto">
                 <AuthMethodCard
                   method="icp"
                   title="Internet Identity"
                   icon={Shield}
-                  selectedAuthMethod={authMethod}
-                  onSelect={handleAuthMethodSelect}
-                />
-                <AuthMethodCard
-                  method="simple-ii"
-                  title="Simple II Demo"
-                  icon={Key}
-                  selectedAuthMethod={authMethod}
-                  onSelect={handleAuthMethodSelect}
-                />
-                <AuthMethodCard
-                  method="demo"
-                  title="Demo Mode"
-                  icon={Zap}
                   selectedAuthMethod={authMethod}
                   onSelect={handleAuthMethodSelect}
                 />
@@ -225,15 +206,15 @@ const AuthMethodCard = ({
   selectedAuthMethod,
   onSelect
 }: {
-  method: 'demo' | 'icp' | 'simple-ii';
+  method: 'icp';
   title: string;
   icon: React.ElementType;
-  selectedAuthMethod: 'demo' | 'icp' | 'simple-ii' | null;
-  onSelect: (method: 'demo' | 'icp' | 'simple-ii') => void;
+  selectedAuthMethod: 'icp';
+  onSelect: (method: 'icp') => void;
 }) => (
   <div
     onClick={() => onSelect(method)}
-    className={`card p-4 cursor-pointer flex items-center space-x-4 ${
+    className={`card p-4 cursor-pointer flex items-center space-x-4 max-w-sm mx-auto ${
       selectedAuthMethod === method ? 'border-yellow-400 ring-2 ring-yellow-200 shadow-lg' : 'border-gray-200'
     }`}
   >
