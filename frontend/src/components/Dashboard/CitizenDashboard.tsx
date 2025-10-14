@@ -1,18 +1,37 @@
-import React, { useState } from 'react';
-import { Search, MapPin, Camera, FileText, Shield, DollarSign, AlertTriangle, Users, Eye, ChevronDown } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Search, MapPin, FileText, Shield, DollarSign, AlertTriangle, Users, Eye } from 'lucide-react';
 import { mockClaims, mockChallenges, statistics } from '../../data/mockData';
 import { useToast } from '../common/Toast';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { TimelineContent } from "@/components/ui/timeline-animation";
+import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 
 export function CitizenDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [challengeReason, setChallengeReason] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [selectedClaim, setSelectedClaim] = useState('');
-  const [expandedChallengeId, setExpandedChallengeId] = useState<string | null>(null);
   const { showToast } = useToast();
+  const dashboardRef = useRef<HTMLDivElement>(null);
+
+  const revealVariants = {
+      visible: (i: number) => ({
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          transition: {
+              delay: i * 0.2,
+              duration: 0.5,
+          },
+      }),
+      hidden: {
+          filter: "blur(10px)",
+          y: -20,
+          opacity: 0,
+      },
+  };
 
   const handleStakeChallenge = () => {
     if (!selectedClaim || !challengeReason || !stakeAmount) {
@@ -34,304 +53,283 @@ export function CitizenDashboard() {
     claim.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const toggleChallengeExpansion = (challengeId: string) => {
-    setExpandedChallengeId(prevId => (prevId === challengeId ? null : challengeId));
-  };
-
   return (
     <>
-      <style>{`
-          body {
-              font-family: 'Inter', sans-serif;
-              background: #F7FAFC;
-          }
-          .card {
-              background: #FFFFFF;
-              border: 1px solid #E2E8F0;
-              transition: all 0.3s ease;
-              border-radius: 0.75rem;
-          }
-          .card:hover {
-              border-color: #F59E0B; /* yellow-500 */
-              transform: translateY(-5px);
-              box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.1), 0 8px 10px -6px rgba(245, 158, 11, 0.1);
-          }
-          .cta-gradient {
-              background: linear-gradient(90deg, #FBBF24, #F59E0B); /* yellow-400 to yellow-500 */
-              color: white;
-              transition: opacity 0.3s ease;
-          }
-          .cta-gradient:hover {
-              opacity: 0.9;
-          }
-          .table-row-hover:hover {
-            background-color: #F7FAFC;
-          }
-        `}</style>
-      <div className="min-h-screen bg-gray-50 font-sans">
-        <main className="container mx-auto max-w-7xl px-4 py-8">
-          {/* Header */}
-          <div className="mb-12 text-center">
-            <div className="mb-6 inline-flex rounded-full bg-yellow-100 p-4">
-              <Users className="h-10 w-10 text-yellow-600" />
-            </div>
-            <h1 className="text-4xl font-black tracking-tighter text-gray-900 md:text-6xl">
-              Citizen Oversight Portal
-            </h1>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
-              Help protect taxpayer money through community verification and transparency monitoring.
-            </p>
-          </div>
-
-          {/* Impact Stats */}
-          <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Corruption Prevented</CardTitle>
-                <Shield className="h-5 w-5 text-emerald-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-emerald-600">${(statistics.corruptionPrevented / 1000000).toFixed(1)}M</div>
-                <p className="text-xs text-gray-500">Value of funds protected</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Active Citizens</CardTitle>
-                <Users className="h-5 w-5 text-yellow-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-yellow-600">1,240</div>
-                <p className="text-xs text-gray-500">Community members</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">My Reports</CardTitle>
-                <FileText className="h-5 w-5 text-amber-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-amber-600">3</div>
-                <p className="text-xs text-gray-500">Challenges & Verifications</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Rewards Earned</CardTitle>
-                <DollarSign className="h-5 w-5 text-purple-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-purple-600">50 ICP</div>
-                <p className="text-xs text-gray-500">For successful reports</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Public Spending Explorer */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-bold flex items-center"><Search className="mr-2 h-6 w-6 text-yellow-600" />Public Spending Explorer</CardTitle>
-                <p className="text-gray-600">Search and challenge government spending claims.</p>
-              </CardHeader>
-              <CardContent>
-                <div className="mb-6">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                    placeholder="Search by description or claim ID..."
-                  />
-                </div>
-                <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {filteredClaims.map((claim) => (
-                    <div key={claim.id} className="rounded-xl border p-4 hover:border-yellow-500 transition-colors">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="font-semibold text-gray-900">{claim.description}</h3>
-                          <p className="text-sm text-gray-600 font-mono">ID: {claim.id}</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="text-lg font-bold text-gray-900">${claim.amount.toLocaleString()}</div>
-                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            claim.riskLevel === 'critical' ? 'bg-red-100 text-red-800' :
-                            claim.riskLevel === 'high' ? 'bg-orange-100 text-orange-800' :
-                            claim.riskLevel === 'medium' ? 'bg-amber-100 text-amber-800' :
-                            'bg-emerald-100 text-emerald-800'
-                          }`}>
-                            {claim.riskLevel.toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between text-sm text-gray-600">
-                        <span>Submitted: {claim.submittedAt.toLocaleDateString()}</span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedClaim(claim.id)}
-                          className="text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700"
-                        >
-                          Challenge This Claim
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* File Corruption Challenge */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />File Corruption Challenge</CardTitle>
-                <p className="text-gray-600">Report fraudulent or suspicious claims.</p>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Select Claim to Challenge
-                  </label>
-                  <select
-                    value={selectedClaim}
-                    onChange={(e) => setSelectedClaim(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+      <section
+          className="py-16 px-4 bg-white w-full relative min-h-screen flex items-start"
+          ref={dashboardRef}
+      >
+          <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#0000001a_1px,transparent_1px),linear-gradient(to_bottom,#0000001a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_40%_50%_at_50%_50%,#000_70%,transparent_110%)]"></div>
+          <main className="max-w-7xl mx-auto w-full z-10">
+              {/* Header */}
+              <article className="text-center mb-12">
+                  <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
+                      <VerticalCutReveal
+                          splitBy="words"
+                          staggerDuration={0.15}
+                          staggerFrom="first"
+                          reverse={true}
+                          containerClassName="justify-center"
+                          transition={{
+                              type: "spring",
+                              stiffness: 250,
+                              damping: 40,
+                              delay: 0,
+                          }}
+                      >
+                          Citizen Oversight Portal
+                      </VerticalCutReveal>
+                  </h1>
+                  <TimelineContent
+                      as="p"
+                      animationNum={0}
+                      timelineRef={dashboardRef}
+                      customVariants={revealVariants}
+                      className="text-gray-600 text-lg"
                   >
-                    <option value="">Choose a claim...</option>
-                    {mockClaims.map((claim) => (
-                      <option key={claim.id} value={claim.id}>
-                        {claim.id} - ${claim.amount.toLocaleString()}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+                      Help protect taxpayer money through community verification and transparency monitoring.
+                  </TimelineContent>
+              </article>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Reason for Challenge
-                  </label>
-                  <textarea
-                    value={challengeReason}
-                    onChange={(e) => setChallengeReason(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                    rows={3}
-                    placeholder="Describe why you believe this claim is fraudulent..."
-                  />
-                </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                  {/* Left Column */}
+                  <div className="lg:col-span-2 space-y-8">
+                      {/* Key Metrics */}
+                      <TimelineContent as="div" animationNum={1} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-bold">Impact Stats</CardTitle>
+                                  <CardDescription>Your contribution to transparency.</CardDescription>
+                              </CardHeader>
+                              <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                                  <div className="flex flex-col p-4 bg-emerald-50 rounded-lg">
+                                      <Shield className="h-6 w-6 text-emerald-500 mb-2" />
+                                      <p className="text-sm font-medium text-gray-600">Corruption Prevented</p>
+                                      <p className="text-2xl font-bold text-emerald-600">${(statistics.corruptionPrevented / 1000000).toFixed(1)}M</p>
+                                  </div>
+                                  <div className="flex flex-col p-4 bg-yellow-50 rounded-lg">
+                                      <Users className="h-6 w-6 text-yellow-500 mb-2" />
+                                      <p className="text-sm font-medium text-gray-600">Active Citizens</p>
+                                      <p className="text-2xl font-bold text-yellow-600">1,240</p>
+                                  </div>
+                                  <div className="flex flex-col p-4 bg-yellow-50 rounded-lg">
+                                      <FileText className="h-6 w-6 text-amber-500 mb-2" />
+                                      <p className="text-sm font-medium text-gray-600">My Reports</p>
+                                      <p className="text-2xl font-bold text-amber-600">3</p>
+                                  </div>
+                                  <div className="flex flex-col p-4 bg-purple-50 rounded-lg">
+                                      <DollarSign className="h-6 w-6 text-purple-500 mb-2" />
+                                      <p className="text-sm font-medium text-purple-600">Rewards Earned</p>
+                                      <p className="text-2xl font-bold text-purple-600">50 ICP</p>
+                                  </div>
+                              </CardContent>
+                          </Card>
+                      </TimelineContent>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    ICP Stake Amount
-                  </label>
-                  <input
-                    type="number"
-                    value={stakeAmount}
-                    onChange={(e) => setStakeAmount(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                    placeholder="Enter ICP amount to stake..."
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Minimum stake: 10 ICP. Stakes are returned if challenge is valid.
-                  </p>
-                </div>
+                      {/* Public Spending Explorer */}
+                      <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef} customVariants={revealVariants}>
+                        <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                          <CardHeader>
+                            <CardTitle className="text-xl font-bold flex items-center"><Search className="mr-2 h-6 w-6" />Public Spending Explorer</CardTitle>
+                            <CardDescription>Search and challenge government spending claims.</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="mb-6">
+                              <input
+                                type="text"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                placeholder="Search by description or claim ID..."
+                              />
+                            </div>
+                            <div className="space-y-4 max-h-96 overflow-y-auto">
+                              {filteredClaims.map((claim) => (
+                                <div key={claim.id} className="rounded-xl border p-4 hover:border-black transition-colors cursor-pointer bg-gray-50/50">
+                                  <div className="flex items-start justify-between mb-3">
+                                    <div>
+                                      <h3 className="font-semibold text-gray-900">{claim.description}</h3>
+                                      <p className="text-sm text-gray-600 font-mono">ID: {claim.id}</p>
+                                    </div>
+                                    <div className="text-right">
+                                      <div className="text-lg font-bold text-gray-900">${claim.amount.toLocaleString()}</div>
+                                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                        claim.riskLevel === 'critical' ? 'bg-red-100 text-red-800' :
+                                        claim.riskLevel === 'high' ? 'bg-orange-100 text-orange-800' :
+                                        claim.riskLevel === 'medium' ? 'bg-amber-100 text-amber-800' :
+                                        'bg-emerald-100 text-emerald-800'
+                                      }`}>
+                                        {claim.riskLevel.toUpperCase()}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center justify-between text-sm text-gray-600">
+                                    <span>Submitted: {claim.submittedAt.toLocaleDateString()}</span>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => setSelectedClaim(claim.id)}
+                                      className="text-black hover:bg-gray-100"
+                                    >
+                                      Challenge This Claim
+                                    </Button>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </TimelineContent>
 
-                <Button
-                  onClick={handleStakeChallenge}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-semibold"
-                  size="lg"
-                >
-                  <AlertTriangle className="mr-2 h-5 w-5" />
-                  Submit Challenge
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+                      {/* My Challenges */}
+                      <TimelineContent as="div" animationNum={3} timelineRef={dashboardRef} customVariants={revealVariants}>
+                        <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                          <CardHeader>
+                            <CardTitle className="text-xl font-bold">My Challenges</CardTitle>
+                            <CardDescription>Track the status of your submitted challenges.</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Challenge ID</TableHead>
+                                  <TableHead>Reason</TableHead>
+                                  <TableHead>Stake</TableHead>
+                                  <TableHead>Filed</TableHead>
+                                  <TableHead>Status</TableHead>
+                                  <TableHead>Location</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {mockChallenges.map((challenge) => (
+                                  <TableRow key={challenge.id} className="hover:bg-gray-50/50">
+                                    <TableCell className="font-semibold font-mono">#{challenge.id}</TableCell>
+                                    <TableCell className="text-gray-600 max-w-xs truncate">{challenge.reason}</TableCell>
+                                    <TableCell className="font-semibold">{challenge.stakeAmount} ICP</TableCell>
+                                    <TableCell>{challenge.createdAt.toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                        challenge.status === 'resolved' ? 'bg-green-100 text-green-800' :
+                                        challenge.status === 'investigating' ? 'bg-yellow-100 text-yellow-800' :
+                                        challenge.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                        'bg-gray-100 text-gray-800'
+                                      }`}>
+                                        {challenge.status.toUpperCase()}
+                                      </span>
+                                    </TableCell>
+                                    <TableCell className="text-gray-600 flex items-center">
+                                      <MapPin className="h-4 w-4 mr-2" />
+                                      {challenge.location?.address}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </CardContent>
+                        </Card>
+                      </TimelineContent>
+                  </div>
 
-          {/* My Challenges */}
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle className="text-xl font-bold">My Challenges</CardTitle>
-              <p className="text-gray-600">Track the status of your submitted challenges.</p>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Challenge ID</TableHead>
-                    <TableHead>Reason</TableHead>
-                    <TableHead>Stake</TableHead>
-                    <TableHead>Filed</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Location</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {mockChallenges.map((challenge) => (
-                    <TableRow key={challenge.id} className="table-row-hover">
-                      <TableCell className="font-semibold font-mono">#{challenge.id}</TableCell>
-                      <TableCell className="text-gray-600 max-w-xs truncate">{challenge.reason}</TableCell>
-                      <TableCell className="font-semibold">{challenge.stakeAmount} ICP</TableCell>
-                      <TableCell>{challenge.createdAt.toLocaleDateString()}</TableCell>
-                      <TableCell>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          challenge.status === 'resolved' ? 'bg-emerald-100 text-emerald-800' :
-                          challenge.status === 'investigating' ? 'bg-amber-100 text-amber-800' :
-                          challenge.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                          'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {challenge.status.toUpperCase()}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-gray-600 flex items-center">
-                        <MapPin className="h-4 w-4 mr-2" />
-                        {challenge.location?.address}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+                  {/* Right Column */}
+                  <div className="space-y-8">
+                       {/* File Corruption Challenge */}
+                       <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                            <CardHeader>
+                              <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />File Corruption Challenge</CardTitle>
+                              <CardDescription>Report fraudulent or suspicious claims.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Select Claim to Challenge</label>
+                                <select
+                                  value={selectedClaim}
+                                  onChange={(e) => setSelectedClaim(e.target.value)}
+                                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                >
+                                  <option value="">Choose a claim...</option>
+                                  {mockClaims.map((claim) => (
+                                    <option key={claim.id} value={claim.id}>
+                                      {claim.id} - ${claim.amount.toLocaleString()}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
 
-          {/* Community Verification */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl font-bold flex items-center"><Eye className="mr-2 h-6 w-6 text-yellow-600" />Community Verification</CardTitle>
-              <p className="text-gray-600">Help verify if claimed projects exist at their specified locations.</p>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="rounded-xl border p-4 space-y-3 hover:border-yellow-500 transition-colors">
-                        <h4 className="font-semibold text-gray-900">Road Construction - Highway 47</h4>
-                        <p className="text-sm text-gray-600">Mumbai-Pune Express Highway Extension</p>
-                        <Button
-                            onClick={handleReportProject}
-                            className="w-full cta-gradient font-semibold"
-                        >
-                            Verify Project
-                        </Button>
-                    </div>
-                    <div className="rounded-xl border p-4 space-y-3 hover:border-yellow-500 transition-colors">
-                        <h4 className="font-semibold text-gray-900">School Equipment Delivery</h4>
-                        <p className="text-sm text-gray-600">Government Primary School, Bangalore</p>
-                        <Button
-                            onClick={handleReportProject}
-                            className="w-full cta-gradient font-semibold"
-                        >
-                            Verify Delivery
-                        </Button>
-                    </div>
-                </div>
-                <p className="text-sm text-center text-gray-500 mt-6">
-                    Earn ICP rewards for verified reports that help prevent corruption.
-                </p>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">Reason for Challenge</label>
+                                <textarea
+                                  value={challengeReason}
+                                  onChange={(e) => setChallengeReason(e.target.value)}
+                                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                  rows={3}
+                                  placeholder="Describe why you believe this claim is fraudulent..."
+                                />
+                              </div>
+
+                              <div>
+                                <label className="text-sm font-medium text-gray-700">ICP Stake Amount</label>
+                                <input
+                                  type="number"
+                                  value={stakeAmount}
+                                  onChange={(e) => setStakeAmount(e.target.value)}
+                                  className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                  placeholder="Enter ICP amount to stake..."
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Minimum stake: 10 ICP. Stakes are returned if challenge is valid.
+                                </p>
+                              </div>
+
+                              <Button
+                                onClick={handleStakeChallenge}
+                                className="w-full p-3 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800"
+                              >
+                                <AlertTriangle className="mr-2 h-5 w-5" />
+                                Submit Challenge
+                              </Button>
+                            </CardContent>
+                          </Card>
+                       </TimelineContent>
+                      
+                      {/* Community Verification */}
+                      <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg h-fit">
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-bold flex items-center"><Eye className="mr-2 h-6 w-6" />Community Verification</CardTitle>
+                                  <CardDescription>Help verify if claimed projects exist at their specified locations.</CardDescription>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                  <div className="rounded-xl border p-4 space-y-3 hover:border-black transition-colors cursor-pointer bg-gray-50/50">
+                                      <h4 className="font-semibold text-gray-900">Road Construction - Highway 47</h4>
+                                      <p className="text-sm text-gray-600">Mumbai-Pune Express Highway Extension</p>
+                                      <Button
+                                          onClick={handleReportProject}
+                                          className="w-full p-2 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800"
+                                      >
+                                          Verify Project
+                                      </Button>
+                                  </div>
+                                  <div className="rounded-xl border p-4 space-y-3 hover:border-black transition-colors cursor-pointer bg-gray-50/50">
+                                      <h4 className="font-semibold text-gray-900">School Equipment Delivery</h4>
+                                      <p className="text-sm text-gray-600">Government Primary School, Bangalore</p>
+                                      <Button
+                                          onClick={handleReportProject}
+                                          className="w-full p-2 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800"
+                                      >
+                                          Verify Delivery
+                                      </Button>
+                                  </div>
+                                  <p className="text-sm text-center text-gray-500 pt-2">
+                                      Earn ICP rewards for verified reports that help prevent corruption.
+                                  </p>
+                              </CardContent>
+                          </Card>
+                      </TimelineContent>
+                  </div>
+              </div>
+          </main>
+      </section>
     </>
   );
 }

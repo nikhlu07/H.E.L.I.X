@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
-import { Search, Shield, FileText, TrendingUp, ChevronDown, Eye } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Search, Shield, FileText, TrendingUp, ChevronDown, Eye, AlertTriangle } from 'lucide-react';
 import { useToast } from '../common/Toast';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { TimelineContent } from "@/components/ui/timeline-animation";
+import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
 
 export function AuditorDashboard() {
   const [expandedTxnId, setExpandedTxnId] = useState<string | null>(null);
   const { showToast } = useToast();
+  const dashboardRef = useRef<HTMLDivElement>(null);
+
+  const revealVariants = {
+      visible: (i: number) => ({
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          transition: {
+              delay: i * 0.2,
+              duration: 0.5,
+          },
+      }),
+      hidden: {
+          filter: "blur(10px)",
+          y: -20,
+          opacity: 0,
+      },
+  };
 
   const auditData = {
     transactionsAudited: 1250,
@@ -33,12 +53,12 @@ export function AuditorDashboard() {
 
   const RiskBadge = ({ risk }: { risk: 'low' | 'medium' | 'high' }) => {
     const riskStyles = {
-      low: 'bg-emerald-100 text-emerald-800',
-      medium: 'bg-amber-100 text-amber-800',
+      low: 'bg-green-100 text-green-800',
+      medium: 'bg-yellow-100 text-yellow-800',
       high: 'bg-red-100 text-red-800',
     };
     return (
-      <span className={`ml-2 px-2 py-1 rounded-full text-xs font-medium ${riskStyles[risk]}`}>
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${riskStyles[risk]}`}>
         {risk.toUpperCase()}
       </span>
     );
@@ -46,167 +66,200 @@ export function AuditorDashboard() {
 
   return (
     <>
-      <style>{`
-          body {
-              font-family: 'Inter', sans-serif;
-              background: #F7FAFC;
-          }
-          .card {
-              background: #FFFFFF;
-              border: 1px solid #E2E8F0;
-              transition: all 0.3s ease;
-              border-radius: 0.75rem;
-          }
-          .card:hover {
-              border-color: #F59E0B; /* yellow-500 */
-              transform: translateY(-5px);
-              box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.1), 0 8px 10px -6px rgba(245, 158, 11, 0.1);
-          }
-          .table-row-hover:hover {
-            background-color: #F7FAFC;
-          }
-        `}</style>
-      <div className="min-h-screen bg-gray-50 font-sans">
-        <main className="container mx-auto max-w-7xl px-4 py-8">
-          {/* Header */}
-          <div className="mb-12 text-center">
-            <div className="mb-6 inline-flex rounded-full bg-yellow-100 p-4">
-              <Shield className="h-10 w-10 text-yellow-600" />
-            </div>
-            <h1 className="text-4xl font-black tracking-tighter text-gray-900 md:text-6xl">
-              Auditor Dashboard
-            </h1>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
-              Independent Oversight & Compliance Monitoring
-            </p>
-          </div>
+      <section
+          className="py-16 px-4 bg-white w-full relative min-h-screen flex items-start"
+          ref={dashboardRef}
+      >
+          <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#0000001a_1px,transparent_1px),linear-gradient(to_bottom,#0000001a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_40%_50%_at_50%_50%,#000_70%,transparent_110%)]"></div>
+          <main className="max-w-7xl mx-auto w-full z-10">
+              {/* Header */}
+              <article className="text-center mb-12">
+                  <h1 className="text-5xl font-extrabold text-gray-900 mb-4">
+                      <VerticalCutReveal
+                          splitBy="words"
+                          staggerDuration={0.15}
+                          staggerFrom="first"
+                          reverse={true}
+                          containerClassName="justify-center"
+                          transition={{
+                              type: "spring",
+                              stiffness: 250,
+                              damping: 40,
+                              delay: 0,
+                          }}
+                      >
+                          Auditor Dashboard
+                      </VerticalCutReveal>
+                  </h1>
+                  <TimelineContent
+                      as="p"
+                      animationNum={0}
+                      timelineRef={dashboardRef}
+                      customVariants={revealVariants}
+                      className="text-gray-600 text-lg"
+                  >
+                      Independent Oversight & Compliance Monitoring.
+                  </TimelineContent>
+              </article>
 
-          {/* Audit Stats */}
-          <div className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Transactions Audited</CardTitle>
-                <FileText className="h-5 w-5 text-gray-400" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{auditData.transactionsAudited.toLocaleString()}</div>
-                <p className="text-xs text-gray-500">In the last 90 days</p>
-              </CardContent>
-            </Card>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                  {/* Left Column */}
+                  <div className="lg:col-span-2 space-y-8">
+                      {/* Key Metrics */}
+                      <TimelineContent as="div" animationNum={1} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-bold">Audit Overview</CardTitle>
+                                  <CardDescription>Real-time compliance and transaction metrics.</CardDescription>
+                              </CardHeader>
+                              <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+                                  <div className="flex flex-col p-4 bg-gray-50 rounded-lg">
+                                      <FileText className="h-6 w-6 text-gray-500 mb-2" />
+                                      <p className="text-sm font-medium text-gray-600">Transactions Audited</p>
+                                      <p className="text-2xl font-bold text-gray-900">{auditData.transactionsAudited.toLocaleString()}</p>
+                                  </div>
+                                  <div className="flex flex-col p-4 bg-green-50 rounded-lg">
+                                      <TrendingUp className="h-6 w-6 text-green-500 mb-2" />
+                                      <p className="text-sm font-medium text-green-600">Network Compliance</p>
+                                      <p className="text-2xl font-bold text-green-600">{auditData.complianceRate}%</p>
+                                  </div>
+                              </CardContent>
+                          </Card>
+                      </TimelineContent>
 
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Network Compliance</CardTitle>
-                <TrendingUp className="h-5 w-5 text-emerald-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-emerald-600">{auditData.complianceRate}%</div>
-                <p className="text-xs text-gray-500">Overall compliance rate</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">High-Risk Flags</CardTitle>
-                <Shield className="h-5 w-5 text-red-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-red-600">{auditData.highRiskFlags}</div>
-                <p className="text-xs text-gray-500">Require investigation</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-gray-600">Open Investigations</CardTitle>
-                <Search className="h-5 w-5 text-amber-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold text-amber-600">{auditData.openInvestigations}</div>
-                <p className="text-xs text-gray-500">Currently under review</p>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Transaction Explorer */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl font-bold">Transaction Explorer</CardTitle>
-              <p className="text-gray-600">Search, filter, and investigate transactions across the network.</p>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    className="w-full bg-white border border-gray-200 rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                    placeholder="Search by Transaction ID, Partner, or Amount..."
-                  />
-                </div>
-              </div>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Transaction</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Risk</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {transactions.map(txn => (
-                    <React.Fragment key={txn.id}>
-                      <TableRow className="table-row-hover cursor-pointer" onClick={() => toggleTxnExpansion(txn.id)}>
-                        <TableCell>
-                          <div className="font-semibold">{txn.type}</div>
-                          <div className="text-sm text-gray-600">{txn.id}</div>
-                        </TableCell>
-                        <TableCell>
-                          {txn.amount > 0 ? `₹${txn.amount.toLocaleString()}` : 'N/A'}
-                        </TableCell>
-                        <TableCell>{txn.date}</TableCell>
-                        <TableCell>
-                          <RiskBadge risk={txn.risk as 'low' | 'medium' | 'high'} />
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <ChevronDown className={`h-5 w-5 text-gray-500 transform transition-transform ${expandedTxnId === txn.id ? 'rotate-180' : ''}`} />
-                        </TableCell>
-                      </TableRow>
-                      {expandedTxnId === txn.id && (
-                        <TableRow>
-                          <TableCell colSpan={5} className="p-0">
-                            <div className="p-4 bg-gray-100">
-                              <h4 className="font-bold mb-2">Transaction Details</h4>
-                              <p className="text-sm text-gray-700 mb-3">{txn.description}</p>
-                              <div className="grid grid-cols-2 gap-2 text-sm">
-                                <div><strong>From:</strong> {txn.from}</div>
-                                <div><strong>To:</strong> {txn.to}</div>
-                                <div><strong>Status:</strong> <span className="font-medium">{txn.status.toUpperCase()}</span></div>
-                              </div>
-                              <div className="mt-4 flex justify-end">
-                                <Button
-                                  onClick={() => handleInvestigation(txn.id)}
-                                  size="sm"
-                                  className="bg-amber-600 hover:bg-amber-700 text-white"
-                                >
-                                  <Search className="mr-2 h-4 w-4" />
-                                  Initiate Investigation
-                                </Button>
-                              </div>
+                      {/* Transaction Explorer */}
+                      <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef} customVariants={revealVariants}>
+                        <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                          <CardHeader>
+                            <CardTitle className="text-xl font-bold">Transaction Explorer</CardTitle>
+                            <CardDescription>Search, filter, and investigate transactions across the network.</CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="mb-4">
+                                <div className="relative">
+                                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                <input
+                                    type="text"
+                                    className="w-full bg-white border border-gray-300 rounded-lg pl-10 pr-4 py-3 focus:ring-2 focus:ring-black focus:border-transparent"
+                                    placeholder="Search by Transaction ID, Partner, or Amount..."
+                                />
+                                </div>
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </React.Fragment>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </main>
-      </div>
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Transaction</TableHead>
+                                  <TableHead>Amount</TableHead>
+                                  <TableHead>Date</TableHead>
+                                  <TableHead>Risk</TableHead>
+                                  <TableHead className="text-right">Details</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {transactions.map(txn => (
+                                    <React.Fragment key={txn.id}>
+                                    <TableRow className="hover:bg-gray-50/50 cursor-pointer" onClick={() => toggleTxnExpansion(txn.id)}>
+                                        <TableCell>
+                                            <div className="font-semibold">{txn.type}</div>
+                                            <div className="text-sm text-gray-600 font-mono">{txn.id}</div>
+                                        </TableCell>
+                                        <TableCell>
+                                            {txn.amount > 0 ? `₹${txn.amount.toLocaleString()}` : 'N/A'}
+                                        </TableCell>
+                                        <TableCell>{txn.date}</TableCell>
+                                        <TableCell>
+                                            <RiskBadge risk={txn.risk as 'low' | 'medium' | 'high'} />
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <ChevronDown className={`h-5 w-5 text-gray-500 transform transition-transform ${expandedTxnId === txn.id ? 'rotate-180' : ''}`} />
+                                        </TableCell>
+                                    </TableRow>
+                                    {expandedTxnId === txn.id && (
+                                        <TableRow>
+                                        <TableCell colSpan={5} className="p-0">
+                                            <div className="p-4 bg-gray-100/80">
+                                            <h4 className="font-bold mb-2">Transaction Details</h4>
+                                            <p className="text-sm text-gray-700 mb-3">{txn.description}</p>
+                                            <div className="grid grid-cols-2 gap-2 text-sm">
+                                                <div><strong>From:</strong> {txn.from}</div>
+                                                <div><strong>To:</strong> {txn.to}</div>
+                                                <div><strong>Status:</strong> <span className="font-medium">{txn.status.toUpperCase()}</span></div>
+                                            </div>
+                                            <div className="mt-4 flex justify-end">
+                                                <Button
+                                                onClick={() => handleInvestigation(txn.id)}
+                                                size="sm"
+                                                className="p-2 h-auto border border-yellow-800 shadow-lg shadow-yellow-800/20 font-semibold rounded-xl bg-yellow-600 text-white hover:bg-yellow-700"
+                                                >
+                                                <Search className="mr-2 h-4 w-4" />
+                                                Initiate Investigation
+                                                </Button>
+                                            </div>
+                                            </div>
+                                        </TableCell>
+                                        </TableRow>
+                                    )}
+                                    </React.Fragment>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </CardContent>
+                        </Card>
+                      </TimelineContent>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-8">
+                       <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                            <CardHeader>
+                              <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />Risk Center</CardTitle>
+                              <CardDescription>Monitor high-risk flags and open cases.</CardDescription>
+                            </CardHeader>
+                            <CardContent className="grid gap-6 sm:grid-cols-2">
+                                <div className="flex flex-col p-4 bg-red-50 rounded-lg">
+                                    <Shield className="h-6 w-6 text-red-500 mb-2" />
+                                    <p className="text-sm font-medium text-red-600">High-Risk Flags</p>
+                                    <p className="text-2xl font-bold text-red-600">{auditData.highRiskFlags}</p>
+                                </div>
+                                <div className="flex flex-col p-4 bg-yellow-50 rounded-lg">
+                                    <Search className="h-6 w-6 text-yellow-500 mb-2" />
+                                    <p className="text-sm font-medium text-yellow-600">Open Investigations</p>
+                                    <p className="text-2xl font-bold text-yellow-600">{auditData.openInvestigations}</p>
+                                </div>
+                            </CardContent>
+                          </Card>
+                       </TimelineContent>
+
+                       <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg h-fit">
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-bold flex items-center"><FileText className="mr-2 h-6 w-6" />Manual Audit</CardTitle>
+                                  <CardDescription>Start a new investigation from scratch.</CardDescription>
+                              </CardHeader>
+                              <CardContent className="space-y-4">
+                                <div>
+                                  <label className="text-sm font-medium text-gray-700">Transaction or Entity ID</label>
+                                  <input
+                                    type="text"
+                                    className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent font-mono text-sm"
+                                    placeholder="Enter ID..."
+                                  />
+                                  <Button
+                                    onClick={() => showToast('Manual investigation started.', 'success')}
+                                    className="w-full mt-2 p-2 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800"
+                                  >
+                                    <Search className="mr-2 h-5 w-5" />
+                                    Start Investigation
+                                  </Button>
+                                </div>
+                              </CardContent>
+                          </Card>
+                      </TimelineContent>
+                  </div>
+              </div>
+          </main>
+      </section>
     </>
   );
 }

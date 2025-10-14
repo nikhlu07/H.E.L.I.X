@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useRef } from 'react';
 import { Landmark, Map, UserCheck, Factory, ArrowLeft, Shield, Key, Truck, ArrowRight, Eye } from 'lucide-react';
 import helixService from '../../services/helixService';
-import { useAuth } from '../../contexts/AuthContext';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { TimelineContent } from "@/components/ui/timeline-animation";
+import {VerticalCutReveal} from "@/components/ui/vertical-cut-reveal";
 
 interface LoginPageProps {
   onLogin: (role: string, sector: string) => void;
@@ -48,6 +51,24 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
   const [authMethod, setAuthMethod] = useState<'icp'>('icp');
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const loginRef = useRef<HTMLDivElement>(null);
+
+  const revealVariants = {
+    visible: (i: number) => ({
+      y: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      transition: {
+        delay: i * 0.4,
+        duration: 0.5,
+      },
+    }),
+    hidden: {
+      filter: "blur(10px)",
+      y: -20,
+      opacity: 0,
+    },
+  };
 
   const handleRoleSelect = (role: RoleType) => {
     setSelectedRole(role);
@@ -82,61 +103,52 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
   };
 
   return (
-    <>
-      <style>{`
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #F7FAFC;
-        }
-        .card {
-            background: #FFFFFF;
-            border: 1px solid #E2E8F0;
-            transition: all 0.3s ease;
-            border-radius: 0.75rem;
-        }
-        .card:hover {
-            border-color: #FBBF24;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(251, 191, 36, 0.1), 0 8px 10px -6px rgba(251, 191, 36, 0.1);
-        }
-        .cta-gradient {
-            background-color: #FFCC00;
-            color: black;
-            transition: opacity 0.3s ease;
-        }
-        .cta-gradient:hover {
-            opacity: 0.9;
-        }
-        ::selection {
-            background-color: #FFCC00;
-            color: black;
-        }
-      `}</style>
-      <div className="min-h-screen bg-gray-50 font-sans">
-        {onBackToLanding && (
-            <button
-              onClick={onBackToLanding}
-              className="absolute top-8 left-8 flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition-colors"
+    <section
+      className="py-16 px-4 bg-white w-full relative min-h-screen flex items-center"
+      ref={loginRef}
+    >
+      {onBackToLanding && (
+        <button
+          onClick={onBackToLanding}
+          className="absolute top-8 left-8 flex items-center space-x-2 text-gray-500 hover:text-gray-800 transition-colors z-10"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span>Back to Home</span>
+        </button>
+      )}
+      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#0000001a_1px,transparent_1px),linear-gradient(to_bottom,#0000001a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_40%_50%_at_50%_50%,#000_70%,transparent_110%)]"></div>
+      <div className="max-w-6xl mx-auto w-full">
+        <article className="text-center mb-12">
+          <h2 className="text-5xl font-bold text-gray-900 mb-4">
+            <VerticalCutReveal
+              splitBy="words"
+              staggerDuration={0.15}
+              staggerFrom="first"
+              reverse={true}
+              containerClassName="justify-center"
+              transition={{
+                type: "spring",
+                stiffness: 250,
+                damping: 40,
+                delay: 0,
+              }}
             >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to Home</span>
-            </button>
-          )}
-
-        <main className="container mx-auto max-w-5xl px-4 pt-28 pb-8">
-          <div className="mb-12 text-center">
-            <div className="mb-6 inline-flex rounded-full bg-yellow-100 p-4">
-                <Key className="h-10 w-10 text-yellow-600" />
-            </div>
-            <h1 className="text-4xl font-black tracking-tighter text-gray-900 md:text-6xl">
               Secure Portal Access
-            </h1>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600 mt-4">
-             Select your role and authentication method to proceed to the Helix dashboard.
-            </p>
-          </div>
+            </VerticalCutReveal>
+          </h2>
 
-          {error && (
+          <TimelineContent
+            as="p"
+            animationNum={0}
+            timelineRef={loginRef}
+            customVariants={revealVariants}
+            className="text-gray-600"
+          >
+            Select your role to proceed to the Helix dashboard.
+          </TimelineContent>
+        </article>
+
+        {error && (
             <div className="mb-8 max-w-2xl mx-auto">
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg text-center">
                 <p>{error}</p>
@@ -144,45 +156,59 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
             </div>
           )}
 
-          <div className="mb-10">
-            <h2 className="text-xl font-bold text-center mb-6 text-gray-700">1. Select Your Role</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {Object.entries(roleConfig).map(([role, config]) => (
-                <RoleCard
-                  key={role}
-                  roleKey={role as RoleType}
-                  config={config}
-                  isSelected={selectedRole === role}
-                  onSelect={handleRoleSelect}
-                />
-              ))}
-            </div>
-          </div>
+        <div className="grid md:grid-cols-3 gap-8 items-stretch mb-12">
+          {Object.entries(roleConfig).map(([role, config], index) => (
+             <TimelineContent
+             as="div"
+             animationNum={index + 1}
+             timelineRef={loginRef}
+             customVariants={revealVariants}
+             key={role}
+           >
+            <RoleCard
+              roleKey={role as RoleType}
+              config={config}
+              isSelected={selectedRole === role}
+              onSelect={handleRoleSelect}
+            />
+            </TimelineContent>
+          ))}
+        </div>
 
-          <div className="mb-12">
-            <h2 className="text-xl font-bold text-center mb-6 text-gray-700">2. Choose Authentication Method</h2>
-            <div className="grid grid-cols-1 md:grid-cols-1 gap-4 max-w-4xl mx-auto">
-                <AuthMethodCard
-                  method="icp"
-                  title="Internet Identity"
-                  icon={Shield}
-                  selectedAuthMethod={authMethod}
-                  onSelect={handleAuthMethodSelect}
-                />
-            </div>
-          </div>
+        <div className="mb-12">
+            <TimelineContent
+              as="div"
+              animationNum={Object.keys(roleConfig).length + 1}
+              timelineRef={loginRef}
+              customVariants={revealVariants}
+            >
+              <AuthMethodCard
+                method="icp"
+                title="Internet Identity"
+                icon={Shield}
+                selectedAuthMethod={authMethod}
+                onSelect={handleAuthMethodSelect}
+              />
+            </TimelineContent>
+        </div>
 
-          <div className="text-center">
+        <div className="text-center">
+        <TimelineContent
+              as="div"
+              animationNum={Object.keys(roleConfig).length + 2}
+              timelineRef={loginRef}
+              customVariants={revealVariants}
+            >
             <button
               onClick={handleConnect}
               disabled={!selectedRole || isConnecting}
-              className={`w-full max-w-md mx-auto cta-gradient font-semibold px-12 py-4 rounded-lg text-lg transition-all duration-300 flex items-center justify-center space-x-2 ${
-                selectedRole && !isConnecting ? '' : 'opacity-50 cursor-not-allowed'
+              className={`w-full max-w-md mx-auto font-semibold px-12 py-4 rounded-lg text-lg transition-all duration-300 flex items-center justify-center space-x-2 ${
+                selectedRole && !isConnecting ? 'bg-black text-white hover:bg-gray-800 shadow-lg shadow-black' : 'bg-gray-200 text-gray-500 cursor-not-allowed'
               }`}
             >
               {isConnecting ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                   <span>Connecting...</span>
                 </>
               ) : (
@@ -192,10 +218,10 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
                 </>
               )}
             </button>
+            </TimelineContent>
           </div>
-        </main>
       </div>
-    </>
+    </section>
   );
 }
 
@@ -212,17 +238,17 @@ const AuthMethodCard = ({
   selectedAuthMethod: 'icp';
   onSelect: (method: 'icp') => void;
 }) => (
-  <div
+  <Card
     onClick={() => onSelect(method)}
-    className={`card p-4 cursor-pointer flex items-center space-x-4 max-w-sm mx-auto ${
+    className={`p-4 cursor-pointer flex items-center space-x-4 max-w-sm mx-auto bg-white h-fit border-neutral-200 ${
       selectedAuthMethod === method ? 'border-yellow-400 ring-2 ring-yellow-200 shadow-lg' : 'border-gray-200'
     }`}
   >
-    <Icon className={`h-6 w-6 ${selectedAuthMethod === method ? 'text-yellow-600' : 'text-gray-500'}`} />
+    <img src="icp-black.svg" className={`h-6 w-6 ${selectedAuthMethod === method ? 'text-yellow-600' : 'text-gray-500'}`} />
     <div>
       <h3 className={`font-bold ${selectedAuthMethod === method ? 'text-gray-900' : 'text-gray-700'}`}>{title}</h3>
     </div>
-  </div>
+  </Card>
 );
 
 const RoleCard = ({ roleKey, config, isSelected, onSelect }: {
@@ -233,21 +259,23 @@ const RoleCard = ({ roleKey, config, isSelected, onSelect }: {
 }) => {
   const Icon = config.icon;
   return (
-    <div
+    <Card
       onClick={() => onSelect(roleKey)}
-      className={`card p-6 text-left cursor-pointer ${
-        isSelected ? 'border-yellow-400 ring-2 ring-yellow-200 shadow-lg' : 'border-gray-200'
-      }`}
-    >
-      <div className="flex items-start space-x-4">
-        <div className={`flex-shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-lg ${isSelected ? 'bg-yellow-100' : 'bg-gray-100'}`}>
-          <Icon className={`h-6 w-6 ${isSelected ? 'text-yellow-600' : 'text-gray-600'}`} />
+      className={`p-0 text-left cursor-pointer h-full flex flex-col bg-white rounded-xl border-neutral-200 ${isSelected ? 'border-yellow-400  shadow-lg' : ''}`}>
+      <CardHeader className={`text-left py-4 border-b  border-neutral-300 rounded-t-xl ${isSelected ? 'bg-primary' : 'bg-gray-100'}`}>
+        <div className="flex items-center space-x-4">
+            <div className={`flex-shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-lg `}>
+              <Icon className={`h-6 w-6 text-black`} />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 my-auto">{config.title}</h3>
+            </div>
         </div>
-        <div>
-          <h3 className="text-lg font-bold text-gray-900 mb-1">{config.title}</h3>
-          <p className="text-gray-500 text-sm">{config.description}</p>
-        </div>
-      </div>
-    </div>
+      </CardHeader>
+      <CardContent className=" flex-grow flex flex-col justify-between">
+        <p className="text-gray-500 text-sm mt-4">{config.description}</p>
+        {/*{isSelected && <div className="text-yellow-600 font-bold text-sm mt-4">Selected</div>}*/}
+      </CardContent>
+    </Card>
   );
 };

@@ -46,10 +46,10 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
 
     const header = document.getElementById('app-header');
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        header?.classList.add('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-gray-200', 'shadow-sm');
+      if (window.scrollY > 20) {
+        header?.classList.add('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-neutral-200', 'shadow-lg');
       } else {
-        header?.classList.remove('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-gray-200', 'shadow-sm');
+        header?.classList.remove('bg-white/80', 'backdrop-blur-sm', 'border-b', 'border-neutral-200', 'shadow-lg');
       }
     };
     window.addEventListener('scroll', handleScroll);
@@ -97,20 +97,20 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
   }
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 transition-all duration-300" id="app-header">
+    <header className="fixed top-0 left-0 w-full z-50 transition-all bg-white duration-300" id="app-header">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img src="/logo.svg" alt="Helix Logo" className="h-8 w-auto" />
-              <span className="ml-3 text-2xl font-bold tracking-tighter text-gray-800">Helix</span>
+              <span className="ml-3 text-2xl font-bold tracking-tighter text-gray-900">Helix</span>
             </Link>
           </div>
 
           <div className="hidden md:flex items-center gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button className="flex items-center gap-2 bg-yellow-400 text-black hover:bg-yellow-400/90 focus-visible:ring-yellow-500">
+                <Button variant="outline" className="flex items-center gap-2 bg-white border-primary border-2">
                   <span>{currentRoleName}</span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
@@ -142,7 +142,7 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
                     <div className="font-semibold text-sm">{currentRoleName}</div>
                     <div className="text-xs text-gray-500">{currentUser.role}</div>
                   </div>
-                  <UserIcon className="h-8 w-8 rounded-full bg-yellow-100 p-1 text-yellow-600" />
+                  <UserIcon className="h-8 w-8 rounded-full bg-gray-100 p-1 text-gray-600" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48 mt-2 bg-white shadow-lg rounded-lg border">
@@ -167,7 +167,7 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4">
+        <div className="md:hidden bg-white/95 backdrop-blur-sm border-t border-gray-200 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col gap-4">
             <div>
               <h3 className="text-sm font-semibold text-gray-500 px-3 mb-2">Switch Demo Role</h3>

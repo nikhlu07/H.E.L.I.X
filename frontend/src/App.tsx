@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, useNavigate, Outlet } from 'react-router-dom';
 import { LandingPage } from './components/Landing/LandingPage';
-import LoginPage from './components/Auth/LoginPage';
+import { LoginPage } from './components/Auth/LoginPage';
 import { MainGovernmentDashboard } from './components/Dashboard/MainGovernmentDashboard';
 import { VendorDashboard } from './components/Dashboard/VendorDashboard';
 import { CitizenDashboard } from './components/Dashboard/CitizenDashboard';
@@ -50,13 +50,13 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-white">
         <Routes>
           <Route path="/" element={
             <LandingPage/>
           } />
           <Route path="/login" element={
-            <LoginPage />
+            <LoginPage onLogin={handleLoginSuccess} />
           } />
           <Route path="/profile" element={<Profile />} />
           <Route path="/demo" element={<div className="p-8 text-center"><h1 className="text-2xl">Demo Mode Coming Soon!</h1></div>} />
