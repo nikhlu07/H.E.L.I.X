@@ -1,12 +1,12 @@
 import React from 'react';
 import JoinUs_Section from "@/components/ui/globe-feature-section";
 import { StackedCircularFooter } from '../ui/stacked-circular-footer';
-import FeaturedSectionStats from '../ui/featured-section-stats';
+import { TestimonialsDemo } from '@/components/testimonials-demo';
 
 export function StatsDashboard() {
   return (
     <div className="bg-white">
-      <FeaturedSectionStats />
+      <TestimonialsDemo />
 
       <JoinUs_Section />
 

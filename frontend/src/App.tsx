@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, useNavigate, Outlet } from 'react-router-dom';
 import { LandingPage } from './components/Landing/LandingPage';
-import { LoginPage } from './components/Auth/LoginPage';
+import LoginPage from './components/Auth/LoginPage';
 import { MainGovernmentDashboard } from './components/Dashboard/MainGovernmentDashboard';
 import { VendorDashboard } from './components/Dashboard/VendorDashboard';
 import { CitizenDashboard } from './components/Dashboard/CitizenDashboard';
@@ -56,10 +56,7 @@ function App() {
             <LandingPage/>
           } />
           <Route path="/login" element={
-            <LoginPage
-              onLogin={(role: string, sector: string) => handleLoginSuccess(role, sector)}
-              onBackToLanding={() => navigate('/')}
-            />
+            <LoginPage />
           } />
           <Route path="/profile" element={<Profile />} />
           <Route path="/demo" element={<div className="p-8 text-center"><h1 className="text-2xl">Demo Mode Coming Soon!</h1></div>} />
