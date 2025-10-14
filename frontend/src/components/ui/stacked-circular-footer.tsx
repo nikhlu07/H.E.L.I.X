@@ -14,10 +14,10 @@ function StackedCircularFooter() {
           </div>
           <nav className="mb-8 flex flex-wrap justify-center gap-6">
             <a href="#" className="hover:text-primary">Home</a>
-            <a href="#" className="hover:text-primary">About</a>
-            <a href="#" className="hover:text-primary">Services</a>
-            <a href="#" className="hover:text-primary">Products</a>
-            <a href="#" className="hover:text-primary">Contact</a>
+            <a href="#problem" className="hover:text-primary">The Problem</a>
+            <a href="#solution" className="hover:text-primary">Our Solution</a>
+            <a href="#howitworks" className="hover:text-primary">How It Works</a>
+            <a href="#features" className="hover:text-primary">Features</a>
           </nav>
           <div className="mb-8 flex space-x-4">
             <Button variant="outline" size="icon" className="rounded-full">
