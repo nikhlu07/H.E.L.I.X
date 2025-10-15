@@ -12,6 +12,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import {SubSupplierDashboard} from "./components/Dashboard/SubSupplierDashboard.tsx";
 import {AuditorDashboard} from "./components/Dashboard/AuditorDashboard.tsx";
 import Profile from './components/Dashboard/Profile.tsx';
+import { DeputyProfile } from './components/Dashboard/DeputyProfile.tsx';
 
 function DashboardLayout() {
   return (
@@ -59,6 +60,7 @@ function App() {
             <LoginPage onLogin={handleLoginSuccess} />
           } />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/deputy-profile" element={<DeputyProfile />} />
           <Route path="/demo" element={<div className="p-8 text-center"><h1 className="text-2xl">Demo Mode Coming Soon!</h1></div>} />
           <Route path="/role-selection" element={<div className="p-8 text-center"><h1 className="text-2xl">Role Selection Coming Soon!</h1></div>} />
 

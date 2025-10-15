@@ -1,12 +1,170 @@
 import React, { useState, useRef } from 'react';
-import { Users, MapPin, DollarSign, AlertTriangle, UserPlus, Settings, BarChart3, Shield, LayoutDashboard, Eye, FileText, Building } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users, MapPin, DollarSign, AlertTriangle, UserPlus, Settings, BarChart3, Shield, LayoutDashboard, Eye, FileText, Building, Mail, Phone, TrendingUp } from 'lucide-react';
 import { useToast } from '../common/Toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog';
+
+function AlertDialog({ alert, onClose, deputies }) {
+  if (!alert) return null;
+
+  const deputyDetails = deputies.find(d => d.name === alert.deputy);
+
+  const getAlertReasoning = (alert, deputy) => {
+    if (!deputy) return <p>No deputy details available.</p>;
+
+    let reasoningPoints = [];
+    switch (alert.type) {
+      case 'corruption':
+        reasoningPoints = [
+            `High Risk Score: Deputy's risk score is ${deputy.riskScore}, which is above the acceptable threshold.`,
+            "Anomalous Procurement Pattern: Analysis of procurement data shows a statistically significant deviation in vendor selection, with a high volume of contracts awarded to a single vendor.",
+            "Potential for Favoritism: This pattern may indicate bid-rigging or a close relationship with the vendor, warranting a deeper investigation.",
+            "Recommendation: A formal audit of this deputy's procurement activities for the last two quarters is strongly recommended."
+        ];
+        break;
+      case 'budget':
+        const projectsInPlanning = deputy.managedProjects.filter(p => p.status === 'Planning').length;
+        reasoningPoints = [
+            `Rapid Budget Depletion: Over 90% of the allocated budget has been spent, with a significant portion of the fiscal year remaining.`,
+            projectsInPlanning > 0 ? `High Expenditure on Unstarted Projects: The deputy has allocated significant funds to ${projectsInPlanning} project(s) still in the 'Planning' phase.` : null,
+            `Risk of Overrun: This spending velocity creates a high risk of budget overruns, which could jeopardize other critical projects.`,
+            "Recommendation: A review of the deputy's financial planning and current project expenditures is advised."
+        ].filter(Boolean);
+        break;
+      case 'timeline':
+        const delayedProjects = deputy.managedProjects.filter(p => p.status === 'Delayed');
+        reasoningPoints = [
+            `Low Performance Rating: The deputy's performance rating is ${deputy.performance}, which is below the state average.`,
+            `Project Delays: ${delayedProjects.length} project(s) under their supervision are marked as 'Delayed', including: ${delayedProjects.map(p => p.name).join(', ')}.`,
+            "Potential Mismanagement: These delays could indicate poor resource allocation, inadequate project oversight, or other management issues.",
+            "Recommendation: An immediate review of the delayed projects' status and the deputy's project management approach is necessary."
+        ];
+        break;
+      default:
+        return <p>No specific reasoning available for this alert type.</p>;
+    }
+    return (
+        <ul className="list-disc list-inside space-y-1">
+            {reasoningPoints.map((point, index) => <li key={index}>{point}</li>)}
+        </ul>
+    );
+  };
+
+  const reasoning = getAlertReasoning(alert, deputyDetails);
+
+  return (
+    <Dialog open={!!alert} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="sm:max-w-3xl bg-white backdrop-blur-sm rounded-xl">
+        <DialogHeader className="flex flex-col items-center text-center py-6">
+            <AlertTriangle className="w-10 h-10 text-red-500 mb-2" />
+            <DialogTitle className="text-2xl font-bold text-gray-900">{alert.description}</DialogTitle>
+            <DialogDescription>
+                <div className="flex items-center justify-center space-x-4 pt-2">
+                    <div>
+                        <p className="text-sm font-medium text-gray-600">Severity</p>
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
+                          alert.severity === 'high' ? 'bg-red-100 text-red-800' :
+                          alert.severity === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-blue-100 text-blue-800'
+                        }`}>
+                          {alert.severity}
+                        </span>
+                    </div>
+                    <div>
+                        <p className="text-sm font-medium text-gray-600">Alert Type</p>
+                        <p className="text-lg font-semibold text-gray-900">{alert.type}</p>
+                    </div>
+                </div>
+            </DialogDescription>
+        </DialogHeader>
+
+        <div className="px-6 py-4 space-y-6 max-h-[60vh] overflow-y-auto">
+            {deputyDetails && (
+                <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-3">Deputy Information</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <p className="text-sm font-medium text-gray-600">Name</p>
+                            <p className="text-lg font-semibold text-gray-900">{deputyDetails.name}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-600">District</p>
+                            <p className="text-lg font-semibold text-gray-900">{deputyDetails.district}</p>
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-gray-600">Performance</p>
+                            <div className="flex items-center space-x-1">
+                                <span className="text-lg font-semibold text-gray-900">{deputyDetails.performance}</span>
+                                <span className="text-yellow-500">★</span>
+                            </div>
+                        </div>
+                        <div className="md:col-span-1">
+                            <p className="text-sm font-medium text-gray-600">Email</p>
+                            <p className="text-sm font-semibold text-gray-700 hover:text-black truncate"><a href={`mailto:${deputyDetails.email}`}>{deputyDetails.email}</a></p>
+                        </div>
+                        <div className="md:col-span-1">
+                            <p className="text-sm font-medium text-gray-600">Phone</p>
+                            <p className="text-sm font-semibold text-gray-700">{deputyDetails.phone}</p>
+                        </div>
+                        <div className="md:col-span-1">
+                            <p className="text-sm font-medium text-gray-600">Risk Score</p>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                deputyDetails.riskScore < 30 ? 'bg-green-100 text-green-800' :
+                                deputyDetails.riskScore < 50 ? 'bg-yellow-100 text-yellow-800' :
+                                'bg-red-100 text-red-800'
+                            }`}>
+                                {deputyDetails.riskScore}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div className="border-t pt-4">
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Analysis & Reasoning</h3>
+                <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg border">{reasoning}</div>
+            </div>
+
+            {deputyDetails && deputyDetails.managedProjects && deputyDetails.managedProjects.length > 0 && (
+                <div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">Associated Projects</h3>
+                    <div className="space-y-3 p-1">
+                        {deputyDetails.managedProjects.map(project => (
+                            <div key={project.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                <p className="font-semibold text-gray-800">{project.name}</p>
+                                <div className="flex justify-between items-center text-sm mt-1">
+                                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                                        project.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                                        project.status === 'Planning' ? 'bg-yellow-100 text-yellow-800' :
+                                        project.status === 'Completed' ? 'bg-green-100 text-green-800' :
+                                        'bg-red-100 text-red-800'
+                                    }`}>
+                                        {project.status}
+                                    </span>
+                                    <span className="font-medium text-gray-700">Budget: ₹{project.budget.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+
+        <DialogFooter className="px-6 pb-6">
+          <Button variant="outline" onClick={onClose}>Close</Button>
+          <Button className="bg-red-600 hover:bg-red-700 text-white">Take Action</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 
 export function StateHeadDashboard() {
   const [budgetAmount, setBudgetAmount] = useState('');
@@ -14,8 +172,10 @@ export function StateHeadDashboard() {
   const [selectedDeputy, setSelectedDeputy] = useState('');
   const [newDeputyId, setNewDeputyId] = useState('');
   const [deputyToRemove, setDeputyToRemove] = useState('');
+  const [selectedAlert, setSelectedAlert] = useState(null);
   const { showToast } = useToast();
   const dashboardRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const revealVariants = {
       visible: (i: number) => ({
@@ -46,10 +206,38 @@ export function StateHeadDashboard() {
   };
 
   const deputies = [
-    { id: 'dep-001', name: 'Rajesh Kumar', district: 'Mumbai Central', projects: 5, performance: 4.2, riskScore: 25 },
-    { id: 'dep-002', name: 'Priya Sharma', district: 'Pune East', projects: 3, performance: 4.7, riskScore: 18 },
-    { id: 'dep-003', name: 'Amit Patel', district: 'Nagpur North', projects: 4, performance: 3.9, riskScore: 45 },
-    { id: 'dep-004', name: 'Sunita Desai', district: 'Nashik South', projects: 6, performance: 4.5, riskScore: 22 }
+    { 
+      id: 'dep-001', name: 'Rajesh Kumar', district: 'Mumbai Central', projects: 5, performance: 4.2, riskScore: 25,
+      email: 'rajesh.k@example.gov', phone: '987-654-3210',
+      performanceHistory: [ { month: 'Jan', score: 4.1 }, { month: 'Feb', score: 4.3 }, { month: 'Mar', score: 4.2 } ],
+      managedProjects: [
+        { id: 'proj-101', name: 'Coastal Road Expansion', status: 'In Progress', budget: 5000000 },
+        { id: 'proj-102', name: 'Slum Redevelopment Initiative', status: 'Planning', budget: 3500000 },
+      ]
+    },
+    { 
+      id: 'dep-002', name: 'Priya Sharma', district: 'Pune East', projects: 3, performance: 4.7, riskScore: 18,
+      email: 'priya.s@example.gov', phone: '876-543-2109',
+      performanceHistory: [ { month: 'Jan', score: 4.5 }, { month: 'Feb', score: 4.6 }, { month: 'Mar', score: 4.7 } ],
+      managedProjects: [
+        { id: 'proj-201', name: 'Metro Line 3 Construction', status: 'Completed', budget: 7000000 },
+      ]
+    },
+    { 
+      id: 'dep-003', name: 'Amit Patel', district: 'Nagpur North', projects: 4, performance: 3.9, riskScore: 45,
+      email: 'amit.p@example.gov', phone: '765-432-1098',
+      performanceHistory: [ { month: 'Jan', score: 4.0 }, { month: 'Feb', score: 3.8 }, { month: 'Mar', score: 3.9 } ],
+      managedProjects: [
+        { id: 'proj-301', name: 'Industrial Zone Development', status: 'Delayed', budget: 4500000 },
+        { id: 'proj-302', name: 'Water Supply Network Upgrade', status: 'In Progress', budget: 2000000 },
+      ]
+    },
+    { 
+      id: 'dep-004', name: 'Sunita Desai', district: 'Nashik South', projects: 6, performance: 4.5, riskScore: 22,
+      email: 'sunita.d@example.gov', phone: '654-321-0987',
+      performanceHistory: [ { month: 'Jan', score: 4.4 }, { month: 'Feb', score: 4.5 }, { month: 'Mar', score: 4.5 } ],
+      managedProjects: []
+    }
   ];
 
   const pendingAllocations = [
@@ -102,6 +290,19 @@ export function StateHeadDashboard() {
 
   const handleApproveAllocation = (allocationId: string, amount: number) => {
     showToast(`Budget allocation of ₹${amount.toLocaleString()} approved`, 'success');
+  };
+
+  const handleViewDeputy = (deputy) => {
+    localStorage.setItem('selectedDeputy', JSON.stringify(deputy));
+    navigate('/deputy-profile');
+  };
+
+  const handleOpenAlert = (alert) => {
+    setSelectedAlert(alert);
+  };
+
+  const handleCloseAlert = () => {
+    setSelectedAlert(null);
   };
 
   return (
@@ -218,7 +419,7 @@ export function StateHeadDashboard() {
                                       </span>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                      <Button variant="ghost" size="sm" className="text-black hover:bg-gray-100">
+                                      <Button variant="ghost" size="sm" className="text-black hover:bg-gray-100" onClick={() => handleViewDeputy(deputy)}>
                                         <Eye className="mr-1 h-4 w-4" /> View
                                       </Button>
                                     </TableCell>
@@ -387,7 +588,7 @@ export function StateHeadDashboard() {
                           </CardHeader>
                           <CardContent className="space-y-4">
                             {regionalAlerts.map((alert) => (
-                              <div key={alert.id} className="rounded-xl border p-4 space-y-3 hover:border-red-500 transition-colors cursor-pointer bg-red-50/50">
+                              <div key={alert.id} onClick={() => handleOpenAlert(alert)} className="rounded-xl border p-4 space-y-3 hover:border-red-500 transition-colors cursor-pointer bg-red-50/50">
                                 <div className="flex items-start justify-between">
                                   <div>
                                     <h4 className="font-semibold text-gray-900">{alert.description}</h4>
@@ -410,6 +611,7 @@ export function StateHeadDashboard() {
               </div>
           </main>
       </section>
+      <AlertDialog alert={selectedAlert} onClose={handleCloseAlert} deputies={deputies} />
     </>
   );
 }

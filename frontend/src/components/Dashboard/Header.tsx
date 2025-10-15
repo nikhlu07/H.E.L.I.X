@@ -83,11 +83,12 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
 
   const availableRoles = Object.keys(roleDisplay).filter(r => r !== 'default');
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (onLogout) {
       onLogout();
     } else {
-      logout();
+      await logout();
+      navigate('/');
     }
     setMobileMenuOpen(false);
   };
@@ -109,7 +110,7 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
 
           <div className="hidden md:flex items-center gap-2">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+             <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="flex items-center gap-2 bg-white border-primary border-2">
                   <span>{currentRoleName}</span>
                   <ChevronDown className="h-4 w-4" />
@@ -192,10 +193,10 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
                 <Bell className="h-5 w-5" />
                 <span>Notifications</span>
               </Button>
-              <Button variant="ghost" className="justify-start gap-2" onClick={() => setMobileMenuOpen(false)}>
-                <Settings className="h-5 w-5" />
-                <span>Settings</span>
-              </Button>
+              {/*<Button variant="ghost" className="justify-start gap-2" onClick={() => setMobileMenuOpen(false)}>*/}
+              {/*  <Settings className="h-5 w-5" />*/}
+              {/*  <span>Settings</span>*/}
+              {/*</Button>*/}
               <Button variant="ghost" asChild className="justify-start gap-2">
                 <Link to="/profile" onClick={() => setMobileMenuOpen(false)}>
                   <UserIcon className="h-5 w-5" />
