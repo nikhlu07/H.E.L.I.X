@@ -3,14 +3,14 @@ import { Testimonials } from "@/components/ui/testimonials"
 const testimonials = [
   {
     image: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    text: 'I\'m blown away by the versatility of the components in this library. They make UI development a breeze!',
+    text: 'H.E.L.I.X. made our procurement pipeline transparent overnight. We finally see where funds go and why.',
     name: 'Alice Johnson',
     username: '@alicejohnson',
     social: 'https://i.imgur.com/VRtqhGC.png'
   },
   {
     image: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    text: 'Using this component library has significantly speed up our development process. The quality and ease of integration are remarkable!',
+    text: 'Deployment was fast, and the immutable audit trail saved weeks during compliance reviews.',
     name: 'David Smith',
     username: '@davidsmith',
     social: 'https://i.imgur.com/VRtqhGC.png'

@@ -24,25 +24,25 @@ export default function PricingSection3() {
   };
 
   const basicFeatures = [
-    "Adaptable data models",
-    "Configurable alerts",
-    "Custom reporting",
-    "Donor transparency",
+    "Flexible data models",
+    "Configurable alerts and workflows",
+    "Impact and compliance reports",
+    "Donor-grade transparency",
   ];
 
   const professionalFeatures = [
     "Real-time procurement monitoring",
-    "AI fraud detection",
-    "Blockchain transparency",
-    "Citizen oversight",
-    "Auto Vendor Allotment",
+    "AI-driven anomaly detection",
+    "End-to-end auditability",
+    "Citizen oversight portals",
+    "Automated vendor allotment",
   ];
 
   const enterpriseFeatures = [
-    "Reusable algorithms",
-    "API integration",
-    "Custom workflows",
-    "Compliance tracking",
+    "Reusable risk rules",
+    "API-first integrations",
+    "Custom workflows and SLAs",
+    "Regulatory compliance tracking",
   ];
 
   return (
@@ -78,7 +78,7 @@ export default function PricingSection3() {
             customVariants={revealVariants}
             className="text-gray-600"
           >
-            Open-source system, originally for government procurement, helps NGOs and companies adapt as well.
+            An open foundation for accountable procurement—adaptable for NGOs, governments, and private programs alike.
           </TimelineContent>
         </article>
 

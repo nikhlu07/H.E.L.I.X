@@ -7,7 +7,7 @@ import { StatsDashboard } from './StatsDashboard';
 
 export function LandingPage() {
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <Header />
       <LampDemo />
       <CaseStudies />

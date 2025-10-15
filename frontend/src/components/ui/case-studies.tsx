@@ -99,42 +99,42 @@ export default function Casestudies() {
     {
       id: 1,
       quote:
-        'NATO under probe for irregularities in drone and ammo contracts. Insider leaks and opaque contractor vetting expose risks in global procurement.',
+        'Investigations revealed irregular awards in drone and ammunition deals—opaque vetting and shadow intermediaries inflated costs and risk.',
       name: 'NATO Procurement Probe',
       role: 'Military contracts compromised',
       image:
         "images/drone.jpeg",
       icon: Monitor,
       metrics: [
-        { value: '100%', label: 'Bid Transparency', sub: 'Publicly auditable bids' },
-        { value: '99%', label: 'Less Collusion', sub: 'Verified vendor histories' },
+        { value: '100%', label: 'Bid Transparency', sub: 'Public, verifiable bid trails' },
+        { value: '99%', label: 'Less Collusion', sub: 'On-chain vendor credentials' },
       ],
     },
     {
       id: 2,
       quote:
-        'PCI chief allegedly approved 870 pharmacy colleges in 13 days via virtual bribes. Fake accreditations endangered education and public health.',
+        'Virtual approvals fast-tracked hundreds of colleges—pay-to-play accreditations put students and patients at risk.',
       name: 'Pharmacy Council of India Scam',
       role: '870 fake colleges cleared',
       image:
         'images/pharma.jpeg',
       icon: LayoutDashboard,
       metrics: [
-        { value: '98%', label: 'Fraud Detection', sub: 'Public challenge system' },
-        { value: '100%', label: 'Audit Proof', sub: 'Immutable approval trail' },
+        { value: '98%', label: 'Fraud Detection', sub: 'Open challenge and review' },
+        { value: '100%', label: 'Audit Proof', sub: 'Tamper-evident approval trail' },
       ],
     },
     {
       id: 3,
       quote:
-        'CBI arrests NAAC officials for bribery in inflated ratings, deceiving students and employers. Trust in accreditation severely damaged.',
+        'Officials were caught selling inflated ratings—students, employers, and taxpayers paid the price.',
       name: 'NAAC Ratings Bribery Case',
       role: 'Accreditation scam exposed',
       image:
         'images/NAAC.jpeg',
       icon: Users,
       metrics: [
-        { value: '95%', label: 'Fraud Detection', sub: 'Flags rating anomalies' },
+        { value: '95%', label: 'Fraud Detection', sub: 'Detects rating anomalies' },
         { value: '100%', label: 'Record Transparency', sub: 'On-chain audit logs' },
       ],
     },
@@ -164,7 +164,7 @@ export default function Casestudies() {
             Corruption is a Systemic Failure.
           </h2>
           <p className="text-gray-600">
-            From defense contracts to educational accreditations, opaque systems are vulnerable to manipulation. We need a new foundation of transparency to restore trust.
+            From defense buys to campus accreditations, opacity creates loopholes—and loopholes invite abuse. Trust returns only when transparency is built into the process.
           </p>
         </motion.div>
 

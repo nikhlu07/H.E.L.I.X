@@ -60,31 +60,31 @@ export function ICPSolution() {
     {
       step: '1',
       title: 'Register on the Blockchain',
-      description: 'Manufacturers register each batch, creating a unique, tamper-proof digital identity. Secure QR codes are generated for every single item, linking the physical to the digital.',
+      description: 'Manufacturers register each batch on-chain, minting a unique digital twin for every item. A secure QR links the physical product to its immutable record.',
       image: '/images/blockchain.jpeg',
       points: [
-        'Tamper-proof digital identity',
-        'Secure QR code generation'
+        'Item-level digital twin',
+        'Secure QR linked to on-chain batch'
       ]
     },
     {
       step: '2',
       title: 'Track in Real-Time',
-      description: 'Every handover is recorded as a secure transaction. Our live dashboard tracks location, temperature (via IoT), and custody, providing unparalleled visibility.',
+      description: 'As products move, each handoff is captured as a signed event. Live telemetry and custody updates show exactly where items are and who touched them.',
       image: '/images/real-time.jpeg',
       points: [
-        'Complete chain of custody',
-        'Real-time condition monitoring'
+        'Proof of custody at every step',
+        'Live condition and location tracking'
       ]
     },
     {
       step: '3',
       title: 'Verify with a Scan',
-      description: "With a simple smartphone scan, anyone—from pharmacists to patients—can instantly view the entire history of their medication, ensuring it's genuine and safe before use.",
+      description: 'Scan once with any smartphone to instantly see provenance, custody, and integrity checks—before it is dispensed or used.',
       image: '/images/scan.jpeg',
       points: [
-        'Empowering patients and providers',
-        'Instant peace of mind'
+        'Transparent history for all stakeholders',
+        'Trust at the point of use'
       ]
     }
   ];
@@ -93,32 +93,32 @@ export function ICPSolution() {
     {
       icon: Lock,
       title: 'Blockchain Integrity',
-      description: 'Powered by Polkadot for robust security and interoperability, ensuring every record is immutable.',
+      description: 'Built on Polkadot for security and interoperability—every event is tamper-evident and auditable.',
     },
     {
       icon: Eye,
       title: 'Instant QR Verification',
-      description: 'Our dynamic QR system connects physical products to their digital twins for foolproof verification.',
+      description: 'Dynamic QR binds the physical item to its digital twin for instant, reliable authenticity checks.',
     },
     {
       icon: Zap,
       title: 'Real-Time Alerts',
-      description: 'Integrate with IoT sensors and receive automated alerts for any deviation or unauthorized activity.',
+      description: 'Connect IoT and policy rules to trigger proactive alerts on anomalies, routes, temperature, and more.',
     },
     {
       icon: Shield,
       title: 'Decentralized Storage',
-      description: 'Critical metadata is stored on IPFS, ensuring data permanence and censorship resistance.',
+      description: 'Metadata anchored to IPFS to ensure permanence, resilience, and censorship resistance.',
     },
     {
       icon: Globe,
       title: 'Advanced Analytics',
-      description: 'Gain insights into your supply chain, predict shortages, and optimize logistics with our data dashboard.',
+      description: 'Turn supply-chain data into decisions—predict risk, optimize routes, and eliminate blind spots.',
     },
     {
       icon: CheckCircle,
       title: 'Enterprise Scalability',
-      description: 'Built with a modern stack designed for high performance, security, and global scale from day one.',
+      description: 'Modern, cloud-ready architecture sized for national programs and high-volume transactions.',
     }
   ];
 
@@ -132,7 +132,7 @@ export function ICPSolution() {
                 An Immutable Chain of Trust.
             </h2>
             <p className="text-lg text-gray-600">
-                H.E.L.I.X. provides a digital passport for every medical product, creating an unforgeable record of its journey from the factory to your hands. We turn opacity into transparency.
+                H.E.L.I.X. gives every critical product a verifiable, end-to-end record—from origin to last-mile delivery—so anyone can trust what is in their hands.
             </p>
           </div>
           <div className="space-y-16">
@@ -170,7 +170,7 @@ export function ICPSolution() {
                 Built for Trust and Scale.
             </h2>
             <p className="text-lg text-gray-600">
-                Our enterprise-grade architecture combines the best of blockchain and modern web technologies to deliver a robust and reliable platform.
+                An architecture that marries blockchain assurances with modern cloud primitives—reliable, fast, and ready for scale.
             </p>
           </div>
 
