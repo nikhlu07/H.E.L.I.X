@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Search, Shield, FileText, TrendingUp, ChevronDown, Eye, AlertTriangle, Brain, Zap } from 'lucide-react';
+import { Search, Shield, FileText, TrendingUp, ChevronDown, Eye, AlertTriangle, Brain, Zap, Activity, Target } from 'lucide-react';
 import { useToast } from '../common/Toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -36,6 +36,10 @@ export function AuditorDashboard() {
     complianceRate: 99.1,
     aiFraudDetections: 158,
     autonomousInterventions: 12,
+    aiModelsActive: 7,
+    transactionsAnalyzedByAI: 8760,
+    currentAIAnalysis: 'High-value transfers to new beneficiaries in East Africa.',
+    aiAccuracyRate: 98.7,
   };
 
   const transactions = [
@@ -125,6 +129,47 @@ export function AuditorDashboard() {
                                       <p className="text-sm font-medium text-green-600">Network Compliance</p>
                                       <p className="text-2xl font-bold text-green-600">{auditData.complianceRate}%</p>
                                   </div>
+                              </CardContent>
+                          </Card>
+                      </TimelineContent>
+
+                      {/* AI Analysis Overview */}
+                      <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-bold flex items-center"><Brain className="mr-2 h-6 w-6 text-indigo-600" />AI Analysis Overview</CardTitle>
+                                  <CardDescription>Insights into AI-driven monitoring and performance.</CardDescription>
+                              </CardHeader>
+                              <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                                  <div className="flex flex-col p-4 bg-indigo-50 rounded-lg">
+                                      <Activity className="h-6 w-6 text-indigo-500 mb-2" />
+                                      <p className="text-sm font-medium text-indigo-600">Models Active</p>
+                                      <p className="text-2xl font-bold text-indigo-600">{auditData.aiModelsActive}</p>
+                                  </div>
+                                  <div className="flex flex-col p-4 bg-purple-50 rounded-lg">
+                                      <Zap className="h-6 w-6 text-purple-500 mb-2" />
+                                      <p className="text-sm font-medium text-purple-600">Txns Analyzed by AI</p>
+                                      <p className="text-2xl font-bold text-purple-600">{auditData.transactionsAnalyzedByAI.toLocaleString()}</p>
+                                  </div>
+                                  <div className="flex flex-col p-4 bg-blue-50 rounded-lg">
+                                      <Target className="h-6 w-6 text-blue-500 mb-2" />
+                                      <p className="text-sm font-medium text-blue-600">AI Accuracy Rate</p>
+                                      <p className="text-2xl font-bold text-blue-600">{auditData.aiAccuracyRate}%</p>
+                                  </div>
+                              </CardContent>
+                          </Card>
+                      </TimelineContent>
+
+                      {/* Current AI Focus */}
+                      <TimelineContent as="div" animationNum={1.7} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-bold flex items-center"><Eye className="mr-2 h-6 w-6 text-gray-600" />Current AI Focus</CardTitle>
+                                  <CardDescription>Real-time insights into the AI engine's active analysis.</CardDescription>
+                              </CardHeader>
+                              <CardContent>
+                                  <p className="text-lg font-semibold text-gray-800">{auditData.currentAIAnalysis}</p>
+                                  <p className="text-sm text-gray-500 mt-2">Last updated: Just now</p>
                               </CardContent>
                           </Card>
                       </TimelineContent>
