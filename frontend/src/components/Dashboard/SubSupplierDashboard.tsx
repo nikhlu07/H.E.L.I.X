@@ -1,16 +1,94 @@
 import React, { useState, useRef } from 'react';
-import { Package, DollarSign, Clock, CheckCircle, FileText, Truck } from 'lucide-react';
+import { Package, DollarSign, Clock, CheckCircle, FileText, Truck, Building } from 'lucide-react';
 import { useToast } from '../common/Toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog'; // Import dialog components
+
+interface Order {
+  id: string;
+  vendor: string;
+  description: string;
+  amount: number;
+  dueDate: string;
+  status: string;
+}
+
+interface OrderDetailsDialogProps {
+  order: Order | null;
+  onClose: () => void;
+}
+
+function OrderDetailsDialog({ order, onClose }: OrderDetailsDialogProps) {
+  if (!order) return null;
+
+  return (
+    <Dialog open={!!order} onOpenChange={(isOpen) => !isOpen && onClose()}>
+      <DialogContent className="sm:max-w-2xl bg-white backdrop-blur-sm rounded-xl">
+        <DialogHeader className="flex flex-col items-center text-center py-6">
+          <Package className="w-10 h-10 text-primary mb-2" />
+          <DialogTitle className="text-2xl font-bold text-gray-900">Order Details</DialogTitle>
+          <DialogDescription>
+            <div className="flex items-center justify-center space-x-4 pt-2">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Order ID</p>
+                <p className="text-lg font-semibold text-gray-900">{order.id}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Status</p>
+                <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium ${
+                  order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                  order.status === 'in-progress' ? 'bg-blue-100 text-blue-800' :
+                  'bg-green-100 text-green-800'
+                }`}>
+                  {order.status}
+                </span>
+              </div>
+            </div>
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="px-6 py-4 space-y-6 max-h-[60vh] overflow-y-auto">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-3">Order Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Description</p>
+                <p className="text-lg font-semibold text-gray-900">{order.description}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Vendor</p>
+                <p className="text-lg font-semibold text-gray-900 flex items-center"><Building className="mr-1 h-4 w-4" />{order.vendor}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Amount</p>
+                <p className="text-lg font-semibold text-gray-900 flex items-center"><DollarSign className="mr-1 h-4 w-4" />₹{order.amount.toLocaleString()}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-600">Due Date</p>
+                <p className="text-lg font-semibold text-gray-900 flex items-center"><Clock className="mr-1 h-4 w-4" />{order.dueDate}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/*<DialogFooter className="px-6 pb-6">*/}
+        {/*  <Button variant="outline" onClick={onClose}>Close</Button>*/}
+        {/*</DialogFooter>*/}
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 
 export function SubSupplierDashboard() {
   const [deliveryAmount, setDeliveryAmount] = useState('');
   const [deliveryDescription, setDeliveryDescription] = useState('');
   const [invoiceNumber, setInvoiceNumber] = useState('');
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null); // State for selected order
   const { showToast } = useToast();
   const dashboardRef = useRef<HTMLDivElement>(null);
 
@@ -37,7 +115,7 @@ export function SubSupplierDashboard() {
     reliabilityScore: 98,
   };
 
-  const pendingOrders = [
+  const pendingOrders: Order[] = [ // Explicitly type pendingOrders
     {
       id: 'SUB-001',
       vendor: 'BuildCorp Ltd',
@@ -88,6 +166,14 @@ export function SubSupplierDashboard() {
     setDeliveryAmount('');
     setDeliveryDescription('');
     setInvoiceNumber('');
+  };
+
+  const handleOpenOrderDetails = (order: Order) => {
+    setSelectedOrder(order);
+  };
+
+  const handleCloseOrderDetails = () => {
+    setSelectedOrder(null);
   };
 
   return (
@@ -152,7 +238,7 @@ export function SubSupplierDashboard() {
                                   <div className="flex flex-col p-4 bg-yellow-50 rounded-lg">
                                       <Clock className="h-6 w-6 text-yellow-500 mb-2" />
                                       <p className="text-sm font-medium text-yellow-600">Pending Payments</p>
-                                      <p className="text-2xl font-bold text-yellow-600">{pendingPayments}</p>
+                                      <p className="text-2xl font-bold text-yellow-600">{(pendingPayments).toLocaleString()}</p>
                                   </div>
                                   <div className="flex flex-col p-4 bg-green-50 rounded-lg">
                                       <CheckCircle className="h-6 w-6 text-green-500 mb-2" />
@@ -172,7 +258,7 @@ export function SubSupplierDashboard() {
                           </CardHeader>
                           <CardContent className="space-y-4">
                             {pendingOrders.map((order) => (
-                              <div key={order.id} className="rounded-xl border p-4 space-y-3 hover:border-black transition-colors cursor-pointer bg-gray-50/50">
+                              <div key={order.id} onClick={() => handleOpenOrderDetails(order)} className="rounded-xl border p-4 space-y-3 hover:border-primary transition-colors cursor-pointer bg-gray-50/50">
                                 <div className="flex items-start justify-between">
                                   <div>
                                     <h3 className="font-semibold text-gray-900">{order.description}</h3>
@@ -281,7 +367,7 @@ export function SubSupplierDashboard() {
                                       <p className="text-sm text-yellow-700 mb-3">
                                       Upload delivery receipts, quality certificates, etc.
                                       </p>
-                                      <Button className="bg-yellow-100 hover:bg-blue-200 text-yellow-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                      <Button className="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                                       Upload Documents
                                       </Button>
                                   </div>
@@ -298,6 +384,7 @@ export function SubSupplierDashboard() {
               </div>
           </main>
       </section>
+      <OrderDetailsDialog order={selectedOrder} onClose={handleCloseOrderDetails} />
     </>
   );
 }

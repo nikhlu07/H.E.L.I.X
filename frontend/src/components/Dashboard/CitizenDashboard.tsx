@@ -55,6 +55,17 @@ export function CitizenDashboard() {
 
   return (
     <>
+      <style>
+        {`
+        .hide-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera*/
+        }
+        `}
+      </style>
       <section
           className="py-16 px-4 bg-white w-full relative min-h-screen flex items-start"
           ref={dashboardRef}
@@ -143,9 +154,9 @@ export function CitizenDashboard() {
                                 placeholder="Search by description or claim ID..."
                               />
                             </div>
-                            <div className="space-y-4 max-h-96 overflow-y-auto">
+                            <div className="space-y-4 max-h-96 overflow-y-auto hide-scrollbar"> {/* Replaced no-scrollbar with hide-scrollbar */}
                               {filteredClaims.map((claim) => (
-                                <div key={claim.id} className="rounded-xl border p-4 hover:border-black transition-colors cursor-pointer bg-gray-50/50">
+                                <div key={claim.id} className="rounded-xl border p-4 hover:border-primary transition-colors cursor-pointer bg-gray-50/50">
                                   <div className="flex items-start justify-between mb-3">
                                     <div>
                                       <h3 className="font-semibold text-gray-900">{claim.description}</h3>

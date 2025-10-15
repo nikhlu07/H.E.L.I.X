@@ -1,16 +1,19 @@
 import React, { useState, useRef } from 'react';
-import { MapPin, Users, CheckCircle, Clock, AlertTriangle, Building, Truck, FileText, Eye, ChevronDown } from 'lucide-react';
+import { MapPin, Users, CheckCircle, Clock, AlertTriangle, Building, Truck, FileText, FilePen, ChevronDown } from 'lucide-react';
 import { useToast } from '../common/Toast';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogBody, DialogFooter, DialogClose } from '../ui/dialog';
 
 export function DeputyDashboard() {
   const [selectedVendor, setSelectedVendor] = useState('');
   const [selectedAllocation, setSelectedAllocation] = useState('');
   const [expandedClaimId, setExpandedClaimId] = useState<string | null>(null);
+  const [isUpdateProgressDialogOpen, setUpdateProgressDialogOpen] = useState(false);
+  const [selectedProjectForUpdate, setSelectedProjectForUpdate] = useState<any>(null);
   const { showToast } = useToast();
   const dashboardRef = useRef<HTMLDivElement>(null);
 
@@ -156,8 +159,15 @@ export function DeputyDashboard() {
     setExpandedClaimId(null);
   };
 
-  const handleVerifyProject = (id: string) => {
-    showToast('Project verification report submitted to State Head', 'success');
+  const handleUpdateProgressClick = (project: any) => {
+    setSelectedProjectForUpdate(project);
+    setUpdateProgressDialogOpen(true);
+  };
+
+  const handleProgressReportSubmit = () => {
+    showToast('Progress report submitted successfully!', 'success');
+    setUpdateProgressDialogOpen(false);
+    setSelectedProjectForUpdate(null);
   };
 
   const toggleClaimExpansion = (claimId: string) => {
@@ -273,8 +283,8 @@ export function DeputyDashboard() {
                                       </span>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                      <Button variant="ghost" size="sm" className="text-black hover:bg-gray-100" onClick={() => handleVerifyProject(project.id)}>
-                                        <Eye className="mr-1 h-4 w-4" /> Update Progress
+                                      <Button variant="ghost" size="sm" className="text-black hover:bg-gray-100" onClick={() => handleUpdateProgressClick(project)}>
+                                        <FilePen className="mr-1 h-4 w-4" /> Progress
                                       </Button>
                                     </TableCell>
                                   </TableRow>
@@ -294,7 +304,7 @@ export function DeputyDashboard() {
                           </CardHeader>
                           <CardContent className="space-y-4">
                             {communityReports.map((report) => (
-                              <div key={report.id} className="rounded-xl border p-4 space-y-3 hover:border-red-500 transition-colors cursor-pointer bg-red-50/50">
+                              <div key={report.id} className="rounded-xl border p-4 space-y-3 bg-gray-50/50 hover:border-primary transition-colors">
                                 <div className="flex items-start justify-between">
                                   <div>
                                     <h4 className="font-semibold text-gray-900">{report.issue}</h4>
@@ -319,7 +329,7 @@ export function DeputyDashboard() {
                                 </div>
                                 <div className="flex items-center justify-between">
                                   <span className="text-sm text-slate-600">Reporter: {report.reporter}</span>
-                                  <Button className="bg-amber-600 hover:bg-amber-700 text-white px-4 py-1 rounded text-sm font-medium transition-colors">
+                                  <Button variant="outline" size="sm" className="p-2 h-auto border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800">
                                     Investigate
                                   </Button>
                                 </div>
@@ -424,21 +434,21 @@ export function DeputyDashboard() {
                                             <Button
                                                 onClick={() => handleReviewClaim(claim.id, 'approve')}
                                                 size="sm"
-                                                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                                                className="p-2 h-auto border  shadow-lg shadow-black/20 font-semibold rounded-xl bg-black border-black text-white hover:bg-gray-800"
                                             >
                                                 Approve
                                             </Button>
                                             <Button
                                                 onClick={() => handleReviewClaim(claim.id, 'investigate')}
                                                 size="sm"
-                                                className="bg-amber-600 hover:bg-amber-700 text-white"
+                                                className="p-2 h-auto border  shadow-lg shadow-black/20 font-semibold rounded-xl bg-primary border-primary text-white hover:bg-gray-800"
                                             >
                                                 Investigate
                                             </Button>
                                             <Button
                                                 onClick={() => handleReviewClaim(claim.id, 'reject')}
                                                 size="sm"
-                                                variant="destructive"
+                                                className="p-2 h-auto border  shadow-lg shadow-black/20 font-semibold rounded-xl bg-red-500 border-red-500 text-white hover:bg-gray-800"
                                             >
                                                 Reject
                                             </Button>
@@ -454,6 +464,36 @@ export function DeputyDashboard() {
               </div>
           </main>
       </section>
+
+      <Dialog open={isUpdateProgressDialogOpen} onOpenChange={setUpdateProgressDialogOpen}>
+        {selectedProjectForUpdate && (
+          <DialogContent className="sm:max-w-[425px] bg-white backdrop-blur-sm rounded-xl">
+            <DialogHeader className="flex flex-col items-center text-center py-6">
+                <FilePen className="w-10 h-10 mb-2 text-gray-800" />
+                <DialogTitle className="text-2xl font-bold">Update Project Progress</DialogTitle>
+                <DialogDescription>
+                    {selectedProjectForUpdate.project}
+                </DialogDescription>
+            </DialogHeader>
+            <DialogBody className="py-4">
+                <div className="space-y-4">
+                    <div>
+                        <label htmlFor="progress-summary" className="text-sm font-medium text-gray-700">Progress Summary</label>
+                        <textarea id="progress-summary" rows={4} className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent" placeholder="Enter a summary of the project progress..."></textarea>
+                    </div>
+                    <div>
+                        <label htmlFor="report-upload" className="text-sm font-medium text-gray-700">Upload Report</label>
+                        <input id="report-upload" type="file" className="mt-1 w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-black file:text-white hover:file:bg-gray-800"/>
+                    </div>
+                </div>
+            </DialogBody>
+            <DialogFooter>
+                {/*<Button variant="outline" onClick={() => setUpdateProgressDialogOpen(false)}>Cancel</Button>*/}
+                <Button onClick={handleProgressReportSubmit} className="p-2 h-auto border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800">Submit Report</Button>
+            </DialogFooter>
+          </DialogContent>
+        )}
+      </Dialog>
     </>
   );
 }

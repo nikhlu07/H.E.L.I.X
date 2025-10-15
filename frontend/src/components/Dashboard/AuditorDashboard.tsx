@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Search, Shield, FileText, TrendingUp, ChevronDown, Eye, AlertTriangle } from 'lucide-react';
+import { Search, Shield, FileText, TrendingUp, ChevronDown, Eye, AlertTriangle, Brain, Zap } from 'lucide-react';
 import { useToast } from '../common/Toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
@@ -34,6 +34,8 @@ export function AuditorDashboard() {
     highRiskFlags: 42,
     openInvestigations: 5,
     complianceRate: 99.1,
+    aiFraudDetections: 158,
+    autonomousInterventions: 12,
   };
 
   const transactions = [
@@ -189,7 +191,7 @@ export function AuditorDashboard() {
                                                 <Button
                                                 onClick={() => handleInvestigation(txn.id)}
                                                 size="sm"
-                                                className="p-2 h-auto border border-yellow-800 shadow-lg shadow-yellow-800/20 font-semibold rounded-xl bg-yellow-600 text-white hover:bg-yellow-700"
+                                                className="p-2 h-auto border border-primary shadow-lg shadow-yellow-800/20 font-semibold rounded-xl bg-primary text-black "
                                                 >
                                                 <Search className="mr-2 h-4 w-4" />
                                                 Initiate Investigation
@@ -228,6 +230,28 @@ export function AuditorDashboard() {
                                     <p className="text-2xl font-bold text-yellow-600">{auditData.openInvestigations}</p>
                                 </div>
                             </CardContent>
+                          </Card>
+                       </TimelineContent>
+
+                       {/* AI Engine Insights */}
+                       <TimelineContent as="div" animationNum={2.0} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                              <CardHeader>
+                                  <CardTitle className="text-xl font-bold flex items-center"><Brain className="mr-2 h-6 w-6 text-blue-600" />AI Engine Insights</CardTitle>
+                                  <CardDescription>Performance metrics for AI-powered fraud detection.</CardDescription>
+                              </CardHeader>
+                              <CardContent className="grid gap-6 sm:grid-cols-2">
+                                  <div className="flex flex-col p-4 bg-blue-50 rounded-lg">
+                                      <Zap className="h-6 w-6 text-blue-500 mb-2" />
+                                      <p className="text-sm font-medium text-blue-600">Fraud Engine Detections</p>
+                                      <p className="text-2xl font-bold text-blue-600">{auditData.aiFraudDetections}</p>
+                                  </div>
+                                  <div className="flex flex-col p-4 bg-purple-50 rounded-lg">
+                                      <Shield className="h-6 w-6 text-purple-500 mb-2" />
+                                      <p className="text-sm font-medium text-purple-600">Autonomous Interventions</p>
+                                      <p className="text-2xl font-bold text-purple-600">{auditData.autonomousInterventions}</p>
+                                  </div>
+                              </CardContent>
                           </Card>
                        </TimelineContent>
 

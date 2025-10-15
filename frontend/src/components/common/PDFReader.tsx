@@ -138,7 +138,7 @@ Vendor History: ${file.name.includes('suspicious') ? 'Limited' : 'Established ve
   return (
     <div className="space-y-4">
       {/* File Upload Area */}
-      <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors">
+      <div className="border-2 border-dashed border-slate-300 rounded-xl p-6 text-center hover:border-primary transition-colors">
         <input
           ref={fileInputRef}
           type="file"

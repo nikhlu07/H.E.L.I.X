@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Upload, DollarSign, Clock, CheckCircle, AlertTriangle, Building, Truck, Wallet, Eye } from 'lucide-react';
+import { Upload, DollarSign, Clock, CheckCircle, AlertTriangle, Building, Truck, Wallet, Eye, Shield, BarChart2, FileText } from 'lucide-react';
 import { mockClaims, calculateFraudScore, getRiskLevel } from '../../data/mockData';
 import { useToast } from '../common/Toast';
 import { PDFReader } from '../common/PDFReader';
@@ -9,6 +9,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useContract } from '../../hooks/useContracts';
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import { VerticalCutReveal } from "@/components/ui/vertical-cut-reveal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
+import { Claim } from '../../types';
 
 export function VendorDashboard() {
   const [claimAmount, setClaimAmount] = useState('');
@@ -17,6 +19,8 @@ export function VendorDashboard() {
   const { showToast } = useToast();
   const [supplierPayment, setSupplierPayment] = useState('');
   const [supplierAddress, setSupplierAddress] = useState('');
+  const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null);
+
 
   const { getCkUSDCBalance, transferCkUSDC } = useContract();
   const [ckBalance, setCkBalance] = useState<string>('—');
@@ -289,7 +293,7 @@ export function VendorDashboard() {
                               }`}>{claim.status}</span>
                             </TableCell>
                             <TableCell className="text-right">
-                                <Button variant="ghost" size="sm" className="text-black hover:bg-gray-100">
+                                <Button variant="ghost" size="sm" className="text-black hover:bg-gray-100" onClick={() => setSelectedClaim(claim)}>
                                     <Eye className="mr-1 h-4 w-4" /> Details
                                 </Button>
                             </TableCell>
@@ -393,6 +397,42 @@ export function VendorDashboard() {
             </div>
           </div>
         </main>
+
+        {selectedClaim && (
+            <Dialog open={!!selectedClaim} onOpenChange={() => setSelectedClaim(null)}>
+                <DialogContent className="sm:max-w-[425px] bg-white backdrop-blur-sm rounded-xl">
+                    <DialogHeader className="flex flex-col items-center text-center py-6">
+                        <svg width="30px" height="30px" viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000"><path d="M7 18H10.5H14" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 14H7.5H8" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 10H8.5H10" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 2L16.5 2L21 6.5V19" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 20.5V6.5C3 5.67157 3.67157 5 4.5 5H14.2515C14.4106 5 14.5632 5.06321 14.6757 5.17574L17.8243 8.32426C17.9368 8.43679 18 8.5894 18 8.74853V20.5C18 21.3284 17.3284 22 16.5 22H4.5C3.67157 22 3 21.3284 3 20.5Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14 5V8.4C14 8.73137 14.2686 9 14.6 9H18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <DialogTitle className="text-2xl font-bold">{selectedClaim.id}</DialogTitle>
+                        <DialogDescription>{selectedClaim.description}</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="flex items-center justify-between p-2 bg-white border-gray-300 border rounded-md mx-4 ">
+                            <span className="text-sm font-medium text-gray-600 flex items-center"><DollarSign className="w-4 h-4 mr-2" />Amount</span>
+                            <span className="text-sm font-bold">${selectedClaim.amount.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-white border-gray-300 border rounded-md mx-4">
+                            <span className="text-sm font-medium text-gray-600 flex items-center"><Shield className="w-4 h-4 mr-2" />Status</span>
+                            <span className="text-sm font-bold">{selectedClaim.status}</span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-white border-gray-300 border rounded-md mx-4">
+                            <span className="text-sm font-medium text-gray-600 flex items-center"><AlertTriangle className="w-4 h-4 mr-2" />Risk Level</span>
+                            <span className="text-sm font-bold">{selectedClaim.riskLevel}</span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-white border-gray-300 border rounded-md mx-4">
+                            <span className="text-sm font-medium text-gray-600 flex items-center"><BarChart2 className="w-4 h-4 mr-2" />Fraud Score</span>
+                            <span className="text-sm font-bold">{selectedClaim.fraudScore}</span>
+                        </div>
+                        {selectedClaim.reviewNotes && (
+                            <div className="p-2 bg-gray-50 rounded-md">
+                                <span className="text-sm font-medium text-gray-600 flex items-center"><FileText className="w-4 h-4 mr-2" />Review Notes</span>
+                                <p className="text-sm mt-1">{selectedClaim.reviewNotes}</p>
+                            </div>
+                        )}
+                    </div>
+                </DialogContent>
+            </Dialog>
+        )}
     </section>
   );
 }
