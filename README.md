@@ -17,7 +17,7 @@
 ## 🚀 **Quick Access Links**
 
 ### 📱 **Live Web App**
-🔗 **[Web app](h-e-l-i-x.vercel.app)**
+🔗 **[Web app](https://h-e-l-i-x.vercel.app)**
 > Full-featured hierarchical data flow system with real Internet Identity authentication
 
 ### 🎬 **Demo Video** 
@@ -367,6 +367,39 @@ This new architecture combines the deterministic precision of our `FraudRulesEng
 - **Prevention Value**: ₹4.28 crore+ equivalent corruption prevented
 - **Response Time**: Real-time alerts for critical threat detection
 
+## 📚 CASE STUDIES & USE CASES
+
+Drawing inspiration from the live Landing page sections (Case Studies), here are concrete contexts where H.E.L.I.X. delivers impact:
+
+- Public Distribution Integrity (Jhalawar): See "THE CATALYST" above — end-to-end tracing from allocation to last-mile delivery prevents material substitution and payment anomalies.
+- Infrastructure Procurement: Vendor collusion and cost inflation detection across tendering, invoicing, and quality verification.
+- Grants & Subsidies: Duplicate claim detection and citizen-verifiable audit logs for transparent disbursal.
+- Supply Chain Oversight: Sub-supplier coordination, delivery tracking, and quality deviation alerts.
+
+Additional case studies and real deployments will be documented as they go live. Contributions and reports are welcome via GitHub Issues.
+
+## 🧠 ICP SOLUTION HIGHLIGHTS
+
+H.E.L.I.X. is purpose-built on the Internet Computer (ICP) — mirroring the dedicated ICP Solution section on the Landing page — to ensure verifiable transparency at scale:
+
+- Passwordless Identity: Biometric/WebAuthn via Internet Identity (principal-based auth). 
+- Smart Contracts in Motoko: Business logic crystallized in canisters; tamper-proof by design.
+- Immutable, Public Audit Trails: Procurement and transaction events persisted on-chain.
+- Flexible Access: Seamless switch between real ICP auth and a secure Demo mode.
+- Mainnet Ready: See ICP Mainnet Deployment below for one-command deploy.
+
+For deeper detail, also see: Cryptographic Genesis Ledger, ICP Mainnet Deployment, and Blockchain Quantum Substrate sections above.
+
+## 💸 PRICING
+
+Inspired by the Pricing section on the Landing page, here’s the straightforward project model:
+
+- Open Source (MIT): Free to use, modify, and self-host.
+- Self-Hosted Costs: Your infrastructure + ICP cycles (if deploying to mainnet canisters).
+- Managed/Enterprise Options: If you need white-glove deployment, audits, or custom features, open an Issue to discuss scope and support.
+
+We keep pricing simple to maximize adoption and transparency. Any future commercial offerings will remain compatible with the open-source core.
+
 ## 🧪 QUANTUM TESTING PROTOCOLS
 
 ### Automated Testing Matrix
@@ -436,14 +469,24 @@ This project operates under the MIT License - see the [LICENSE](LICENSE) file fo
 - **Innovation Award**: AI + Blockchain for Government Transparency
 - **Technical Excellence**: Full-stack implementation with quantum-ready architecture
 
-## 👥 NEURAL COLLECTIVE
+## 👥 CORE TEAM
 
-**Core Development Consciousness**
-- **Lead Quantum Developer**: [@nikhlu07](https://github.com/nikhlu07)
-- **AI/ML Neural Engineer**: Machine learning consciousness development
-- **Blockchain Quantum Architect**: ICP integration and smart contracts
-- **Frontend Neural Specialist**: React/TypeScript quantum interfaces
-- **Security Quantum Consultant**: Authentication and data protection protocols
+H.E.L.I.X. is designed, built, and maintained by a focused two‑developer team.
+
+- Nikhil — https://github.com/nikhlu07
+  - Lead developer and systems architect across frontend, backend, and ICP smart contracts
+  - React + TypeScript frontend, dashboard architecture, performance and accessibility
+  - FastAPI backend and fraud detection pipeline integration (rules + Hybrid RAG with Ollama)
+  - Motoko canisters and Internet Identity integration; deployment and DevOps
+  - Release management, CI/CD, and security reviews
+
+- Chandan — https://github.com/chandan989
+  - Product engineering and UX for Government, State, Deputy, Vendor, Sub‑Supplier, and Citizen dashboards
+  - Data modeling, procurement workflows, and rule curation for fraud scenarios
+  - QA, test planning, demo environments, documentation, and community support
+  - Operational analytics, telemetry, and feedback loops for iterative improvement
+
+Maintainers: For issues, discussions, and releases, both developers above are the active maintainers. Please use GitHub issues or reach out via their profiles.
 
 ## 📞 QUANTUM COMMUNICATION CHANNELS
 
