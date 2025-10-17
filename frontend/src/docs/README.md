@@ -12,9 +12,6 @@ Main documentation component with navigation and content rendering.
 ### documentation.data.ts
 Documentation content data and structure.
 
-### DocumentationSections.tsx
-Individual documentation section components.
-
 ### sections/
 Subdirectory containing individual documentation section components.
 
