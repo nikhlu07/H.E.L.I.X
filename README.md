@@ -71,13 +71,21 @@ Born from the tragedy of the Jhalawar school collapse—where ₹4.28 crore of d
 
 ### 🤖 AI Fraud Detection Engine
 
-Our MVP currently uses **Gemma 3 (4B parameters)** running locally via Ollama, with plans to integrate advanced commercial LLMs as we scale.
+H.E.L.I.X. uses a **hybrid fraud detection architecture** combining deterministic rules with advanced AI models.
+
+**Multi-Model LLM/SLM Support:**
+- **Current MVP**: Gemma 3 (4B parameters) via Ollama for local deployment
+- **Production Ready**: GPT-4, Claude, and other commercial LLMs supported
+- **Flexible Architecture**: Easy model switching without code changes
+- **Fallback Strategy**: Graceful degradation to rules-only if LLM unavailable
 
 **Hybrid RAG Architecture:**
-- **Rules Engine**: Deterministic detection of 10 corruption patterns
-- **LLM Analysis**: Context-aware reasoning using historical case data
+- **Rules Engine (70% weight)**: Deterministic detection of 10 corruption patterns
+- **ML Models (30% weight)**: Isolation Forest for anomaly detection
+- **LLM Analysis**: Context-aware reasoning using historical case data via RAG
 - **Vector Database**: FAISS-powered similarity search for pattern matching
-- **Real-time Processing**: Analysis completed in under 3 seconds
+- **Real-time Processing**: Complete analysis in under 3 seconds
+- **Autonomous Learning**: Self-improving detection from investigation outcomes
 
 **Detection Capabilities:**
 
@@ -116,17 +124,59 @@ Our MVP currently uses **Gemma 3 (4B parameters)** running locally via Ollama, w
 
 ### 🏛️ Hierarchical Data Flow
 
-Complete end-to-end tracking:
+Complete end-to-end tracking with role-based permissions:
+
 ```
-Main Government → State Head → Deputy Officer → Vendor → Sub-Supplier → Citizen Verification
+┌─────────────────────────────────────────────────────────────┐
+│  Main Government (National Level)                           │
+│  • Creates budgets                                          │
+│  • Assigns roles                                            │
+│  • Monitors all transactions                                │
+└────────────────┬────────────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────────────┐
+│  State Head (Regional Level)                                │
+│  • Receives budget allocation                               │
+│  • Manages deputies                                         │
+│  • Oversees state operations                                │
+└────────────────┬────────────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Deputy Officer (District Level)                            │
+│  • Receives allocation                                      │
+│  • Selects vendors                                          │
+│  • Approves claims                                          │
+└────────────────┬────────────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Vendor (Contractor)                                        │
+│  • Submits claims                                           │
+│  • Manages sub-suppliers                                    │
+│  • Tracks payments                                          │
+└────────────────┬────────────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Sub-Supplier (Material Provider)                           │
+│  • Delivers materials                                       │
+│  • Quality assurance                                        │
+│  • Receives payment                                         │
+└────────────────┬────────────────────────────────────────────┘
+                 ↓
+┌─────────────────────────────────────────────────────────────┐
+│  Citizen (Public Oversight)                                 │
+│  • Views all transactions                                   │
+│  • Reports suspicious activity                              │
+│  • Verifies project completion                              │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-Each transaction is recorded on the blockchain with:
-- Timestamp and principal ID
-- Budget allocation amounts
-- Approval workflows
-- Fraud detection results
-- Public audit accessibility
+**Each transaction is recorded on the blockchain with:**
+- Timestamp and principal ID (immutable identity)
+- Budget allocation amounts and purpose
+- Multi-level approval workflows
+- Real-time fraud detection results
+- Public audit accessibility (full transparency)
+- Cryptographic proof of authenticity
 
 ---
 
@@ -153,11 +203,12 @@ Each transaction is recorded on the blockchain with:
 - Public ledger for transparency
 
 **AI/ML Pipeline**
-- **Current**: Gemma 3 (4B) via Ollama (local)
-- **Planned**: GPT-4, Claude, or specialized models for production
-- LangChain for RAG orchestration
-- FAISS vector store for historical analysis
-- Custom rules engine for deterministic checks
+- **LLM/SLM Support**: Gemma 3 (4B) via Ollama (current MVP), GPT-4, Claude, and other LLMs supported
+- **Hybrid Architecture**: Rules engine (70%) + ML models (30%) for balanced accuracy
+- **RAG Pipeline**: LangChain orchestration with FAISS vector store
+- **Real-time Analysis**: Sub-3-second fraud detection with contextual reasoning
+- **Continuous Learning**: Autonomous pattern updates from investigation outcomes
+- **Multi-Model Fallback**: Graceful degradation if primary LLM unavailable
 
 ### System Architecture
 
@@ -279,6 +330,46 @@ For detailed deployment guides, see:
 - `ICP_MAINNET_DEPLOYMENT.md` - ICP-specific instructions
 - `docker-compose.prod.yml` - Docker production setup
 
+### 🔧 Troubleshooting
+
+**Common Issues:**
+
+1. **Ollama Connection Error**
+   ```bash
+   # Ensure Ollama is running
+   ollama serve
+   # Pull required models
+   ollama pull gemma3:4b
+   ollama pull nomic-embed-text
+   ```
+
+2. **ICP Canister Connection Failed**
+   ```bash
+   # Start local dfx
+   dfx start --clean --background
+   # Deploy canisters
+   dfx deploy
+   ```
+
+3. **Frontend Build Errors**
+   ```bash
+   # Clear cache and reinstall
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+4. **Backend Import Errors**
+   ```bash
+   # Ensure virtual environment is activated
+   source venv/bin/activate  # or venv\Scripts\activate on Windows
+   pip install -r requirements.txt
+   ```
+
+For more help, see:
+- [Backend Troubleshooting](backend/README.md#troubleshooting)
+- [Frontend Troubleshooting](frontend/README.md#troubleshooting)
+- [Open an Issue](https://github.com/nikhlu07/H.E.L.I.X/issues)
+
 ---
 
 ## 🧪 Use Cases
@@ -384,6 +475,65 @@ For managed deployment inquiries, open a GitHub issue or contact the team.
 
 ---
 
+## 📚 Documentation
+
+H.E.L.I.X. has comprehensive documentation for every component:
+
+### Backend Documentation
+- **[Backend Overview](backend/README.md)** - Complete backend architecture
+- **[API Layer](backend/app/api/README.md)** - REST API endpoints by role
+- **[Authentication](backend/app/auth/README.md)** - Internet Identity & RBAC
+- **[Fraud Detection](backend/app/fraud/README.md)** - Core fraud detection logic
+- **[Fraud Engine](backend/app/fraud_engine/README.md)** - Standalone LLM/SLM fraud service
+- **[Autonomous Engine](backend/app/autonomous_fraud_engine/README.md)** - Self-healing fraud detection
+- **[ICP Integration](backend/app/icp/README.md)** - Blockchain connectivity
+- **[Configuration](backend/app/config/README.md)** - Settings and environment
+- **[Database](backend/app/database/README.md)** - Data persistence layer
+- **[Tests](backend/tests/README.md)** - Testing strategy
+
+### Frontend Documentation
+- **[Frontend Overview](frontend/src/README.md)** - React application structure
+- **[Components](frontend/src/components/README.md)** - UI component library
+- **[Authentication](frontend/src/auth/README.md)** - Auth services
+- **[Dashboards](frontend/src/components/Dashboard/README.md)** - Role-specific dashboards
+- **[Services](frontend/src/services/README.md)** - API integration
+- **[State Management](frontend/src/contexts/README.md)** - React contexts
+- **[UI Library](frontend/src/components/ui/README.md)** - shadcn/ui components
+- **[Types](frontend/src/types/README.md)** - TypeScript definitions
+
+### Blockchain Documentation
+- **[Canisters](canisters/README.md)** - Motoko smart contracts
+- **[ICP Integration Guide](backend/app/icp/README.md)** - Canister communication
+
+### Supporting Documentation
+- **[Scripts](scripts/README.md)** - Automation and deployment scripts
+- **[Docs](docs/README.md)** - Additional documentation and guides
+
+### Quick Navigation
+
+```
+H.E.L.I.X./
+├── backend/          # FastAPI backend with fraud detection
+│   ├── app/          # Main application code
+│   │   ├── api/      # REST API endpoints
+│   │   ├── auth/     # Authentication & RBAC
+│   │   ├── fraud/    # Fraud detection logic
+│   │   ├── icp/      # ICP blockchain integration
+│   │   └── ...       # See backend/README.md
+│   └── tests/        # Test suite
+├── frontend/         # React + TypeScript frontend
+│   └── src/          # Source code
+│       ├── components/  # UI components
+│       ├── services/    # API clients
+│       ├── auth/        # Auth services
+│       └── ...          # See frontend/src/README.md
+├── canisters/        # ICP smart contracts (Motoko)
+├── scripts/          # Deployment & automation
+└── docs/             # Additional documentation
+```
+
+---
+
 ## 🤝 Contributing
 
 We welcome contributions from developers, security researchers, and anti-corruption advocates.
@@ -392,7 +542,7 @@ We welcome contributions from developers, security researchers, and anti-corrupt
 
 1. **Fork** the repository
 2. **Create** a feature branch: `git checkout -b feature/amazing-feature`
-3. **Commit** your changes: `git commit -m '''Add amazing feature'''`
+3. **Commit** your changes: `git commit -m 'Add amazing feature'`
 4. **Push** to branch: `git push origin feature/amazing-feature`
 5. **Open** a Pull Request
 
@@ -401,6 +551,16 @@ We welcome contributions from developers, security researchers, and anti-corrupt
 - Write comprehensive tests for new features
 - Update documentation for API changes
 - Ensure blockchain integration tests pass
+- Review the relevant README files before contributing
+
+### Getting Started with Development
+
+1. **Read the Documentation**: Start with [Backend README](backend/README.md) and [Frontend README](frontend/src/README.md)
+2. **Set Up Environment**: Follow the Quick Demo guide above
+3. **Explore the Code**: Each directory has a README explaining its purpose
+4. **Run Tests**: `pytest backend/tests/` and `npm test` in frontend
+5. **Make Changes**: Follow the coding standards in each component's README
+6. **Submit PR**: Include tests and update relevant documentation
 
 ---
 
@@ -445,14 +605,48 @@ This project is licensed under the Creative Commons Attribution-NonCommercial 4.
 
 ---
 
+## 🆚 H.E.L.I.X. vs Traditional Systems
+
+| Feature | Traditional Systems | H.E.L.I.X. |
+|---------|-------------------|-----------|
+| **Transparency** | Limited, request-based | Real-time, public by default |
+| **Audit Trail** | Paper-based, modifiable | Blockchain, immutable |
+| **Fraud Detection** | Manual, post-incident | AI-powered, real-time |
+| **Authentication** | Passwords, vulnerable | Internet Identity, biometric |
+| **Data Integrity** | Centralized, tamperable | Decentralized, cryptographic |
+| **Citizen Access** | Restricted, bureaucratic | Open, instant |
+| **Response Time** | Days to weeks | Seconds |
+| **Cost** | High overhead | Minimal operational cost |
+| **Scalability** | Limited | Unlimited (blockchain) |
+| **Accountability** | Diffused | Clear, traceable |
+
+---
+
 ## 💡 Final Note
 
 *"Technology alone cannot eliminate corruption, but it can make corruption so difficult, transparent, and risky that honest governance becomes the rational choice."*
 
 H.E.L.I.X. is more than code—it's a commitment to a future where public resources reach their intended destinations. Every feature we build, every fraud pattern we detect, and every transparency tool we deploy honors the memory of those lost to systemic corruption.
 
+### Why H.E.L.I.X. Matters
+
+- **For Citizens**: Transparency and accountability in how public funds are used
+- **For Governments**: Tools to prevent corruption and build public trust
+- **For Vendors**: Fair, transparent procurement processes
+- **For Developers**: Open-source platform to build upon and improve
+- **For the World**: A blueprint for corruption-resistant governance systems
+
 **Join us in building a more transparent, accountable world. One transaction at a time.** ⚡
+
+### Connect With Us
+
+- **GitHub**: [github.com/nikhlu07/H.E.L.I.X](https://github.com/nikhlu07/H.E.L.I.X)
+- **Live Demo**: [h-e-l-i-x.vercel.app](https://h-e-l-i-x.vercel.app)
+- **Issues**: [Report bugs or request features](https://github.com/nikhlu07/H.E.L.I.X/issues)
+- **Discussions**: [Join the conversation](https://github.com/nikhlu07/H.E.L.I.X/discussions)
 
 ---
 
-**Version**: 2.1.0 (MVP) | **Status**: Production Ready | **Last Updated**: October 2025
+**Version**: 2.1.0 (MVP) | **Status**: Production Ready | **Last Updated**: January 2025
+
+**Built with ❤️ for transparency, accountability, and the memory of Jhalawar's children.**
