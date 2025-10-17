@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogOut, Bell, Settings, ChevronDown, Menu, X, User as UserIcon } from 'lucide-react';
+import { LogOut, Bell, Settings, ChevronDown, Menu, X, User as UserIcon, Presentation } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
@@ -93,7 +93,7 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
     setMobileMenuOpen(false);
   };
 
-  if (location.pathname === '/') {
+  if (location.pathname === '/' || location.pathname === '/pitch') {
     return null;
   }
 
@@ -105,6 +105,9 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
             <Link to="/" className="flex items-center">
               <img src="/logo.svg" alt="Helix Logo" className="h-8 w-auto" />
               <span className="ml-3 text-2xl font-bold tracking-tighter text-gray-900">Helix</span>
+            </Link>
+            <Link to="/pitch" className="ml-8 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
+              Pitch
             </Link>
           </div>
 
@@ -189,6 +192,12 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
             <div className="border-t border-gray-200" />
 
             <div className="flex flex-col gap-1">
+              <Button variant="ghost" asChild className="justify-start gap-2">
+                <Link to="/pitch" onClick={() => setMobileMenuOpen(false)}>
+                  <Presentation className="h-5 w-5" />
+                  <span>Pitch</span>
+                </Link>
+              </Button>
               <Button variant="ghost" className="justify-start gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <Bell className="h-5 w-5" />
                 <span>Notifications</span>

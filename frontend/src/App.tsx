@@ -13,6 +13,8 @@ import {SubSupplierDashboard} from "./components/Dashboard/SubSupplierDashboard.
 import {AuditorDashboard} from "./components/Dashboard/AuditorDashboard.tsx";
 import Profile from './components/Dashboard/Profile.tsx';
 import { DeputyProfile } from './components/Dashboard/DeputyProfile.tsx';
+import PitchPage from './pages/pitch/index.tsx';
+import Documentation from './docs/documentation.tsx';
 
 function DashboardLayout() {
   return (
@@ -63,6 +65,8 @@ function App() {
           <Route path="/deputy-profile" element={<DeputyProfile />} />
           <Route path="/demo" element={<div className="p-8 text-center"><h1 className="text-2xl">Demo Mode Coming Soon!</h1></div>} />
           <Route path="/role-selection" element={<div className="p-8 text-center"><h1 className="text-2xl">Role Selection Coming Soon!</h1></div>} />
+          {/*<Route path="/pitch" element={<PitchPage />} />*/}
+          <Route path="/docs" element={<Documentation />} />
 
           {/* Dashboard routes wrapped with common header */}
           <Route path="/dashboard" element={<DashboardLayout />}>
