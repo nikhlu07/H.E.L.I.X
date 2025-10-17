@@ -1,4 +1,4 @@
-# ⛓️ CorruptGuard Canisters
+# ⛓️ H.E.L.I.X. Canisters
 
 **Internet Computer Smart Contracts for Immutable Anti-Corruption**
 
@@ -11,7 +11,7 @@
 
 ## 🎯 Blockchain-Powered Justice
 
-These smart contracts represent the **immutable foundation** of CorruptGuard. Every transaction, every decision, every fraud detection result is permanently recorded on the Internet Computer blockchain, ensuring that corruption evidence can never be deleted, modified, or hidden.
+These smart contracts represent the **immutable foundation** of H.E.L.I.X. Every transaction, every decision, every fraud detection result is permanently recorded on the Internet Computer blockchain, ensuring that corruption evidence can never be deleted, modified, or hidden.
 
 **In Jhalawar, corruption files disappeared in bureaucracy. On ICP, corruption evidence is eternal.**
 
@@ -546,7 +546,7 @@ python3 tests/run_fraud_accuracy_tests.py
 - **[Monitoring Tools](monitoring/)** - Performance and security monitoring utilities
 
 ### Community Resources
-- **[Contributing Guidelines](../CONTRIBUTING.md)** - How to contribute to CorruptGuard
+- **[Contributing Guidelines](../CONTRIBUTING.md)** - How to contribute to H.E.L.I.X.
 - **[Code of Conduct](../CODE_OF_CONDUCT.md)** - Community standards and expectations
 - **[Security Reporting](../SECURITY.md)** - How to report security vulnerabilities
 

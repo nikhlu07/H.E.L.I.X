@@ -39,7 +39,7 @@ Custom exception classes:
 
 ```python
 from app.utils.exceptions import (
-    CorruptGuardException,
+    HelixException,
     ValidationError,
     AuthenticationError,
     ICPError
@@ -78,7 +78,7 @@ is_valid = validate_principal_id("rdmx6-jaaaa-aaaah-qcaiq-cai")
 ## Exception Hierarchy
 
 ```
-CorruptGuardException (Base)
+HelixException (Base)
 ├── ValidationError
 ├── AuthenticationError
 ├── AuthorizationError

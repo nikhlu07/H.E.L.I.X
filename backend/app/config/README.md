@@ -29,7 +29,7 @@ The configuration module manages:
 ### Application Settings
 
 ```python
-APP_NAME: str = "CorruptGuard API"
+APP_NAME: str = "H.E.L.I.X. API"
 VERSION: str = "1.0.0"
 DEBUG: bool = True
 ENVIRONMENT: str = "development"
@@ -101,7 +101,7 @@ corruption_rules: dict = {
 ### Database Configuration
 
 ```python
-database_url: str = "sqlite:///./corruptguard.db"
+database_url: str = "sqlite:///./helix.db"
 database_echo: bool = False
 ```
 
@@ -148,7 +148,7 @@ ICP_CANISTER_ID=rdmx6-jaaaa-aaaah-qcaiq-cai
 ICP_AGENT_HOST=http://127.0.0.1:4943
 
 # Database
-DATABASE_URL=sqlite:///./corruptguard.db
+DATABASE_URL=sqlite:///./helix.db
 
 # Fraud Detection
 FRAUD_DETECTION_ENABLED=true

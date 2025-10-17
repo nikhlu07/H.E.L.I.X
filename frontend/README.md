@@ -1,4 +1,4 @@
-# 🎨 CorruptGuard Frontend
+# 🎨 H.E.L.I.X. Frontend
 
 **React + TypeScript Anti-Corruption Dashboard**
 
@@ -231,8 +231,8 @@ DFX SDK 0.15+
 ### Installation & Development
 ```bash
 # Clone and install
-git clone https://github.com/nikhlu07/Corruptguard.git
-cd Corruptguard/frontend
+git clone https://github.com/nikhlu07/H.E.L.I.X.git
+cd H.E.L.I.X/frontend
 npm install
 
 # Environment setup

@@ -26,7 +26,7 @@ Animated number counter for statistics.
 ```
 
 ### CorruptGuardLogo.tsx
-H.E.L.I.X./CorruptGuard logo component.
+H.E.L.I.X. logo component (legacy component name).
 
 ### RoleGate.tsx
 Role-based access control component.

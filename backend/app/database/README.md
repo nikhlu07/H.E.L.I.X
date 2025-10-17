@@ -31,7 +31,7 @@ SessionLocal (Session Factory)
     ↓
 SQLAlchemy Engine
     ↓
-SQLite Database (corruptguard.db)
+SQLite Database (helix.db)
 ```
 
 ## Key Components
@@ -42,7 +42,7 @@ SQLite Database (corruptguard.db)
 from sqlalchemy import create_engine
 from sqlalchemy.pool import NullPool
 
-DATABASE_URL = "sqlite:///./corruptguard.db"
+DATABASE_URL = "sqlite:///./helix.db"
 
 engine = create_engine(
     DATABASE_URL,
@@ -195,7 +195,7 @@ async def create_fraud_alert(db: Session, alert_data: dict):
 ### SQLite (Default)
 
 ```python
-DATABASE_URL = "sqlite:///./corruptguard.db"
+DATABASE_URL = "sqlite:///./helix.db"
 
 # SQLite-specific settings
 connect_args = {"check_same_thread": False}
@@ -205,7 +205,7 @@ poolclass = NullPool  # No connection pooling
 ### PostgreSQL (Production)
 
 ```python
-DATABASE_URL = "postgresql://user:password@localhost/corruptguard"
+DATABASE_URL = "postgresql://user:password@localhost/helix"
 
 # PostgreSQL settings
 poolclass = QueuePool
@@ -217,7 +217,7 @@ pool_pre_ping = True  # Verify connections before use
 ### MySQL
 
 ```python
-DATABASE_URL = "mysql+pymysql://user:password@localhost/corruptguard"
+DATABASE_URL = "mysql+pymysql://user:password@localhost/helix"
 
 # MySQL settings
 poolclass = QueuePool

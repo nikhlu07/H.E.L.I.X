@@ -1,8 +1,8 @@
-# CorruptGuard Fraud Detection Engine
+# H.E.L.I.X. Fraud Detection Engine
 
 **AI-powered fraud detection for government procurement**
 
-CorruptGuard is a standalone Python service designed to detect and prevent corruption in government procurement processes. It uses a sophisticated combination of a rule-based engine and a Large Language Model (LLM) to analyze procurement claims and identify suspicious activities in real-time.
+H.E.L.I.X. Fraud Detection Engine is a standalone Python service designed to detect and prevent corruption in government procurement processes. It uses a sophisticated combination of a rule-based engine and a Large Language Model (LLM) to analyze procurement claims and identify suspicious activities in real-time.
 
 ## Features
 
@@ -15,7 +15,7 @@ CorruptGuard is a standalone Python service designed to detect and prevent corru
 
 ## Architecture
 
-The CorruptGuard Fraud Detection Engine is composed of three main components:
+The H.E.L.I.X. Fraud Detection Engine is composed of three main components:
 
 1.  **FastAPI Application (`main.py`):** This is the main entry point of the service. It exposes a set of API endpoints for interacting with the fraud detection engine, handles request and response validation, and orchestrates the analysis process.
 
@@ -56,8 +56,8 @@ graph TD
 
 2.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/corruptguard.git
-    cd corruptguard
+    git clone https://github.com/nikhlu07/H.E.L.I.X.git
+    cd H.E.L.I.X
     ```
 
 3.  **Create and activate a virtual environment:**

@@ -10,7 +10,7 @@ API clients and service integrations for H.E.L.I.X. frontend.
 - **authService.ts** - Authentication API calls
 - **helixService.ts** - H.E.L.I.X. backend API integration
 - **icpCanisterService.ts** - ICP canister interactions
-- **corruptGuardService.ts** - Fraud detection API
+- **corruptGuardService.ts** - Fraud detection API (legacy name)
 - **ckusdcLedgerService.ts** - CKUSDC ledger operations
 - **demoMode.ts** - Demo mode utilities
 

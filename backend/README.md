@@ -1,8 +1,8 @@
-# 🚨 CorruptGuard Backend
+# 🚨 H.E.L.I.X. Backend
 
 **FastAPI + AI/ML Fraud Detection Engine**
 
-> The brain of CorruptGuard - where AI meets anti-corruption to save lives.
+> The brain of H.E.L.I.X. - where AI meets anti-corruption to save lives.
 
 ## 🎯 Mission Critical Components
 
@@ -155,7 +155,7 @@ pip install -r requirements.txt
 Create `.env` file:
 ```bash
 # Database Configuration
-DATABASE_URL=sqlite:///./corruptguard.db
+DATABASE_URL=sqlite:///./helix.db
 
 # Security
 SECRET_KEY=your-super-secret-key-here
@@ -174,7 +174,7 @@ ENABLE_REAL_TIME_ANALYSIS=true
 
 # Logging
 LOG_LEVEL=INFO
-LOG_FILE=./logs/corruptguard.log
+LOG_FILE=./logs/helix.log
 ```
 
 ### 3. Run Development Server
