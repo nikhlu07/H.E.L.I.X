@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef } from 'react';
-import { Landmark, Map, UserCheck, Factory, ArrowLeft, Shield, Key, Truck, ArrowRight, Eye } from 'lucide-react';
+import { Landmark, Map, UserCheck, Factory, ArrowLeft, FileSearch, Key, Truck, ArrowRight, Eye } from 'lucide-react';
 import helixService from '../../services/helixService';
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TimelineContent } from "@/components/ui/timeline-animation";
@@ -41,6 +41,11 @@ const roleConfig = {
     title: 'Citizen Observer',
     description: 'Transparency monitoring and reporting',
     icon: Eye,
+  },
+  'auditor': {
+    title: 'Auditor',
+    description: 'Independent Oversight & Compliance Monitoring',
+    icon: FileSearch,
   }
 };
 
@@ -48,7 +53,6 @@ type RoleType = keyof typeof roleConfig;
 
 export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
   const [selectedRole, setSelectedRole] = useState<RoleType | null>(null);
-  const [authMethod, setAuthMethod] = useState<'icp'>('icp');
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const loginRef = useRef<HTMLDivElement>(null);
@@ -75,21 +79,14 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
     setError(null);
   };
 
-  const handleAuthMethodSelect = (method: 'icp') => {
-    setAuthMethod(method);
-    setError(null);
-  };
-
   const handleConnect = async () => {
-    if (!selectedRole || !authMethod) return;
+    if (!selectedRole) return;
     setIsConnecting(true);
     setError(null);
 
     try {
-      if (authMethod === 'icp') {
-        await helixService.init();
-        await helixService.loginWithICP();
-      }
+      await helixService.init();
+      await helixService.loginWithICP();
 
       setTimeout(() => {
         onLogin(selectedRole, 'government');
@@ -117,7 +114,7 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
         </button>
       )}
       <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#0000001a_1px,transparent_1px),linear-gradient(to_bottom,#0000001a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_40%_50%_at_50%_50%,#000_70%,transparent_110%)]"></div>
-      <div className="max-w-6xl mx-auto w-full">
+      <div className="max-w-7xl mx-auto w-full">
         <article className="text-center mb-12">
           <h2 className="text-5xl font-bold text-gray-900 mb-4">
             <VerticalCutReveal
@@ -156,7 +153,7 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
             </div>
           )}
 
-        <div className="grid md:grid-cols-3 gap-8 items-stretch mb-12">
+        <div className="flex flex-wrap justify-center gap-8 mb-12">
           {Object.entries(roleConfig).map(([role, config], index) => (
              <TimelineContent
              as="div"
@@ -164,6 +161,7 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
              timelineRef={loginRef}
              customVariants={revealVariants}
              key={role}
+             className="w-full max-w-sm"
            >
             <RoleCard
               roleKey={role as RoleType}
@@ -173,23 +171,6 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
             />
             </TimelineContent>
           ))}
-        </div>
-
-        <div className="mb-12">
-            <TimelineContent
-              as="div"
-              animationNum={Object.keys(roleConfig).length + 1}
-              timelineRef={loginRef}
-              customVariants={revealVariants}
-            >
-              <AuthMethodCard
-                method="icp"
-                title="Internet Identity"
-                icon={Shield}
-                selectedAuthMethod={authMethod}
-                onSelect={handleAuthMethodSelect}
-              />
-            </TimelineContent>
         </div>
 
         <div className="text-center">
@@ -225,32 +206,6 @@ export function LoginPage({ onLogin, onBackToLanding }: LoginPageProps) {
   );
 }
 
-const AuthMethodCard = ({
-  method,
-  title,
-  icon: Icon,
-  selectedAuthMethod,
-  onSelect
-}: {
-  method: 'icp';
-  title: string;
-  icon: React.ElementType;
-  selectedAuthMethod: 'icp';
-  onSelect: (method: 'icp') => void;
-}) => (
-  <Card
-    onClick={() => onSelect(method)}
-    className={`p-4 cursor-pointer flex items-center space-x-4 max-w-sm mx-auto bg-white h-fit border-neutral-200 ${
-      selectedAuthMethod === method ? 'border-yellow-400 ring-2 ring-yellow-200 shadow-lg' : 'border-gray-200'
-    }`}
-  >
-    <img src="icp-black.svg" className={`h-6 w-6 ${selectedAuthMethod === method ? 'text-yellow-600' : 'text-gray-500'}`} />
-    <div>
-      <h3 className={`font-bold ${selectedAuthMethod === method ? 'text-gray-900' : 'text-gray-700'}`}>{title}</h3>
-    </div>
-  </Card>
-);
-
 const RoleCard = ({ roleKey, config, isSelected, onSelect }: {
   roleKey: RoleType,
   config: { title: string, description: string, icon: React.ElementType },
@@ -265,7 +220,7 @@ const RoleCard = ({ roleKey, config, isSelected, onSelect }: {
       <CardHeader className={`text-left py-4 border-b  border-neutral-300 rounded-t-xl ${isSelected ? 'bg-primary' : 'bg-gray-100'}`}>
         <div className="flex items-center space-x-4">
             <div className={`flex-shrink-0 inline-flex items-center justify-center w-12 h-12 rounded-lg `}>
-              <Icon className={`h-6 w-6 text-black`} />
+              <Icon className={'h-6 w-6 text-black'} />
             </div>
             <div>
               <h3 className="text-lg font-bold text-gray-900 my-auto">{config.title}</h3>
