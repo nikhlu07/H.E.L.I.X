@@ -8,47 +8,139 @@ export const BlockchainSection = () => {
         <h2 className="text-3xl font-bold text-gray-900">Blockchain/ICP Integration</h2>
       </div>
 
-      <div id="canister" className="mb-8">
-        <h3 className="text-2xl font-semibold text-gray-900 mb-4">Canister Architecture</h3>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-4">
-          <p className="text-gray-700 mb-4">
-            H.E.L.I.X. uses Internet Computer canisters for immutable data storage and smart contract execution.
-          </p>
-          <div className="bg-gray-50 p-4 rounded-lg font-mono text-sm overflow-x-auto">
-            <pre className="text-gray-800">{`canisters/
-├── procurement/              # Main procurement canister
-│   ├── src/
-│   │   ├── main.mo          # Primary canister logic
-│   │   ├── types.mo         # Data type definitions
-│   │   ├── rbac.mo          # Role-based access control
-│   │   └── validation.mo    # Input validation
-│   └── procurement.did      # Candid interface
-└── fraud_engine/            # Fraud detection canister
-    ├── main.py              # Python fraud engine
-    ├── ml_detector.py       # ML-based detection
-    └── rules_engine.py      # Rules-based detection`}</pre>
+      <div className="bg-gradient-to-br from-purple-50 to-indigo-50 p-6 rounded-lg border border-purple-200 mb-8">
+        <h3 className="text-2xl font-semibold text-gray-900 mb-4">⛓️ Canister Architecture</h3>
+        <p className="text-gray-700 mb-4">
+          H.E.L.I.X. uses Internet Computer canisters (smart contracts) for immutable data storage and decentralized execution. 
+          Two main canisters work together to provide complete transparency and fraud detection.
+        </p>
+
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <div className="bg-white p-5 rounded-lg border border-gray-200">
+            <h4 className="font-semibold text-lg mb-3 text-purple-900">📋 Procurement Canister</h4>
+            <p className="text-sm text-gray-700 mb-3">Core government procurement management on blockchain</p>
+            <ul className="text-sm text-gray-700 space-y-2">
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2">•</span>
+                <span><strong>Budget Management:</strong> Immutable budget allocation and tracking</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2">•</span>
+                <span><strong>Project Lifecycle:</strong> End-to-end project tracking</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2">•</span>
+                <span><strong>Vendor Management:</strong> Contractor registration and evaluation</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2">•</span>
+                <span><strong>Claim Processing:</strong> Payment claims with fraud detection</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-purple-500 mr-2">•</span>
+                <span><strong>Public Transparency:</strong> Citizen-accessible APIs</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-white p-5 rounded-lg border border-gray-200">
+            <h4 className="font-semibold text-lg mb-3 text-indigo-900">🚨 Fraud Engine Canister</h4>
+            <p className="text-sm text-gray-700 mb-3">AI-powered fraud detection on blockchain</p>
+            <ul className="text-sm text-gray-700 space-y-2">
+              <li className="flex items-start">
+                <span className="text-indigo-500 mr-2">•</span>
+                <span><strong>ML Model Execution:</strong> Run fraud detection algorithms on-chain</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-500 mr-2">•</span>
+                <span><strong>Risk Scoring:</strong> Generate immutable fraud scores (0-100)</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-500 mr-2">•</span>
+                <span><strong>Alert Generation:</strong> Create tamper-proof fraud alerts</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-500 mr-2">•</span>
+                <span><strong>Pattern Analysis:</strong> Track fraud patterns across time</span>
+              </li>
+              <li className="flex items-start">
+                <span className="text-indigo-500 mr-2">•</span>
+                <span><strong>Evidence Preservation:</strong> Store fraud evidence permanently</span>
+              </li>
+            </ul>
           </div>
         </div>
 
+        <details className="mb-4">
+          <summary className="cursor-pointer font-medium text-gray-900 hover:text-purple-600 p-4 bg-white rounded-lg border">
+            View Canister Directory Structure →
+          </summary>
+          <div className="mt-3 bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-xs overflow-x-auto">
+            <pre>{`canisters/
+├── procurement/                    # Main procurement canister
+│   ├── src/
+│   │   ├── main.mo                # Primary canister logic
+│   │   ├── types.mo               # Data type definitions
+│   │   ├── rbac.mo                # Role-based access control
+│   │   ├── budget.mo              # Budget management
+│   │   ├── projects.mo            # Project lifecycle
+│   │   ├── vendors.mo             # Vendor management
+│   │   ├── claims.mo              # Payment claims
+│   │   └── audit.mo               # Audit trail functions
+│   └── procurement.did            # Candid interface
+├── fraud_engine/                  # AI fraud detection canister
+│   ├── src/
+│   │   ├── main.mo                # Canister entry point
+│   │   ├── ml_interface.mo        # ML model interface
+│   │   ├── rules.mo               # Fraud detection rules
+│   │   └── analytics.mo           # Pattern analysis
+│   ├── python/                    # Python ML components
+│   │   ├── ml_detector.py         # ML models
+│   │   ├── feature_extractor.py   # Feature engineering
+│   │   └── rules_engine.py        # Business rules
+│   └── fraud_engine.did           # Candid interface
+└── shared/                        # Shared utilities
+    ├── types.mo                   # Common data types
+    └── utils.mo                   # Shared functions`}</pre>
+          </div>
+        </details>
+
         <div className="grid md:grid-cols-2 gap-4">
-          <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-            <h4 className="font-semibold text-purple-900 mb-2">Canister Benefits</h4>
-            <ul className="text-sm text-purple-800 space-y-1">
-              <li>• Immutable transaction records</li>
-              <li>• Decentralized storage</li>
-              <li>• Tamper-proof audit trails</li>
-              <li>• Public verification</li>
-              <li>• No single point of failure</li>
+          <div className="bg-gradient-to-br from-purple-100 to-pink-100 p-4 rounded-lg border border-purple-300">
+            <h4 className="font-semibold text-purple-900 mb-3">🎯 Blockchain Benefits</h4>
+            <ul className="text-sm text-purple-800 space-y-2">
+              <li>✓ <strong>Immutable Records:</strong> Cannot be altered or deleted</li>
+              <li>✓ <strong>Decentralized Storage:</strong> Replicated across ICP nodes</li>
+              <li>✓ <strong>Tamper-proof Audit Trails:</strong> Complete transaction history</li>
+              <li>✓ <strong>Public Verification:</strong> Anyone can audit the ledger</li>
+              <li>✓ <strong>No Single Point of Failure:</strong> Consensus-based validation</li>
+              <li>✓ <strong>Cryptographic Proof:</strong> Mathematically verifiable authenticity</li>
             </ul>
           </div>
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="font-semibold text-blue-900 mb-2">Performance</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
-              <li>• Query Response: &lt; 100ms</li>
-              <li>• Update Calls: &lt; 2 seconds</li>
-              <li>• Throughput: 1,000+ tx/sec</li>
-              <li>• Uptime: 99.9%</li>
-            </ul>
+          <div className="bg-gradient-to-br from-blue-100 to-cyan-100 p-4 rounded-lg border border-blue-300">
+            <h4 className="font-semibold text-blue-900 mb-3">⚡ Performance Metrics</h4>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between items-center">
+                <span className="text-blue-800">Query Response:</span>
+                <span className="font-bold text-blue-900">&lt; 100ms</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-blue-800">Update Calls:</span>
+                <span className="font-bold text-blue-900">&lt; 2 seconds</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-blue-800">Throughput:</span>
+                <span className="font-bold text-blue-900">1,000+ tx/sec</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-blue-800">Uptime:</span>
+                <span className="font-bold text-blue-900">99.9%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-blue-800">Storage:</span>
+                <span className="font-bold text-blue-900">Unlimited</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

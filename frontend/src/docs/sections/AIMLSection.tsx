@@ -8,12 +8,29 @@ export const AIMLSection = () => {
         <h2 className="text-3xl font-bold text-gray-900">AI/ML Fraud Detection</h2>
       </div>
 
-      <div id="fraud-architecture" className="mb-8">
-        <h3 className="text-2xl font-semibold text-gray-900 mb-4">Detection Architecture</h3>
+      <div id="ai-hybrid" className="mb-8">
+        <h3 className="text-2xl font-semibold text-gray-900 mb-4">Hybrid Detection Architecture</h3>
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 mb-4">
           <p className="text-gray-700 mb-4">
-            H.E.L.I.X. employs a hybrid fraud detection approach combining deterministic rules with AI-powered analysis.
+            H.E.L.I.X. employs a sophisticated hybrid approach combining deterministic rules (70%), ML models (30%), and LLM analysis for context-aware fraud detection.
           </p>
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg mb-4 border border-purple-200">
+            <h4 className="font-semibold text-purple-900 mb-2">🤖 Multi-Model LLM/SLM Support</h4>
+            <p className="text-sm text-purple-800 mb-2">
+              H.E.L.I.X. supports multiple language models with flexible architecture:
+            </p>
+            <div className="grid md:grid-cols-3 gap-2 text-sm">
+              <div className="bg-white p-2 rounded">
+                <strong>Current MVP:</strong> Gemma 3 (4B) via Ollama
+              </div>
+              <div className="bg-white p-2 rounded">
+                <strong>Production:</strong> GPT-4, Claude supported
+              </div>
+              <div className="bg-white p-2 rounded">
+                <strong>Fallback:</strong> Graceful degradation to rules-only
+              </div>
+            </div>
+          </div>
           <div className="bg-gray-50 p-4 rounded-lg font-mono text-sm overflow-x-auto">
             <pre className="text-gray-800">{`Transaction Input
         ↓
@@ -34,15 +51,15 @@ export const AIMLSection = () => {
 └───────────┬───────────────────┘
             │
 ┌───────────▼───────────────────┐
-│   Gemma 3 LLM                │
-│   4B Parameters              │
-│   Context-Aware Analysis     │
+│   LLM/SLM Analysis           │
+│   Gemma3/GPT-4/Claude        │
+│   Context-Aware Reasoning    │
 └───────────┬───────────────────┘
             │
 ┌───────────▼───────────────────┐
 │   Final Fraud Score           │
-│   Combined: Rules (40%) +     │
-│   ML (60%) = 0-100           │
+│   Combined: Rules (70%) +     │
+│   ML (30%) = 0-100           │
 └───────────┬───────────────────┘
             │
       Score >= 70?
