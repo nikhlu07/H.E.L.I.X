@@ -104,6 +104,20 @@ const idlFactory = ({ IDL }: { IDL: any }) => {
       totalChallenges: IDL.Nat,
       vendorCount: IDL.Nat,
     })], ['query']),
+    
+    // Auditor functions
+    setMainGovernment: IDL.Func([IDL.Principal], [Result(IDL.Null)], []),
+    setAuditor: IDL.Func([IDL.Principal], [Result(IDL.Null)], []),
+    getSystemInfo: IDL.Func([], [IDL.Record({
+      systemAuditor: IDL.Principal,
+      mainGovernment: IDL.Principal,
+      totalStateHeads: IDL.Nat,
+      totalDeputies: IDL.Nat,
+      totalVendors: IDL.Nat,
+      systemPaused: IDL.Bool,
+      totalBudget: IDL.Nat,
+      totalClaims: IDL.Nat,
+    })], ['query']),
   });
 };
 
@@ -364,6 +378,35 @@ class ICPCanisterService {
     };
   }
 
+  // Auditor Functions
+  async setMainGovernment(principal: string): Promise<void> {
+    await this.ensureActor();
+    const principalObj = Principal.fromText(principal);
+    const result = await (this.actor as any).setMainGovernment(principalObj);
+    return this.handleResult(result);
+  }
+
+  async setAuditor(principal: string): Promise<void> {
+    await this.ensureActor();
+    const principalObj = Principal.fromText(principal);
+    const result = await (this.actor as any).setAuditor(principalObj);
+    return this.handleResult(result);
+  }
+
+  async getSystemInfo(): Promise<{
+    systemAuditor: Principal;
+    mainGovernment: Principal;
+    totalStateHeads: bigint;
+    totalDeputies: bigint;
+    totalVendors: bigint;
+    systemPaused: boolean;
+    totalBudget: bigint;
+    totalClaims: bigint;
+  }> {
+    await this.ensureActor();
+    return await (this.actor as any).getSystemInfo();
+  }
+
   // Utility function to convert Principal to string
   principalToString(principal: Principal): string {
     return principal.toString();
@@ -422,6 +465,11 @@ export const useICP = () => {
     getFraudAlerts: icpCanisterService.getFraudAlerts.bind(icpCanisterService),
     getBudgetTransparency: icpCanisterService.getBudgetTransparency.bind(icpCanisterService),
     getSystemStats: icpCanisterService.getSystemStats.bind(icpCanisterService),
+    
+    // Auditor operations
+    setMainGovernment: icpCanisterService.setMainGovernment.bind(icpCanisterService),
+    setAuditor: icpCanisterService.setAuditor.bind(icpCanisterService),
+    getSystemInfo: icpCanisterService.getSystemInfo.bind(icpCanisterService),
     
     // Utilities
     checkConnection: icpCanisterService.checkConnection.bind(icpCanisterService),

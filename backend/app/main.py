@@ -1341,12 +1341,17 @@ async def demo_login(role: str):
     """Demo login endpoint for frontend authentication"""
     try:
         # Validate role
-        valid_roles = ['main_government', 'state_head', 'deputy', 'vendor', 'sub_supplier', 'citizen']
+        valid_roles = ['auditor', 'main_government', 'state_head', 'deputy', 'vendor', 'sub_supplier', 'citizen']
         if role not in valid_roles:
             raise HTTPException(status_code=400, detail=f"Invalid role. Must be one of: {', '.join(valid_roles)}")
         
         # Generate demo user data
         demo_users = {
+            'auditor': {
+                'name': 'System Auditor',
+                'title': 'H.E.L.I.X. Platform Administrator',
+                'permissions': ['system_management', 'view_all', 'emergency_control', 'role_assignment', 'audit_access']
+            },
             'main_government': {
                 'name': 'Rajesh Kumar (Admin)',
                 'title': 'Secretary, Ministry of Finance',

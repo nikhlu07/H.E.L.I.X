@@ -8,8 +8,45 @@ import Text "mo:base/Text";
 import Nat "mo:base/Nat";
 import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
+import Blob "mo:base/Blob";
 
 actor ClearGov {
+    // ================================================================================
+    // ckUSDC LEDGER INTEGRATION
+    // ================================================================================
+    
+    // ckUSDC Ledger Canister Interface (ICRC-1 Standard)
+    type Subaccount = Blob;
+    type Account = { owner: Principal; subaccount: ?Subaccount };
+    
+    type TransferArgs = {
+        from_subaccount: ?Subaccount;
+        to: Account;
+        amount: Nat;
+        fee: ?Nat;
+        memo: ?Blob;
+        created_at_time: ?Nat64;
+    };
+    
+    type TransferError = {
+        #BadFee: { expected_fee: Nat };
+        #BadBurn: { min_burn_amount: Nat };
+        #InsufficientFunds: { balance: Nat };
+        #TooOld;
+        #CreatedInFuture: { ledger_time: Nat64 };
+        #Duplicate: { duplicate_of: Nat };
+        #TemporarilyUnavailable;
+        #GenericError: { error_code: Nat; message: Text };
+    };
+    
+    type TransferResult = Result.Result<Nat, TransferError>;
+    
+    // ICP Ledger Actor for ALL payments (you have ICP tokens)
+    let ICP_ledger : actor {
+        icrc1_balance_of: (Account) -> async Nat;
+        icrc1_transfer: (TransferArgs) -> async TransferResult;
+        icrc1_fee: () -> async Nat;
+    } = actor("ryjl3-tyaaa-aaaaa-aaaba-cai"); // Official ICP ledger
     // Types
     public type Budget = {
         amount: Nat;
@@ -74,9 +111,15 @@ actor ClearGov {
     };
 
     // State variables
-    private stable var mainGovernment: Principal = Principal.fromText("rdmx6-jaaaa-aaaah-qcaiq-cai");
+    private stable var systemAuditor: Principal = Principal.fromText("rdmx6-jaaaa-aaaah-qcaiq-cai"); // SUPER ADMIN - deployer
+    private stable var mainGovernment: Principal = Principal.fromText("2vxsx-fae"); // Placeholder - will be set by auditor
     private var stateHeads = HashMap.HashMap<Principal, Bool>(10, Principal.equal, Principal.hash);
     private var deputies = HashMap.HashMap<Principal, Principal>(50, Principal.equal, Principal.hash);
+    
+    // DEMO MODE - Allows one principal to act as multiple roles
+    private stable var demoMode: Bool = true; // Set to true for hackathon demo
+    private stable var demoMasterPrincipal: ?Principal = null; // The one II that can be everything
+    private stable var simulateTransfers: Bool = true; // Set to false when you have real ICP tokens
     
     private stable var budget: Nat = 0;
     private stable var reservedBudget: Nat = 0;
@@ -121,11 +164,42 @@ actor ClearGov {
     private let ESCROW_DURATION: Int = 86_400_000_000_000; // 1 day in nanoseconds
 
     // Role checking functions
+    private func isAuditor(caller: Principal): Bool {
+        // In demo mode, master principal is auditor
+        if (demoMode) {
+            switch (demoMasterPrincipal) {
+                case (?master) { 
+                    if (Principal.equal(caller, master)) { return true };
+                };
+                case null {};
+            };
+        };
+        Principal.equal(caller, systemAuditor)
+    };
+
     private func isMainGovernment(caller: Principal): Bool {
+        // In demo mode, master principal can be main government
+        if (demoMode) {
+            switch (demoMasterPrincipal) {
+                case (?master) { 
+                    if (Principal.equal(caller, master)) { return true };
+                };
+                case null {};
+            };
+        };
         Principal.equal(caller, mainGovernment)
     };
 
     private func isStateHead(caller: Principal): Bool {
+        // In demo mode, master principal can be state head
+        if (demoMode) {
+            switch (demoMasterPrincipal) {
+                case (?master) { 
+                    if (Principal.equal(caller, master)) { return true };
+                };
+                case null {};
+            };
+        };
         switch (stateHeads.get(caller)) {
             case (?true) { true };
             case _ { false };
@@ -133,6 +207,15 @@ actor ClearGov {
     };
 
     private func isDeputy(caller: Principal): Bool {
+        // In demo mode, master principal can be deputy
+        if (demoMode) {
+            switch (demoMasterPrincipal) {
+                case (?master) { 
+                    if (Principal.equal(caller, master)) { return true };
+                };
+                case null {};
+            };
+        };
         switch (deputies.get(caller)) {
             case (?_) { true };
             case null { false };
@@ -140,16 +223,20 @@ actor ClearGov {
     };
 
     private func isAuthorized(caller: Principal): Bool {
-        isMainGovernment(caller) or isStateHead(caller) or isDeputy(caller)
+        isAuditor(caller) or isMainGovernment(caller) or isStateHead(caller) or isDeputy(caller)
+    };
+
+    private func isSuperAdmin(caller: Principal): Bool {
+        isAuditor(caller) // Only auditor has super admin rights
     };
 
     // ================================================================================
     // FRAUD DETECTION INTEGRATION FUNCTIONS
     // ================================================================================
 
-    public func updateFraudScore(claimId: Nat, score: Nat): async Result.Result<(), Text> {
-        if (not isMainGovernment(msg.caller)) {
-            return #err("Only main government can update fraud scores");
+    public shared(msg) func updateFraudScore(claimId: Nat, score: Nat): async Result.Result<(), Text> {
+        if (not isMainGovernment(msg.caller) and not isAuditor(msg.caller)) {
+            return #err("Only main government or auditor can update fraud scores");
         };
 
         switch (claims.get(claimId)) {
@@ -170,7 +257,7 @@ actor ClearGov {
         }
     };
 
-    public func addFraudAlert(claimId: Nat, alertType: Text, severity: Text, description: Text): async Result.Result<(), Text> {
+    public shared(msg) func addFraudAlert(claimId: Nat, alertType: Text, severity: Text, description: Text): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government can add fraud alerts");
         };
@@ -200,9 +287,9 @@ actor ClearGov {
     // MAIN GOVERNMENT FUNCTIONS
     // ================================================================================
 
-    public func proposeStateHead(stateHead: Principal): async Result.Result<(), Text> {
-        if (not isMainGovernment(msg.caller)) {
-            return #err("Only main government");
+    public shared(msg) func proposeStateHead(stateHead: Principal): async Result.Result<(), Text> {
+        if (not isMainGovernment(msg.caller) and not isAuditor(msg.caller)) {
+            return #err("Only main government or auditor");
         };
         if (paused) {
             return #err("System paused");
@@ -227,9 +314,9 @@ actor ClearGov {
         #ok(())
     };
 
-    public func confirmStateHead(stateHead: Principal): async Result.Result<(), Text> {
-        if (not isMainGovernment(msg.caller)) {
-            return #err("Only main government");
+    public shared(msg) func confirmStateHead(stateHead: Principal): async Result.Result<(), Text> {
+        if (not isMainGovernment(msg.caller) and not isAuditor(msg.caller)) {
+            return #err("Only main government or auditor");
         };
 
         switch (stateHeadProposals.get(stateHead)) {
@@ -256,7 +343,7 @@ actor ClearGov {
     // DEPUTY MANAGEMENT FUNCTIONS (MISSING FROM YOUR CODE)
     // ================================================================================
 
-    public func proposeDeputy(deputy: Principal, stateHead: Principal): async Result.Result<(), Text> {
+    public shared(msg) func proposeDeputy(deputy: Principal, stateHead: Principal): async Result.Result<(), Text> {
         if (not isStateHead(msg.caller) and not isMainGovernment(msg.caller)) {
             return #err("Only state heads or main government can propose deputies");
         };
@@ -283,7 +370,7 @@ actor ClearGov {
         #ok(())
     };
 
-    public func confirmDeputy(deputy: Principal, stateHead: Principal): async Result.Result<(), Text> {
+    public shared(msg) func confirmDeputy(deputy: Principal, stateHead: Principal): async Result.Result<(), Text> {
         if (not isStateHead(msg.caller) and not isMainGovernment(msg.caller)) {
             return #err("Only state heads or main government can confirm deputies");
         };
@@ -309,7 +396,7 @@ actor ClearGov {
     };
 
     // Vendor selection by deputy
-    public func selectVendor(budgetId: Nat, allocationId: Nat, vendor: Principal): async Result.Result<(), Text> {
+    public shared(msg) func selectVendor(budgetId: Nat, allocationId: Nat, vendor: Principal): async Result.Result<(), Text> {
         if (not isDeputy(msg.caller)) {
             return #err("Only deputies can select vendors");
         };
@@ -363,7 +450,7 @@ actor ClearGov {
     // BUDGET MANAGEMENT
     // ================================================================================
 
-    public func lockBudget(amount: Nat, purpose: Text): async Result.Result<Nat, Text> {
+    public shared(msg) func lockBudget(amount: Nat, purpose: Text): async Result.Result<Nat, Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government");
         };
@@ -387,7 +474,7 @@ actor ClearGov {
         #ok(budgetCount)
     };
 
-    public func allocateBudget(budgetId: Nat, amount: Nat, area: Text, deputy: Principal): async Result.Result<(), Text> {
+    public shared(msg) func allocateBudget(budgetId: Nat, amount: Nat, area: Text, deputy: Principal): async Result.Result<(), Text> {
         if (not isAuthorized(msg.caller)) {
             return #err("Not authorized");
         };
@@ -439,7 +526,7 @@ actor ClearGov {
     // VENDOR MANAGEMENT
     // ================================================================================
 
-    public func proposeVendor(vendor: Principal): async Result.Result<(), Text> {
+    public shared(msg) func proposeVendor(vendor: Principal): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government");
         };
@@ -462,7 +549,7 @@ actor ClearGov {
         #ok(())
     };
 
-    public func approveVendor(vendor: Principal): async Result.Result<(), Text> {
+    public shared(msg) func approveVendor(vendor: Principal): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government");
         };
@@ -483,10 +570,23 @@ actor ClearGov {
     // CLAIM SUBMISSION AND MANAGEMENT
     // ================================================================================
 
-    public func submitClaim(budgetId: Nat, allocationId: Nat, amount: Nat, invoiceData: Text): async Result.Result<Nat, Text> {
-        switch (isVendor.get(msg.caller)) {
-            case (?true) { };
-            case _ { return #err("Not a vendor") };
+    public shared(msg) func submitClaim(budgetId: Nat, allocationId: Nat, amount: Nat, invoiceData: Text): async Result.Result<Nat, Text> {
+        // Check if caller is vendor (or demo master)
+        let isCallerVendor = switch (isVendor.get(msg.caller)) {
+            case (?true) { true };
+            case _ { 
+                // In demo mode, master principal can be vendor
+                if (demoMode) {
+                    switch (demoMasterPrincipal) {
+                        case (?master) { Principal.equal(msg.caller, master) };
+                        case null { false };
+                    }
+                } else { false }
+            };
+        };
+        
+        if (not isCallerVendor) {
+            return #err("Not a vendor");
         };
 
         if (paused) {
@@ -544,7 +644,7 @@ actor ClearGov {
     };
 
     // AI/Fraud detection functions
-    public func approveClaimByAI(claimId: Nat, approve: Bool, flagReason: Text): async Result.Result<(), Text> {
+    public shared(msg) func approveClaimByAI(claimId: Nat, approve: Bool, flagReason: Text): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government");
         };
@@ -594,48 +694,70 @@ actor ClearGov {
     // CHALLENGE SYSTEM
     // ================================================================================
 
-    public func stakeChallenge(invoiceHash: Text, reason: Text, evidence: Text): async Result.Result<(), Text> {
+    public shared(msg) func stakeChallenge(invoiceHash: Text, reason: Text, evidence: Text): async Result.Result<Nat, Text> {
         switch (invoiceClaimed.get(invoiceHash)) {
             case (?true) { };
             case _ { return #err("Invoice not found") };
         };
 
-        // In production, would transfer ICP tokens here
-        let challenge: Challenge = {
-            staker = msg.caller;
-            amount = STAKE_AMOUNT;
-            withdrawn = false;
-            reason = reason;
-            evidence = evidence;
-            timestamp = Time.now();
+        // REAL ICP TRANSFER - Citizen stakes 1 ICP
+        // Transfer from citizen to this canister
+        let stakeTransferArgs : TransferArgs = {
+            from_subaccount = null;
+            to = { owner = Principal.fromActor(ClearGov); subaccount = null }; // Canister holds the stake
+            amount = STAKE_AMOUNT; // 1 ICP in e8s
+            fee = null;
+            memo = null;
+            created_at_time = null;
         };
 
-        switch (invoiceChallenges.get(invoiceHash)) {
-            case (?existingChallenges) {
-                invoiceChallenges.put(invoiceHash, Array.append(existingChallenges, [challenge]));
-            };
-            case null {
-                invoiceChallenges.put(invoiceHash, [challenge]);
-            };
-        };
+        let stakeResult = await ICP_ledger.icrc1_transfer(stakeTransferArgs);
 
-        // Update challenge count on claim
-        switch (invoiceToClaimId.get(invoiceHash)) {
-            case (?claimId) {
-                switch (claims.get(claimId)) {
-                    case (?claim) {
-                        let updatedClaim = {
-                            claim with challengeCount = claim.challengeCount + 1
+        switch (stakeResult) {
+            case (#Ok(blockIndex)) {
+                // Stake successful! Record challenge
+                let challenge: Challenge = {
+                    staker = msg.caller;
+                    amount = STAKE_AMOUNT;
+                    withdrawn = false;
+                    reason = reason;
+                    evidence = evidence;
+                    timestamp = Time.now();
+                };
+
+                switch (invoiceChallenges.get(invoiceHash)) {
+                    case (?existingChallenges) {
+                        invoiceChallenges.put(invoiceHash, Array.append(existingChallenges, [challenge]));
+                    };
+                    case null {
+                        invoiceChallenges.put(invoiceHash, [challenge]);
+                    };
+                };
+
+                // Update challenge count on claim
+                switch (invoiceToClaimId.get(invoiceHash)) {
+                    case (?claimId) {
+                        switch (claims.get(claimId)) {
+                            case (?claim) {
+                                let updatedClaim = {
+                                    claim with challengeCount = claim.challengeCount + 1
+                                };
+                                claims.put(claimId, updatedClaim);
+                            };
+                            case null { };
                         };
-                        claims.put(claimId, updatedClaim);
                     };
                     case null { };
                 };
-            };
-            case null { };
-        };
 
-        #ok(())
+                Debug.print("CITIZEN CHALLENGE: " # Principal.toText(msg.caller) # " staked 1 ICP at block " # Nat.toText(blockIndex));
+                
+                #ok(blockIndex) // Return block index as proof
+            };
+            case (#Err(error)) {
+                #err("Failed to stake ICP - ensure you have 1 ICP balance")
+            };
+        }
     };
 
     // ================================================================================
@@ -797,19 +919,28 @@ actor ClearGov {
     };
 
     public query func checkRole(principal: Principal): async {
+        isAuditor: Bool;
         isMainGovernment: Bool;
         isStateHead: Bool;
         isDeputy: Bool;
         isVendor: Bool;
+        isDemoMaster: Bool;
     } {
+        let isDemoMaster = switch (demoMasterPrincipal) {
+            case (?master) { Principal.equal(principal, master) };
+            case null { false };
+        };
+        
         {
+            isAuditor = isAuditor(principal);
             isMainGovernment = isMainGovernment(principal);
             isStateHead = isStateHead(principal);
             isDeputy = isDeputy(principal);
             isVendor = switch (isVendor.get(principal)) {
                 case (?true) { true };
-                case _ { false };
+                case _ { isDemoMaster and demoMode }; // Demo master can be vendor
             };
+            isDemoMaster = isDemoMaster;
         }
     };
 
@@ -878,7 +1009,7 @@ actor ClearGov {
     // ADMINISTRATION FUNCTIONS
     // ================================================================================
 
-    public func pauseSystem(): async Result.Result<(), Text> {
+    public shared(msg) func pauseSystem(): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government can pause system");
         };
@@ -886,7 +1017,7 @@ actor ClearGov {
         #ok(())
     };
 
-    public func resumeSystem(): async Result.Result<(), Text> {
+    public shared(msg) func resumeSystem(): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government can resume system");
         };
@@ -894,65 +1025,227 @@ actor ClearGov {
         #ok(())
     };
 
-    public func setMainGovernment(newMainGov: Principal): async Result.Result<(), Text> {
-        if (not isMainGovernment(msg.caller)) {
-            return #err("Only current main government can transfer authority");
+    public shared(msg) func setMainGovernment(newMainGov: Principal): async Result.Result<(), Text> {
+        if (not isAuditor(msg.caller)) {
+            return #err("Only auditor can set main government");
         };
         mainGovernment := newMainGov;
         #ok(())
+    };
+
+    public shared(msg) func setAuditor(newAuditor: Principal): async Result.Result<(), Text> {
+        if (not isAuditor(msg.caller)) {
+            return #err("Only current auditor can transfer auditor role");
+        };
+        systemAuditor := newAuditor;
+        #ok(())
+    };
+
+    // ================================================================================
+    // DEMO MODE MANAGEMENT
+    // ================================================================================
+
+    public shared(msg) func enableDemoMode(masterPrincipal: Principal): async Result.Result<(), Text> {
+        if (not isAuditor(msg.caller)) {
+            return #err("Only auditor can enable demo mode");
+        };
+        demoMode := true;
+        demoMasterPrincipal := ?masterPrincipal;
+        Debug.print("DEMO MODE ENABLED: " # Principal.toText(masterPrincipal) # " can act as all roles");
+        #ok(())
+    };
+
+    public shared(msg) func disableDemoMode(): async Result.Result<(), Text> {
+        if (not isAuditor(msg.caller)) {
+            return #err("Only auditor can disable demo mode");
+        };
+        demoMode := false;
+        demoMasterPrincipal := null;
+        Debug.print("DEMO MODE DISABLED: Strict role enforcement enabled");
+        #ok(())
+    };
+
+    public query func getDemoStatus(): async {
+        demoModeEnabled: Bool;
+        demoMasterPrincipal: ?Principal;
+    } {
+        {
+            demoModeEnabled = demoMode;
+            demoMasterPrincipal = demoMasterPrincipal;
+        }
+    };
+
+    // ================================================================================
+    // PAYMENT FUNCTIONS WITH REAL ckUSDC TRANSFERS
+    // ================================================================================
+
+    public shared(msg) func approveAndPayClaim(claimId: Nat): async Result.Result<Nat, Text> {
+        // Approve claim and transfer REAL ckUSDC to vendor
+        if (not isMainGovernment(msg.caller) and not isDeputy(msg.caller)) {
+            return #err("Only government or deputy can approve payments");
+        };
+
+        switch (claims.get(claimId)) {
+            case (?claim) {
+                if (claim.paid) {
+                    return #err("Claim already paid");
+                };
+                if (claim.flagged) {
+                    return #err("Cannot pay flagged claim");
+                };
+
+                // ICP TRANSFER to vendor (real or simulated)
+                if (simulateTransfers) {
+                    // SIMULATED for demo (no ICP needed)
+                    let updatedClaim = {
+                        claim with 
+                        paid = true;
+                        aiApproved = true;
+                    };
+                    claims.put(claimId, updatedClaim);
+                    
+                    Debug.print("SIMULATED PAYMENT: Claim " # Nat.toText(claimId) # " - would pay " # Nat.toText(claim.amount) # " ICP to vendor");
+                    
+                    #ok(99999) // Fake block index for demo
+                } else {
+                    // REAL ICP TRANSFER
+                    let transferArgs : TransferArgs = {
+                        from_subaccount = null;
+                        to = { owner = claim.vendor; subaccount = null };
+                        amount = claim.amount;
+                        fee = null;
+                        memo = null;
+                        created_at_time = null;
+                    };
+
+                    let transferResult = await ICP_ledger.icrc1_transfer(transferArgs);
+
+                    switch (transferResult) {
+                        case (#Ok(blockIndex)) {
+                            let updatedClaim = {
+                                claim with 
+                                paid = true;
+                                aiApproved = true;
+                            };
+                            claims.put(claimId, updatedClaim);
+                            
+                            Debug.print("REAL ICP PAYMENT: Claim " # Nat.toText(claimId) # " paid " # Nat.toText(claim.amount) # " ICP at block " # Nat.toText(blockIndex));
+                            
+                            #ok(blockIndex)
+                        };
+                        case (#Err(error)) {
+                            let errorMsg = switch (error) {
+                                case (#InsufficientFunds(details)) { "Insufficient ICP balance: " # Nat.toText(details.balance) };
+                                case _ { "ICP transfer failed" };
+                            };
+                            #err(errorMsg)
+                        };
+                    };
+                };
+            };
+            case null { #err("Claim not found") };
+        }
     };
 
     // ================================================================================
     // SUPPLIER PAYMENT FUNCTIONS
     // ================================================================================
 
-    public func paySupplier(claimId: Nat, supplier: Principal, amount: Nat, invoiceHash: Text): async Result.Result<(), Text> {
-        // Check if caller is the vendor for this claim
+    public shared(msg) func paySupplier(claimId: Nat, supplier: Principal, amount: Nat, invoiceHash: Text): async Result.Result<Nat, Text> {
+        // Vendor pays sub-supplier with REAL ckUSDC
         switch (claims.get(claimId)) {
             case (?claim) {
                 if (not Principal.equal(claim.vendor, msg.caller)) {
                     return #err("Only claim vendor can pay suppliers");
                 };
                 
-                if (not claim.aiApproved or claim.flagged) {
-                    return #err("Claim must be approved before supplier payments");
+                if (not claim.paid) {
+                    return #err("Claim must be paid before supplier payments");
                 };
                 
                 if (amount == 0 or (claim.totalPaidToSuppliers + amount) > claim.amount) {
                     return #err("Invalid payment amount");
                 };
                 
-                let payment: SupplierPayment = {
-                    supplier = supplier;
-                    amount = amount;
-                    invoiceHash = invoiceHash;
-                    verified = false;
-                    timestamp = Time.now();
-                };
-                
-                // Add payment to supplier payments
-                switch (supplierPayments.get(claimId)) {
-                    case (?existingPayments) {
-                        supplierPayments.put(claimId, Array.append(existingPayments, [payment]));
+                // ICP TRANSFER from vendor to supplier (real or simulated)
+                if (simulateTransfers) {
+                    // SIMULATED payment
+                    let payment: SupplierPayment = {
+                        supplier = supplier;
+                        amount = amount;
+                        invoiceHash = invoiceHash;
+                        verified = true;
+                        timestamp = Time.now();
                     };
-                    case null {
-                        supplierPayments.put(claimId, [payment]);
+                    
+                    switch (supplierPayments.get(claimId)) {
+                        case (?existingPayments) {
+                            supplierPayments.put(claimId, Array.append(existingPayments, [payment]));
+                        };
+                        case null {
+                            supplierPayments.put(claimId, [payment]);
+                        };
+                    };
+                    
+                    let updatedClaim = {
+                        claim with totalPaidToSuppliers = claim.totalPaidToSuppliers + amount
+                    };
+                    claims.put(claimId, updatedClaim);
+                    
+                    Debug.print("SIMULATED SUB-SUPPLIER PAYMENT: " # Nat.toText(amount) # " ICP");
+                    #ok(88888) // Fake block index
+                } else {
+                    // REAL ICP TRANSFER
+                    let transferArgs : TransferArgs = {
+                        from_subaccount = null;
+                        to = { owner = supplier; subaccount = null };
+                        amount = amount;
+                        fee = null;
+                        memo = null;
+                        created_at_time = null;
+                    };
+
+                    let transferResult = await ICP_ledger.icrc1_transfer(transferArgs);
+
+                    switch (transferResult) {
+                        case (#Ok(blockIndex)) {
+                            let payment: SupplierPayment = {
+                                supplier = supplier;
+                                amount = amount;
+                                invoiceHash = invoiceHash;
+                                verified = true;
+                                timestamp = Time.now();
+                            };
+                            
+                            switch (supplierPayments.get(claimId)) {
+                                case (?existingPayments) {
+                                    supplierPayments.put(claimId, Array.append(existingPayments, [payment]));
+                                };
+                                case null {
+                                    supplierPayments.put(claimId, [payment]);
+                                };
+                            };
+                            
+                            let updatedClaim = {
+                                claim with totalPaidToSuppliers = claim.totalPaidToSuppliers + amount
+                            };
+                            claims.put(claimId, updatedClaim);
+                            
+                            Debug.print("REAL SUB-SUPPLIER PAYMENT: " # Nat.toText(amount) # " ICP at block " # Nat.toText(blockIndex));
+                            
+                            #ok(blockIndex)
+                        };
+                        case (#Err(error)) {
+                            #err("ICP transfer to supplier failed")
+                        };
                     };
                 };
-                
-                // Update total paid to suppliers
-                let updatedClaim = {
-                    claim with totalPaidToSuppliers = claim.totalPaidToSuppliers + amount
-                };
-                claims.put(claimId, updatedClaim);
-                
-                #ok(())
             };
             case null { #err("Claim not found") };
         }
     };
 
-    public func paySubSupplier(claimId: Nat, paymentIndex: Nat, subSupplier: Principal, amount: Nat, invoiceHash: Text): async Result.Result<(), Text> {
+    public shared(msg) func paySubSupplier(claimId: Nat, paymentIndex: Nat, subSupplier: Principal, amount: Nat, invoiceHash: Text): async Result.Result<(), Text> {
         // Check if caller is authorized to make sub-supplier payments
         switch (claims.get(claimId)) {
             case (?claim) {
@@ -993,7 +1286,7 @@ actor ClearGov {
     // REWARD SYSTEM
     // ================================================================================
 
-    public func rewardStaker(invoiceHash: Text, staker: Principal): async Result.Result<(), Text> {
+    public shared(msg) func rewardStaker(invoiceHash: Text, staker: Principal): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government can distribute rewards");
         };
@@ -1032,6 +1325,7 @@ actor ClearGov {
     };
 
     public query func getSystemInfo(): async {
+        systemAuditor: Principal;
         mainGovernment: Principal;
         totalStateHeads: Nat;
         totalDeputies: Nat;
@@ -1039,8 +1333,11 @@ actor ClearGov {
         systemPaused: Bool;
         totalBudget: Nat;
         totalClaims: Nat;
+        demoMode: Bool;
+        demoMasterPrincipal: ?Principal;
     } {
         {
+            systemAuditor = systemAuditor;
             mainGovernment = mainGovernment;
             totalStateHeads = stateHeads.size();
             totalDeputies = deputies.size();
@@ -1048,6 +1345,8 @@ actor ClearGov {
             systemPaused = paused;
             totalBudget = budget;
             totalClaims = claimCount;
+            demoMode = demoMode;
+            demoMasterPrincipal = demoMasterPrincipal;
         }
     };
 
@@ -1111,7 +1410,7 @@ actor ClearGov {
     // DEMO AND TESTING FUNCTIONS
     // ================================================================================
 
-    public func initializeDemoData(): async Result.Result<(), Text> {
+    public shared(msg) func initializeDemoData(): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government can initialize demo data");
         };
@@ -1148,7 +1447,7 @@ actor ClearGov {
         #ok(())
     };
 
-    public func resetSystem(): async Result.Result<(), Text> {
+    public shared(msg) func resetSystem(): async Result.Result<(), Text> {
         if (not isMainGovernment(msg.caller)) {
             return #err("Only main government can reset system");
         };

@@ -44,6 +44,7 @@ class ICPRBACManager:
         self.role_cache: Dict[str, ICPRole] = {}
         self.cache_ttl = timedelta(minutes=15)  # Cache roles for 15 minutes
         self.role_hierarchy = {
+            'auditor': 6,  # Highest - system administrator
             'main_government': 5,
             'state_head': 4,
             'deputy': 3,
@@ -53,6 +54,11 @@ class ICPRBACManager:
         
         # Define role permissions
         self.role_permissions = {
+            'auditor': [
+                'system_management', 'view_all', 'emergency_control', 
+                'role_assignment', 'audit_access', 'canister_management',
+                'set_main_government', 'pause_system', 'view_all_data'
+            ],
             'main_government': [
                 'budget_control', 'role_management', 'fraud_oversight', 
                 'system_administration', 'canister_upgrade', 'emergency_override',

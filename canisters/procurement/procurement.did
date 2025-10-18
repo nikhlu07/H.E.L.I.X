@@ -108,10 +108,12 @@ type AllocationInfo = record {
 };
 
 type RoleInfo = record {
+    isAuditor : bool;
     isMainGovernment : bool;
     isStateHead : bool;
     isDeputy : bool;
     isVendor : bool;
+    isDemoMaster : bool;
 };
 
 type SystemStats = record {
@@ -123,6 +125,7 @@ type SystemStats = record {
 };
 
 type SystemInfo = record {
+    systemAuditor : principal;
     mainGovernment : principal;
     totalStateHeads : nat;
     totalDeputies : nat;
@@ -130,6 +133,8 @@ type SystemInfo = record {
     systemPaused : bool;
     totalBudget : nat;
     totalClaims : nat;
+    demoMode : bool;
+    demoMasterPrincipal : opt principal;
 };
 
 type FraudStats = record {
@@ -175,15 +180,20 @@ service : {
     "approveClaimByAI" : (claimId : nat, approve : bool, flagReason : text) -> (result : variant { ok; err : text });
     
     // ================================================================================
-    // CHALLENGE SYSTEM
+    // PAYMENT FUNCTIONS (REAL ckUSDC TRANSFERS)
     // ================================================================================
-    "stakeChallenge" : (invoiceHash : text, reason : text, evidence : text) -> (result : variant { ok; err : text });
+    "approveAndPayClaim" : (claimId : nat) -> (result : variant { ok : nat; err : text });
+    
+    // ================================================================================
+    // CHALLENGE SYSTEM (REAL ICP STAKING)
+    // ================================================================================
+    "stakeChallenge" : (invoiceHash : text, reason : text, evidence : text) -> (result : variant { ok : nat; err : text });
     "rewardStaker" : (invoiceHash : text, staker : principal) -> (result : variant { ok; err : text });
     
     // ================================================================================
-    // SUPPLIER PAYMENTS
+    // SUPPLIER PAYMENTS (REAL ckUSDC TRANSFERS)
     // ================================================================================
-    "paySupplier" : (claimId : nat, supplier : principal, amount : nat, invoiceHash : text) -> (result : variant { ok; err : text });
+    "paySupplier" : (claimId : nat, supplier : principal, amount : nat, invoiceHash : text) -> (result : variant { ok : nat; err : text });
     "paySubSupplier" : (claimId : nat, paymentIndex : nat, subSupplier : principal, amount : nat, invoiceHash : text) -> (result : variant { ok; err : text });
     
     // ================================================================================
@@ -192,6 +202,12 @@ service : {
     "pauseSystem" : () -> (result : variant { ok; err : text });
     "resumeSystem" : () -> (result : variant { ok; err : text });
     "setMainGovernment" : (newMainGov : principal) -> (result : variant { ok; err : text });
+    "setAuditor" : (newAuditor : principal) -> (result : variant { ok; err : text });
+    
+    // Demo mode management
+    "enableDemoMode" : (masterPrincipal : principal) -> (result : variant { ok; err : text });
+    "disableDemoMode" : () -> (result : variant { ok; err : text });
+    "getDemoStatus" : () -> (record { demoModeEnabled : bool; demoMasterPrincipal : opt principal }) query;
     
     // ================================================================================
     // DEMO AND TESTING

@@ -1,8 +1,24 @@
 {
   "canisters": {
+    "procurement": {
+      "type": "motoko",
+      "main": "canisters/procurement/src/main.mo",
+      "declarations": {
+        "output": "frontend/src/declarations/procurement",
+        "bindings": ["ts"],
+        "env_override": null
+      }
+    },
     "helix_frontend": {
       "type": "assets",
-      "source": ["frontend/dist"]
+      "source": ["frontend/dist"],
+      "dependencies": ["procurement"]
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
     }
   },
   "networks": {

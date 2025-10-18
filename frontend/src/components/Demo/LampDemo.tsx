@@ -36,10 +36,10 @@ export function LampDemo() {
                 {/*  <span>Try ICP Demo</span>*/}
                 {/*  <ArrowRight className="w-5 h-5" />*/}
                 {/*</button>*/}
-                <Link to="/login" target="_blank" rel="noopener noreferrer"
+                <Link to="/login"
                       className="group flex items-center gap-2 rounded-lg border-2 border-yellow-400/80 bg-yellow-400/10 px-6 py-3 text-sm font-semibold text-yellow-500 shadow-sm backdrop-blur-sm transition-all hover:border-yellow-400 hover:bg-yellow-400/20 hover:shadow-md">
                    {/*<img src="logo.svg" alt="Helix Logo" className="h-5 w-auto"/>*/}
-                    <span >Access Now</span>
+                    <span>Access Now</span>
                 </Link>
               </div>
       </motion.div>

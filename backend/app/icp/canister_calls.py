@@ -173,10 +173,23 @@ class CanisterService:
             raise
     
     # Role Management Functions
+    async def is_auditor(self, principal_id: str) -> bool:
+        """Check if principal is system auditor"""
+        if self.demo_mode:
+            # In demo mode, specific principal is auditor
+            return principal_id == "rdmx6-jaaaa-aaaah-qcaiq-cai" or "auditor" in principal_id.lower()
+        
+        try:
+            agent = await get_default_agent()
+            role_info = await agent.query_method("checkRole", [principal_id])
+            return bool(role_info.get('isAuditor', False)) if role_info else False
+        except Exception:
+            return False
+    
     async def is_main_government(self, principal_id: str) -> bool:
         """Check if principal is main government"""
         if self.demo_mode:
-            return principal_id == "rdmx6-jaaaa-aaaah-qcaiq-cai"
+            return "main_government" in principal_id or principal_id == "2vxsx-fae"
         
         try:
             agent = await get_default_agent()

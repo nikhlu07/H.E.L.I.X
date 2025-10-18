@@ -13,6 +13,7 @@ import {SubSupplierDashboard} from "./components/Dashboard/SubSupplierDashboard.
 import {AuditorDashboard} from "./components/Dashboard/AuditorDashboard.tsx";
 import Profile from './components/Dashboard/Profile.tsx';
 import { DeputyProfile } from './components/Dashboard/DeputyProfile.tsx';
+import { PrincipalRoleManager } from './components/Admin/PrincipalRoleManager.tsx';
 import PitchPage from './pages/pitch/index.tsx';
 import Documentation from './docs/documentation.tsx';
 
@@ -78,6 +79,11 @@ function App() {
             <Route path="deputy" element={<DeputyDashboard />} />
               <Route path="auditor" element={<AuditorDashboard />} />
               <Route path="profile" element={<Profile />} />
+          </Route>
+          
+          {/* Admin Panel for Role Management */}
+          <Route path="/admin/roles" element={<DashboardLayout />}>
+            <Route index element={<PrincipalRoleManager />} />
           </Route>
         </Routes>
       </div>

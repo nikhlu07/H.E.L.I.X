@@ -483,6 +483,10 @@ class AuthService {
     return this.user?.permissions.includes(permission) ?? false;
   }
 
+  isAuditor(): boolean {
+    return this.user?.role === 'auditor';
+  }
+
   isMainGovernment(): boolean {
     return this.user?.role === 'main_government';
   }
@@ -504,7 +508,7 @@ class AuthService {
   }
 
   isGovernmentOfficial(): boolean {
-    return ['main_government', 'state_head', 'deputy'].includes(this.user?.role || '');
+    return ['auditor', 'main_government', 'state_head', 'deputy'].includes(this.user?.role || '');
   }
 
   getUser(): User | null {
