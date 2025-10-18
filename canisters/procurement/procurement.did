@@ -205,9 +205,12 @@ service : {
     "setAuditor" : (newAuditor : principal) -> (result : variant { ok; err : text });
     
     // Demo mode management
+    "setCanisterPrincipal" : (principal : principal) -> (result : variant { ok; err : text });
     "enableDemoMode" : (masterPrincipal : principal) -> (result : variant { ok; err : text });
     "disableDemoMode" : () -> (result : variant { ok; err : text });
-    "getDemoStatus" : () -> (record { demoModeEnabled : bool; demoMasterPrincipal : opt principal }) query;
+    "enablePublicDemo" : () -> (result : variant { ok; err : text });
+    "disablePublicDemo" : () -> (result : variant { ok; err : text });
+    "getDemoStatus" : () -> (record { demoModeEnabled : bool; demoMasterPrincipal : opt principal; allowPublicDemo : bool }) query;
     
     // ================================================================================
     // DEMO AND TESTING

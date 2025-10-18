@@ -113,6 +113,7 @@ actor ClearGov {
     // State variables
     private stable var systemAuditor: Principal = Principal.fromText("rdmx6-jaaaa-aaaah-qcaiq-cai"); // SUPER ADMIN - deployer
     private stable var mainGovernment: Principal = Principal.fromText("2vxsx-fae"); // Placeholder - will be set by auditor
+    private stable var canisterPrincipal: Principal = Principal.fromText("aaaaa-aa"); // Will be set after deployment
     private var stateHeads = HashMap.HashMap<Principal, Bool>(10, Principal.equal, Principal.hash);
     private var deputies = HashMap.HashMap<Principal, Principal>(50, Principal.equal, Principal.hash);
     
@@ -120,6 +121,7 @@ actor ClearGov {
     private stable var demoMode: Bool = true; // Set to true for hackathon demo
     private stable var demoMasterPrincipal: ?Principal = null; // The one II that can be everything
     private stable var simulateTransfers: Bool = true; // Set to false when you have real ICP tokens
+    private stable var allowPublicDemo: Bool = true; // Allow anyone to use demo mode (for judges)
     
     private stable var budget: Nat = 0;
     private stable var reservedBudget: Nat = 0;
@@ -165,8 +167,9 @@ actor ClearGov {
 
     // Role checking functions
     private func isAuditor(caller: Principal): Bool {
-        // In demo mode, master principal is auditor
+        // In demo mode, master principal OR anyone if public demo
         if (demoMode) {
+            if (allowPublicDemo) { return true }; // ANYONE can be auditor in public demo
             switch (demoMasterPrincipal) {
                 case (?master) { 
                     if (Principal.equal(caller, master)) { return true };
@@ -178,8 +181,9 @@ actor ClearGov {
     };
 
     private func isMainGovernment(caller: Principal): Bool {
-        // In demo mode, master principal can be main government
+        // In demo mode, master principal OR anyone if public demo
         if (demoMode) {
+            if (allowPublicDemo) { return true }; // ANYONE can be government in public demo
             switch (demoMasterPrincipal) {
                 case (?master) { 
                     if (Principal.equal(caller, master)) { return true };
@@ -191,8 +195,9 @@ actor ClearGov {
     };
 
     private func isStateHead(caller: Principal): Bool {
-        // In demo mode, master principal can be state head
+        // In demo mode, master principal OR anyone if public demo
         if (demoMode) {
+            if (allowPublicDemo) { return true };
             switch (demoMasterPrincipal) {
                 case (?master) { 
                     if (Principal.equal(caller, master)) { return true };
@@ -207,8 +212,9 @@ actor ClearGov {
     };
 
     private func isDeputy(caller: Principal): Bool {
-        // In demo mode, master principal can be deputy
+        // In demo mode, master principal OR anyone if public demo
         if (demoMode) {
+            if (allowPublicDemo) { return true };
             switch (demoMasterPrincipal) {
                 case (?master) { 
                     if (Principal.equal(caller, master)) { return true };
@@ -571,15 +577,18 @@ actor ClearGov {
     // ================================================================================
 
     public shared(msg) func submitClaim(budgetId: Nat, allocationId: Nat, amount: Nat, invoiceData: Text): async Result.Result<Nat, Text> {
-        // Check if caller is vendor (or demo master)
+        // Check if caller is vendor (or demo user)
         let isCallerVendor = switch (isVendor.get(msg.caller)) {
             case (?true) { true };
             case _ { 
-                // In demo mode, master principal can be vendor
+                // In demo mode, check permissions
                 if (demoMode) {
-                    switch (demoMasterPrincipal) {
-                        case (?master) { Principal.equal(msg.caller, master) };
-                        case null { false };
+                    if (allowPublicDemo) { true } // Anyone can be vendor in public demo
+                    else {
+                        switch (demoMasterPrincipal) {
+                            case (?master) { Principal.equal(msg.caller, master) };
+                            case null { false };
+                        }
                     }
                 } else { false }
             };
@@ -704,7 +713,7 @@ actor ClearGov {
         // Transfer from citizen to this canister
         let stakeTransferArgs : TransferArgs = {
             from_subaccount = null;
-            to = { owner = Principal.fromActor(ClearGov); subaccount = null }; // Canister holds the stake
+            to = { owner = canisterPrincipal; subaccount = null }; // Canister holds the stake
             amount = STAKE_AMOUNT; // 1 ICP in e8s
             fee = null;
             memo = null;
@@ -1045,6 +1054,14 @@ actor ClearGov {
     // DEMO MODE MANAGEMENT
     // ================================================================================
 
+    public shared(msg) func setCanisterPrincipal(principal: Principal): async Result.Result<(), Text> {
+        if (not isAuditor(msg.caller)) {
+            return #err("Only auditor can set canister principal");
+        };
+        canisterPrincipal := principal;
+        #ok(())
+    };
+
     public shared(msg) func enableDemoMode(masterPrincipal: Principal): async Result.Result<(), Text> {
         if (not isAuditor(msg.caller)) {
             return #err("Only auditor can enable demo mode");
@@ -1052,6 +1069,25 @@ actor ClearGov {
         demoMode := true;
         demoMasterPrincipal := ?masterPrincipal;
         Debug.print("DEMO MODE ENABLED: " # Principal.toText(masterPrincipal) # " can act as all roles");
+        #ok(())
+    };
+
+    public shared(msg) func enablePublicDemo(): async Result.Result<(), Text> {
+        if (not isAuditor(msg.caller)) {
+            return #err("Only auditor can enable public demo");
+        };
+        allowPublicDemo := true;
+        demoMode := true;
+        Debug.print("PUBLIC DEMO ENABLED: Any user can demonstrate all roles");
+        #ok(())
+    };
+
+    public shared(msg) func disablePublicDemo(): async Result.Result<(), Text> {
+        if (not isAuditor(msg.caller)) {
+            return #err("Only auditor can disable public demo");
+        };
+        allowPublicDemo := false;
+        Debug.print("PUBLIC DEMO DISABLED: Strict role enforcement");
         #ok(())
     };
 
@@ -1068,10 +1104,12 @@ actor ClearGov {
     public query func getDemoStatus(): async {
         demoModeEnabled: Bool;
         demoMasterPrincipal: ?Principal;
+        allowPublicDemo: Bool;
     } {
         {
             demoModeEnabled = demoMode;
             demoMasterPrincipal = demoMasterPrincipal;
+            allowPublicDemo = allowPublicDemo;
         }
     };
 
