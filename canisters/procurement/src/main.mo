@@ -9,6 +9,10 @@ import Nat "mo:base/Nat";
 import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
 import Blob "mo:base/Blob";
+import Cycles "mo:base/ExperimentalCycles";
+import Nat8 "mo:base/Nat8";
+import Nat32 "mo:base/Nat32";
+import Nat64 "mo:base/Nat64";
 
 actor ClearGov {
     // ================================================================================
@@ -111,9 +115,9 @@ actor ClearGov {
     };
 
     // State variables
-    private stable var systemAuditor: Principal = Principal.fromText("rdmx6-jaaaa-aaaah-qcaiq-cai"); // SUPER ADMIN - deployer
-    private stable var mainGovernment: Principal = Principal.fromText("2vxsx-fae"); // Placeholder - will be set by auditor
-    private stable var canisterPrincipal: Principal = Principal.fromText("aaaaa-aa"); // Will be set after deployment
+    private stable var systemAuditor: Principal = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe"); // SUPER ADMIN - deployer
+    private stable var mainGovernment: Principal = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe"); // Placeholder - will be set by auditor
+    private stable var canisterPrincipal: Principal = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe"); // Will be set after deployment
     private var stateHeads = HashMap.HashMap<Principal, Bool>(10, Principal.equal, Principal.hash);
     private var deputies = HashMap.HashMap<Principal, Principal>(50, Principal.equal, Principal.hash);
     
@@ -122,6 +126,10 @@ actor ClearGov {
     private stable var demoMasterPrincipal: ?Principal = null; // The one II that can be everything
     private stable var simulateTransfers: Bool = true; // Set to false when you have real ICP tokens
     private stable var allowPublicDemo: Bool = true; // Allow anyone to use demo mode (for judges)
+    
+    // AI FRAUD DETECTION - External API endpoint
+    private stable var aiEndpointUrl: Text = "https://api.groq.com/fraud-detect"; // External AI service
+    private stable var useExternalAI: Bool = false; // Set true to call external AI API
     
     private stable var budget: Nat = 0;
     private stable var reservedBudget: Nat = 0;
@@ -1454,8 +1462,8 @@ actor ClearGov {
         };
         
         // Add demo state heads
-        let demoStateHead1 = Principal.fromText("renrk-eyaaa-aaaah-qcaia-cai");
-        let demoStateHead2 = Principal.fromText("r7inp-6aaaa-aaaah-qcaia-cai");
+        let demoStateHead1 = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe");
+        let demoStateHead2 = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe");
         
         stateHeads.put(demoStateHead1, true);
         stateHeads.put(demoStateHead2, true);
@@ -1463,8 +1471,8 @@ actor ClearGov {
         approvedStakers.put(demoStateHead2, true);
         
         // Add demo deputies
-        let demoDeputy1 = Principal.fromText("rrkah-fqaaa-aaaah-qcaiq-cai");
-        let demoDeputy2 = Principal.fromText("rdmx6-jaaaa-aaaah-qcair-cai");
+        let demoDeputy1 = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe");
+        let demoDeputy2 = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe");
         
         deputies.put(demoDeputy1, demoStateHead1);
         deputies.put(demoDeputy2, demoStateHead2);
@@ -1472,8 +1480,8 @@ actor ClearGov {
         approvedStakers.put(demoDeputy2, true);
         
         // Add demo vendors
-        let demoVendor1 = Principal.fromText("radvj-tiaaa-aaaah-qcaiq-cai");
-        let demoVendor2 = Principal.fromText("r7inp-6aaaa-aaaah-qcair-cai");
+        let demoVendor1 = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe");
+        let demoVendor2 = Principal.fromText("j2gwo-etxyy-ieqbi-d3wln-cv5au-ffqdm-r2v4f-fvweg-ybhwz-7pvft-yqe");
         
         vettedVendors.add(demoVendor1);
         vettedVendors.add(demoVendor2);
