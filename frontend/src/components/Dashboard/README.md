@@ -2,9 +2,9 @@
 
 ## Overview
 
-Role-specific dashboard components for H.E.L.I.X., providing specialized interfaces for each user role.
+Role-specific dashboard components for H.E.L.I.X., providing specialized interfaces for each user role in both Government and NGO sectors.
 
-## Main Dashboards
+## Government Dashboards
 
 ### MainGovernmentDashboard.tsx
 National-level oversight dashboard with:
@@ -54,10 +54,41 @@ Audit and compliance dashboard with:
 - Compliance checking
 - Report generation
 
+## NGO Dashboards
+
+### NgoHeadDashboard.tsx
+Overall NGO leadership dashboard with:
+- Program monitoring
+- Budget allocation planning
+- Donation tracking
+
+### NgoProgramManagerDashboard.tsx
+Manages specific NGO programs with:
+- Program details and task management
+- Volunteer roster and assignments
+
+### NgoFieldOfficerDashboard.tsx
+For on-the-ground operations with:
+- Task reporting and status updates
+- Site locations and details
+
+### NgoVolunteerCoordinatorDashboard.tsx
+Manages all volunteer-related activities with:
+- Volunteer application management
+- Event coordination and broadcast messaging
+
+### NgoAdminDashboard.tsx
+Administrative tasks for the NGO section with:
+- User management and role assignments
+- System announcements and audit logs
+
 ## Supporting Components
 
 ### Header.tsx
-Common navigation header for all dashboards.
+Common navigation header for all government-related dashboards.
+
+### NgoHeader.tsx
+Dedicated navigation header for all NGO-related dashboards.
 
 ### Profile.tsx
 User profile management component.
@@ -65,38 +96,18 @@ User profile management component.
 ### DeputyProfile.tsx
 Deputy-specific profile with additional fields.
 
-## Generic Dashboards
-
-### GenericDashboard.tsx
-Base dashboard template for custom roles.
-
-### TransparencyDashboard.tsx
-Public transparency view.
-
-## Specialized Dashboards
-
-### FieldDirectorDashboard.tsx
-Field operations management.
-
-### LeadAgencyDashboard.tsx
-Lead agency coordination.
-
-### LocalSupplierDashboard.tsx
-Local supplier interface.
-
-### LogisticsPartnerDashboard.tsx
-Logistics coordination.
-
-### ProgramManagerDashboard.tsx
-Program management interface.
 
 ## Usage
 
 ```tsx
 import { MainGovernmentDashboard } from '@/components/Dashboard/MainGovernmentDashboard';
+import { NgoHeadDashboard } from '@/components/Dashboard/NgoHeadDashboard';
 
-// Protected route
+// Protected route for a government dashboard
 <Route path="/dashboard/government" element={<MainGovernmentDashboard />} />
+
+// Protected route for an NGO dashboard
+<Route path="/dashboard/ngo-head" element={<NgoHeadDashboard />} />
 ```
 
 ## Related Documentation

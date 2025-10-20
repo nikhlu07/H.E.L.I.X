@@ -3,9 +3,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TimelineContent } from "@/components/ui/timeline-animation";
 import {VerticalCutReveal} from "@/components/ui/vertical-cut-reveal";
 import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function PricingSection3() {
   const pricingRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const revealVariants = {
     visible: (i: number) => ({
       y: 0,
@@ -108,8 +110,11 @@ export default function PricingSection3() {
                     </li>
                   ))}
                 </ul>
-                <button className="w-full p-3 rounded-xl bg-white border border-[#FFCC00] text-black font-semibold shadow-lg shadow-[#FFCC00]/50 hover:bg-[#FFCC00]/90">
-                  Under Development
+                <button
+                  onClick={() => navigate('/login/ngo')}
+                  className="w-full p-3 rounded-xl bg-white border border-[#FFCC00] text-black font-semibold shadow-lg shadow-[#FFCC00]/50 hover:bg-[#FFCC00]/90"
+                >
+                  Access
                 </button>
               </CardContent>
             </Card>
@@ -143,7 +148,10 @@ export default function PricingSection3() {
                     </li>
                   ))}
                 </ul>
-                <button className="w-full p-3 border border-gray-800 shadow-lg shadow-black font-semibold  rounded-xl bg-black text-white hover:bg-gray-800">
+                <button
+                  onClick={() => navigate('/login')}
+                  className="w-full p-3 border border-gray-800 shadow-lg shadow-black font-semibold  rounded-xl bg-black text-white hover:bg-gray-800"
+                >
                   Access
                 </button>
               </CardContent>
