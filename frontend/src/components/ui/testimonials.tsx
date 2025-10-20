@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card"
 import { Icons } from "@/components/ui/icons"
 
 interface Testimonial {
-  image: string
   name: string
   username: string
   text: string
@@ -68,13 +67,10 @@ export function Testimonials({
                 className="w-80 h-auto p-5 relative bg-card border-primary border rounded-xl shadow-primary"
               >
                 <div className="flex flex-col items-center text-center">
-                  <img
-                    src={testimonial.image}
-                    alt={testimonial.name}
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
+                  <svg width="40" height="40" strokeWidth="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="#000000">
+                    <path d="M5 20V19C5 15.134 8.13401 12 12 12V12C15.866 12 19 15.134 19 19V20" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                    <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                  </svg>
                   <div className="flex flex-col mt-2">
                     <span className="font-semibold text-base">
                       {testimonial.name}
@@ -89,12 +85,12 @@ export function Testimonials({
                     {testimonial.text}
                   </p>
                 </div>
-                <button
-                  onClick={() => openInNewTab(testimonial.social)}
-                  className="absolute top-4 right-4 hover:opacity-80 transition-opacity"
-                >
-                  <Icons.twitter className="h-4 w-4" aria-hidden="true" />
-                </button>
+                {/*<button*/}
+                {/*  onClick={() => openInNewTab(testimonial.social)}*/}
+                {/*  className="absolute top-4 right-4 hover:opacity-80 transition-opacity"*/}
+                {/*>*/}
+                {/*  <Icons.twitter className="h-4 w-4" aria-hidden="true" />*/}
+                {/*</button>*/}
               </Card>
             ))}
         </div>
