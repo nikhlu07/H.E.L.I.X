@@ -282,19 +282,7 @@ class ICPCanisterService {
     return this.handleResult(result);
   }
 
-  async proposeStateHead(stateHeadPrincipal: string): Promise<void> {
-    await this.ensureActor();
-    const principal = Principal.fromText(stateHeadPrincipal);
-    const result = await (this.actor as any).proposeStateHead(principal);
-    return this.handleResult(result);
-  }
-
-  async confirmStateHead(stateHeadPrincipal: string): Promise<void> {
-    await this.ensureActor();
-    const principal = Principal.fromText(stateHeadPrincipal);
-    const result = await (this.actor as any).confirmStateHead(principal);
-    return this.handleResult(result);
-  }
+  // Duplicates removed (proposeStateHead, confirmStateHead)
 
   async proposeDeputy(deputyPrincipal: string, stateHeadPrincipal: string): Promise<void> {
     await this.ensureActor();
@@ -337,6 +325,89 @@ class ICPCanisterService {
     const result = await (this.actor as any).submitClaim(
       BigInt(budgetId),
       BigInt(allocationId),
+      BigInt(amount),
+      invoiceData
+    );
+    const claimId = this.handleResult(result);
+    return Number(claimId);
+  }
+
+  // Vendor-friendly claim submission (simplified)
+  async submitVendorClaim(
+    amount: number,
+    description: string,
+    ipfsHash: string
+  ): Promise<number> {
+    await this.ensureActor();
+    
+    // Get all budgets to find one we can use
+    const allBudgets = await this.getAllBudgets();
+    
+    console.log('All budgets (raw):', allBudgets);
+    console.log('Number of budgets:', allBudgets?.length);
+    
+    if (!allBudgets || allBudgets.length === 0) {
+      throw new Error('No budgets available. Main Government needs to create and lock a budget first.');
+    }
+    
+    // Parse budget tuples: [id, budgetObject]
+    const parsedBudgets = allBudgets.map(([id, budget]) => {
+      console.log(`Budget ${id}:`, {
+        id: id,
+        amount: budget.amount,
+        purpose: budget.purpose,
+        locked: budget.locked,
+        lockTime: budget.lockTime
+      });
+      return {
+        id: id,
+        amount: Number(budget.amount),
+        purpose: budget.purpose,
+        locked: budget.locked,
+        lockTime: Number(budget.lockTime)
+      };
+    });
+    
+    // Use the first locked budget
+    const lockedBudget = parsedBudgets.find((b: any) => b.locked);
+    console.log('Found locked budget:', lockedBudget);
+    
+    if (!lockedBudget) {
+      // If no locked budget found, just use the first budget for demo
+      console.warn('No locked budget found, using first budget as fallback');
+      const budgetId = parsedBudgets[0].id;
+      
+      const invoiceData = JSON.stringify({
+        description: description,
+        ipfsHash: ipfsHash,
+        timestamp: Date.now(),
+        vendor: 'demo-vendor'
+      });
+      
+      const result = await (this.actor as any).submitClaim(
+        BigInt(budgetId),
+        BigInt(0),
+        BigInt(amount),
+        invoiceData
+      );
+      const claimId = this.handleResult(result);
+      return Number(claimId);
+    }
+    
+    const budgetId = lockedBudget.id;
+    
+    // For demo, use allocationId=0
+    // In production, this would be linked to the actual project allocation
+    const invoiceData = JSON.stringify({
+      description: description,
+      ipfsHash: ipfsHash,
+      timestamp: Date.now(),
+      vendor: 'demo-vendor'
+    });
+    
+    const result = await (this.actor as any).submitClaim(
+      BigInt(budgetId),
+      BigInt(0),  // allocationId - use first allocation
       BigInt(amount),
       invoiceData
     );

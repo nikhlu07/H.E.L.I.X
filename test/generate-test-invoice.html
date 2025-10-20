@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Test Invoice PDF</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .preview {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-top: 20px;
+            background: #fafafa;
+        }
+        .invoice-info {
+            margin: 10px 0;
+        }
+        .invoice-info strong {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 Generate Test Invoice PDF</h1>
+        
+        <div class="preview">
+            <h3>Invoice Preview:</h3>
+            <div class="invoice-info"><strong>Invoice #:</strong> INV-2024-001</div>
+            <div class="invoice-info"><strong>Date:</strong> <span id="date"></span></div>
+            <div class="invoice-info"><strong>Vendor:</strong> MedTech Solutions Ltd.</div>
+            <div class="invoice-info"><strong>Project:</strong> Medical Equipment Purchase</div>
+            <div class="invoice-info"><strong>Amount:</strong> $150,000</div>
+            <div class="invoice-info"><strong>Description:</strong> Supply and installation of 10 ventilators and 20 patient monitors for Government Hospital, District A</div>
+            <div class="invoice-info"><strong>Items:</strong></div>
+            <ul>
+                <li>10x Ventilators @ $10,000 = $100,000</li>
+                <li>20x Patient Monitors @ $2,000 = $40,000</li>
+                <li>Installation & Training = $10,000</li>
+            </ul>
+        </div>
+
+        <button onclick="generatePDF()">📥 Download Test Invoice PDF</button>
+    </div>
+
+    <script>
+        // Display current date
+        document.getElementById('date').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Header
+            doc.setFontSize(24);
+            doc.setFont(undefined, 'bold');
+            doc.text('INVOICE', 105, 20, { align: 'center' });
+            
+            // Invoice Details
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Left column
+            doc.setFont(undefined, 'bold');
+            doc.text('From:', 20, 40);
+            doc.setFont(undefined, 'normal');
+            doc.text('MedTech Solutions Ltd.', 20, 47);
+            doc.text('123 Medical Avenue', 20, 54);
+            doc.text('Healthcare District', 20, 61);
+            doc.text('Tax ID: 12-3456789', 20, 68);
+            
+            // Right column
+            doc.setFont(undefined, 'bold');
+            doc.text('To:', 120, 40);
+            doc.setFont(undefined, 'normal');
+            doc.text('Government Hospital', 120, 47);
+            doc.text('District A', 120, 54);
+            doc.text('Ministry of Health', 120, 61);
+            
+            // Invoice info
+            doc.setFont(undefined, 'bold');
+            doc.text('Invoice #:', 20, 85);
+            doc.setFont(undefined, 'normal');
+            doc.text('INV-2024-001', 60, 85);
+            
+            doc.setFont(undefined, 'bold');
+            doc.text('Date:', 20, 92);
+            doc.setFont(undefined, 'normal');
+            doc.text(currentDate, 60, 92);
+            
+            doc.setFont(undefined, 'bold');
+            doc.text('Project:', 20, 99);
+            doc.setFont(undefined, 'normal');
+            doc.text('Medical Equipment Purchase', 60, 99);
+            
+            // Line
+            doc.line(20, 110, 190, 110);
+            
+            // Table header
+            doc.setFont(undefined, 'bold');
+            doc.text('Description', 20, 120);
+            doc.text('Qty', 120, 120);
+            doc.text('Unit Price', 145, 120);
+            doc.text('Amount', 175, 120);
+            
+            doc.line(20, 123, 190, 123);
+            
+            // Items
+            doc.setFont(undefined, 'normal');
+            doc.text('Medical Ventilators', 20, 133);
+            doc.text('10', 120, 133);
+            doc.text('$10,000', 145, 133);
+            doc.text('$100,000', 170, 133);
+            
+            doc.text('Patient Monitors', 20, 143);
+            doc.text('20', 120, 143);
+            doc.text('$2,000', 145, 143);
+            doc.text('$40,000', 170, 143);
+            
+            doc.text('Installation & Training', 20, 153);
+            doc.text('1', 120, 153);
+            doc.text('$10,000', 145, 153);
+            doc.text('$10,000', 170, 153);
+            
+            doc.line(20, 163, 190, 163);
+            
+            // Total
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(14);
+            doc.text('TOTAL:', 120, 175);
+            doc.text('$150,000', 170, 175);
+            
+            // Footer
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text('Payment Terms: Net 30 days', 20, 200);
+            doc.text('Bank Details: Account #1234567890 - National Bank', 20, 207);
+            doc.text('Thank you for your business!', 20, 220);
+            
+            // Signature line
+            doc.line(20, 250, 80, 250);
+            doc.text('Authorized Signature', 20, 257);
+            
+            // Save the PDF
+            doc.save('test-invoice-INV-2024-001.pdf');
+            
+            alert('✅ PDF Downloaded! Now you can upload this to the Vendor Dashboard.');
+        }
+    </script>
+</body>
+</html>
+

@@ -38,6 +38,11 @@ export function Toast({ message, type, onClose, duration = 5000 }: ToastProps) {
       color: 'text-red-500',
       title: 'Error',
     },
+    info: {
+      Icon: AlertTriangle,
+      color: 'text-blue-500',
+      title: 'Info',
+    },
   };
 
   const { Icon, color, title } = typeStyles[type];

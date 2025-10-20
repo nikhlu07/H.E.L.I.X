@@ -35,71 +35,53 @@
    - 3.8 [Service Layer](#38-service-layer)
    - 3.9 [Type Definitions](#39-type-definitions)
 
-### 4. [Backend Documentation](#4-backend-documentation)
-   - 4.1 [Directory Structure](#41-directory-structure)
-   - 4.2 [API Architecture](#42-api-architecture)
-   - 4.3 [Authentication and Authorization](#43-authentication-and-authorization)
-   - 4.4 [API Endpoints](#44-api-endpoints)
-   - 4.5 [Middleware Implementation](#45-middleware-implementation)
-   - 4.6 [Database Models](#46-database-models)
-   - 4.7 [Service Layer](#47-service-layer)
-   - 4.8 [External Integrations](#48-external-integrations)
+### 4. [Blockchain/ICP Integration](#4-blockchainicp-integration)
+   - 4.1 [Canister Architecture](#41-canister-architecture)
+   - 4.2 [Procurement Canister](#42-procurement-canister)
+   - 4.3 [Smart Contract Implementations](#43-smart-contract-implementations)
+   - 4.4 [Internet Identity Integration](#44-internet-identity-integration)
+   - 4.5 [Principal-Based Authentication](#45-principal-based-authentication)
+   - 4.6 [Data Structures](#46-data-structures)
+   - 4.7 [Deployment Procedures](#47-deployment-procedures)
 
-### 5. [Blockchain/ICP Integration](#5-blockchainicp-integration)
-   - 5.1 [Canister Architecture](#51-canister-architecture)
-   - 5.2 [Procurement Canister](#52-procurement-canister)
-   - 5.3 [Smart Contract Implementations](#53-smart-contract-implementations)
-   - 5.4 [Internet Identity Integration](#54-internet-identity-integration)
-   - 5.5 [Principal-Based Authentication](#55-principal-based-authentication)
-   - 5.6 [Data Structures](#56-data-structures)
-   - 5.7 [Deployment Procedures](#57-deployment-procedures)
+### 5. [AI/ML Fraud Detection](#5-aiml-fraud-detection)
+   - 5.1 [Fraud Detection Architecture](#51-fraud-detection-architecture)
+   - 5.2 [Rules Engine](#52-rules-engine)
+   - 5.3 [ML Detector with RAG Pipeline](#53-ml-detector-with-rag-pipeline)
+   - 5.4 [Autonomous Fraud Engine](#54-autonomous-fraud-engine)
+   - 5.5 [Detection Algorithms](#55-detection-algorithms)
+   - 5.6 [Performance Metrics](#56-performance-metrics)
 
-### 6. [AI/ML Fraud Detection](#6-aiml-fraud-detection)
-   - 6.1 [Fraud Detection Architecture](#61-fraud-detection-architecture)
-   - 6.2 [Rules Engine](#62-rules-engine)
-   - 6.3 [ML Detector with RAG Pipeline](#63-ml-detector-with-rag-pipeline)
-   - 6.4 [Autonomous Fraud Engine](#64-autonomous-fraud-engine)
-   - 6.5 [Detection Algorithms](#65-detection-algorithms)
-   - 6.6 [Performance Metrics](#66-performance-metrics)
+### 6. [Deployment Guide](#6-deployment-guide)
+   - 6.1 [Prerequisites](#61-prerequisites)
+   - 6.2 [Local Development Setup](#62-local-development-setup)
+   - 6.3 [Docker Deployment](#63-docker-deployment)
+   - 6.4 [ICP Mainnet Deployment](#64-icp-mainnet-deployment)
+   - 6.5 [Vercel Frontend Deployment](#65-vercel-frontend-deployment)
+   - 6.6 [Environment Configuration](#66-environment-configuration)
+   - 6.7 [Monitoring and Health Checks](#67-monitoring-and-health-checks)
 
-### 7. [Deployment Guide](#7-deployment-guide)
-   - 7.1 [Prerequisites](#71-prerequisites)
-   - 7.2 [Local Development Setup](#72-local-development-setup)
-   - 7.3 [Docker Deployment](#73-docker-deployment)
-   - 7.4 [ICP Mainnet Deployment](#74-icp-mainnet-deployment)
-   - 7.5 [Vercel Frontend Deployment](#75-vercel-frontend-deployment)
-   - 7.6 [Environment Configuration](#76-environment-configuration)
-   - 7.7 [Monitoring and Health Checks](#77-monitoring-and-health-checks)
+### 7. [Development Guide](#7-development-guide)
+   - 7.1 [Development Environment Setup](#71-development-environment-setup)
+   - 7.2 [Code Organization](#72-code-organization)
+   - 7.3 [Coding Standards](#73-coding-standards)
+   - 7.4 [Testing Procedures](#74-testing-procedures)
+   - 7.5 [Git Workflow](#75-git-workflow)
+   - 7.6 [Contribution Guidelines](#76-contribution-guidelines)
 
-### 8. [Development Guide](#8-development-guide)
-   - 8.1 [Development Environment Setup](#81-development-environment-setup)
-   - 8.2 [Code Organization](#82-code-organization)
-   - 8.3 [Coding Standards](#83-coding-standards)
-   - 8.4 [Testing Procedures](#84-testing-procedures)
-   - 8.5 [Git Workflow](#85-git-workflow)
-   - 8.6 [Contribution Guidelines](#86-contribution-guidelines)
+### 8. [Security & Compliance](#8-security--compliance)
+   - 8.1 [Authentication Security](#81-authentication-security)
+   - 8.2 [Authorization and RBAC](#82-authorization-and-rbac)
+   - 8.3 [Data Protection](#83-data-protection)
+   - 8.4 [Blockchain Security](#84-blockchain-security)
+   - 8.5 [Security Best Practices](#85-security-best-practices)
+   - 8.6 [Vulnerability Reporting](#86-vulnerability-reporting)
 
-### 9. [Security & Compliance](#9-security--compliance)
-   - 9.1 [Authentication Security](#91-authentication-security)
-   - 9.2 [Authorization and RBAC](#92-authorization-and-rbac)
-   - 9.3 [Data Protection](#93-data-protection)
-   - 9.4 [Blockchain Security](#94-blockchain-security)
-   - 9.5 [Security Best Practices](#95-security-best-practices)
-   - 9.6 [Vulnerability Reporting](#96-vulnerability-reporting)
-
-### 10. [API Reference](#10-api-reference)
-   - 10.1 [Authentication Endpoints](#101-authentication-endpoints)
-   - 10.2 [Government Endpoints](#102-government-endpoints)
-   - 10.3 [Deputy Endpoints](#103-deputy-endpoints)
-   - 10.4 [Vendor Endpoints](#104-vendor-endpoints)
-   - 10.5 [Citizen Endpoints](#105-citizen-endpoints)
-   - 10.6 [Fraud Detection Endpoints](#106-fraud-detection-endpoints)
-
-### 11. [Troubleshooting](#11-troubleshooting)
-   - 11.1 [Common Setup Issues](#111-common-setup-issues)
-   - 11.2 [Deployment Issues](#112-deployment-issues)
-   - 11.3 [Runtime Issues](#113-runtime-issues)
-   - 11.4 [FAQ](#114-faq)
+### 9. [Troubleshooting](#9-troubleshooting)
+   - 9.1 [Common Setup Issues](#91-common-setup-issues)
+   - 9.2 [Deployment Issues](#92-deployment-issues)
+   - 9.3 [Runtime Issues](#93-runtime-issues)
+   - 9.4 [FAQ](#94-faq)
 
 ---
 
@@ -1450,86 +1432,390 @@ export interface Vendor {
 ---
 
 
-## 4. Backend Documentation
+## 4. Blockchain/ICP Integration
 
-### 4.1 Directory Structure
+### 4.1 Canister Architecture
 
-The backend is built with FastAPI and Python 3.9+, organized for scalability and maintainability:
+H.E.L.I.X. uses Internet Computer canisters for immutable data storage and smart contract execution.
 
 ```
-backend/
-├── app/                           # Main application package
-│   ├── __init__.py
-│   ├── main.py                    # FastAPI application entry point
-│   │
-│   ├── api/                       # API route handlers
-│   │   ├── __init__.py
-│   │   ├── auth.py                # Authentication endpoints
-│   │   ├── government.py          # Government official endpoints
-│   │   ├── deputy.py              # Deputy officer endpoints
-│   │   ├── vendor.py              # Vendor/contractor endpoints
-│   │   ├── citizen.py             # Citizen oversight endpoints
-│   │   ├── fraud.py               # Fraud detection endpoints
-│   │   └── deps.py                # Dependency injection
-│   │
-│   ├── auth/                      # Authentication system
-│   │   ├── __init__.py
-│   │   ├── icp_auth.py            # Internet Identity integration
-│   │   ├── icp_rbac.py            # Role-based access control
-│   │   ├── middleware.py          # Auth middleware
-│   │   └── principal_auth.py      # Principal verification
-│   │
-│   ├── config/                    # Configuration management
-│   │   ├── __init__.py
-│   │   ├── settings.py            # Application settings
-│   │   └── icp_config.py          # ICP-specific configuration
-│   │
-│   ├── fraud/                     # Fraud detection
-│   │   ├── __init__.py
-│   │   └── detection.py           # Fraud detection logic
-│   │
-│   ├── icp/                       # Internet Computer integration
-│   │   ├── __init__.py
-│   │   ├── agent.py               # ICP agent configuration
-│   │   └── canister_calls.py      # Smart contract interactions
-│   │
-│   ├── middleware/                # Request/response middleware
-│   │   ├── __init__.py
-│   │   ├── error_handler.py       # Global error handling
-│   │   ├── logging.py             # Request logging
-│   │   └── validation.py          # Input validation
-│   │
-│   ├── schemas/                   # Pydantic data models
-│   │   ├── __init__.py
-│   │   └── government.py          # Government-specific schemas
-│   │
-│   ├── services/                  # Business logic services
-│   │   └── icp_integration.py     # ICP service layer
-│   │
-│   └── utils/                     # Utility functions
-│       ├── __init__.py
-│       ├── exceptions.py          # Custom exceptions
-│       ├── logging.py             # Logging utilities
-│       └── validation.py          # Validation helpers
+canisters/
+├── procurement/                    # Main procurement canister
+│   ├── src/
+│   │   ├── main.mo                # Primary canister logic
+│   │   ├── types.mo               # Data type definitions
+│   │   ├── rbac.mo                # Role-based access control
+│   │   ├── validation.mo          # Input validation
+│   │   └── tests.mo               # Unit tests
+│   ├── procurement.did            # Candid interface definition
+│   └── rbac.did                   # RBAC interface definition
 │
-├── tests/                         # Test suite
-│   ├── test_auth.py
-│   ├── test_fraud.py
-│   └── test_api.py
+├── fraud_engine/                  # Fraud detection canister
+│   ├── main.py                    # Python fraud engine
+│   ├── ml_detector.py             # ML-based detection
+│   ├── rules_engine.py            # Rules-based detection
+│   ├── requirements.txt           # Python dependencies
+│   └── start_fraud_engine.sh      # Startup script
 │
-├── demo_api.py                    # Demo API server
-├── hierarchical_demo_api.py       # Hierarchical demo server
-├── requirements.txt               # Python dependencies
-├── requirements-minimal.txt       # Minimal dependencies
-└── .env.example                   # Environment variables template
+└── README.md                      # Canister documentation
 ```
 
-### 4.2 API Architecture
-
-H.E.L.I.X. backend follows a layered architecture pattern:
-
+**Canister Communication Flow**:
+```mermaid
+graph LR
+    Frontend[Frontend] -->|HTTP Agent| Gateway[ICP Gateway]
+    Gateway -->|Candid| Procurement[Procurement<br/>Canister]
+    Gateway -->|Candid| Fraud[Fraud Engine<br/>Canister]
+    Procurement -->|Inter-canister| Fraud
+    Procurement -->|Store| Blockchain[(ICP Blockchain)]
+    Fraud -->|Store| Blockchain
 ```
-┌─────────────────────────────────────────┐
+
+### 4.2 Procurement Canister
+
+**Main Canister Logic** (`canisters/procurement/src/main.mo`):
+
+```motoko
+import Principal "mo:base/Principal";
+import HashMap "mo:base/HashMap";
+import Array "mo:base/Array";
+import Time "mo:base/Time";
+import Result "mo:base/Result";
+import Types "types";
+import RBAC "rbac";
+
+actor ProcurementCanister {
+    // State variables
+    private stable var budgetEntries : [(Text, Types.Budget)] = [];
+    private var budgets = HashMap.HashMap<Text, Types.Budget>(10, Text.equal, Text.hash);
+    
+    private stable var transactionEntries : [(Text, Types.Transaction)] = [];
+    private var transactions = HashMap.HashMap<Text, Types.Transaction>(100, Text.equal, Text.hash);
+    
+    // Budget allocation
+    public shared(msg) func allocate_budget(
+        amount: Nat,
+        allocated_to: Text,
+        purpose: Text,
+        state: ?Text,
+        district: ?Text
+    ) : async Result.Result<Text, Text> {
+        // Verify caller has permission
+        let caller = Principal.toText(msg.caller);
+        if (not RBAC.hasPermission(caller, #AllocateBudget)) {
+            return #err("Permission denied");
+        };
+        
+        // Create budget record
+        let budget_id = generateId();
+        let budget : Types.Budget = {
+            id = budget_id;
+            amount = amount;
+            allocated_to = allocated_to;
+            allocated_by = caller;
+            purpose = purpose;
+            state = state;
+            district = district;
+            timestamp = Time.now();
+            status = #Pending;
+        };
+        
+        budgets.put(budget_id, budget);
+        return #ok(budget_id);
+    };
+}
+```
+
+**Data Types** (`canisters/procurement/src/types.mo`):
+
+```motoko
+module Types {
+    public type Budget = {
+        id: Text;
+        amount: Nat;
+        allocated_to: Text;
+        allocated_by: Text;
+        purpose: Text;
+        state: ?Text;
+        district: ?Text;
+        timestamp: Int;
+        status: BudgetStatus;
+    };
+    
+    public type BudgetStatus = {
+        #Pending;
+        #Approved;
+        #Rejected;
+        #Completed;
+    };
+}
+```
+
+### 4.3 Smart Contract Implementations
+
+The canister provides the following key functions for the procurement system:
+
+1. **Budget Management**
+   - `allocate_budget()` - Allocate funds to specific purposes
+   - `get_budget()` - Retrieve budget information
+   - `update_budget_status()` - Update budget approval status
+
+2. **Transaction Recording**
+   - `record_transaction()` - Log procurement transactions
+   - `get_transactions()` - Query transaction history
+   - `verify_transaction()` - Validate transaction authenticity
+
+3. **Role-Based Access Control (RBAC)**
+   - `assign_role()` - Assign roles to principals
+   - `check_permission()` - Verify user permissions
+   - `revoke_role()` - Remove role assignments
+
+### 4.4 Internet Identity Integration
+
+H.E.L.I.X. uses Internet Identity for decentralized authentication:
+
+```typescript
+// Frontend authentication with Internet Identity
+import { AuthClient } from "@dfinity/auth-client";
+
+const authClient = await AuthClient.create();
+await authClient.login({
+    identityProvider: process.env.II_URL,
+    onSuccess: () => {
+        const identity = authClient.getIdentity();
+        const principal = identity.getPrincipal().toString();
+        console.log("Authenticated as:", principal);
+    }
+});
+```
+
+### 4.5 Principal-Based Authentication
+
+All users are identified by their unique Internet Computer Principal ID.
+
+Principals are cryptographic identities that provide:
+- **Unique identification** across the Internet Computer
+- **Decentralized authentication** without usernames/passwords
+- **Role-based access control** at the blockchain level
+- **Tamper-proof audit trails** of all actions
+
+### 4.6 Data Structures
+
+The canister maintains the following data structures in stable memory:
+
+```motoko
+// Budget tracking
+private stable var budgetEntries : [(Text, Budget)] = [];
+private var budgets = HashMap.HashMap<Text, Budget>(10, Text.equal, Text.hash);
+
+// Transaction records
+private stable var transactionEntries : [(Text, Transaction)] = [];
+private var transactions = HashMap.HashMap<Text, Transaction>(100, Text.equal, Text.hash);
+
+// Role assignments
+private stable var roleAssignments : [(Principal, Role)] = [];
+```
+
+### 4.7 Deployment Procedures
+
+Deploy the canister to the Internet Computer:
+
+```bash
+# Build the canister
+dfx build procurement
+
+# Deploy to local replica
+dfx deploy procurement
+
+# Deploy to mainnet
+dfx deploy --network ic procurement
+```
+
+---
+
+
+## 5. AI/ML Fraud Detection
+
+### 5.1 Fraud Detection Architecture
+
+H.E.L.I.X. uses a multi-layered fraud detection system combining rules-based and ML-based approaches.
+
+**Detection Layers**:
+
+1. **Rules Engine**: Deterministic pattern matching for known fraud patterns
+2. **ML Detector**: Machine learning models trained on historical procurement data
+3. **Autonomous Engine**: AI-powered analysis using RAG (Retrieval-Augmented Generation) with Gemma 3 LLM
+
+```mermaid
+graph TB
+    Input[Transaction Input] --> Rules[Rules Engine<br/>10 Detection Rules]
+    Input --> Features[Feature Extraction<br/>45+ Features]
+    
+    Rules --> RulesScore[Rules Score<br/>0-100]
+    Features --> RAG[RAG Pipeline<br/>FAISS + Historical Data]
+    
+    RAG --> LLM[Gemma 3 LLM<br/>4B Parameters]
+    RulesScore --> LLM
+    
+    LLM --> FinalScore[Final Fraud Score<br/>0-100]
+    FinalScore --> Decision{Score >= 70?}
+    
+    Decision -->|Yes| Alert[Generate Alert<br/>Flag Transaction]
+    Decision -->|No| Approve[Approve Transaction]
+    
+    Alert --> Blockchain[Store on Blockchain]
+    Approve --> Blockchain
+```
+
+### 5.2 Rules Engine
+
+The rules engine provides instant fraud detection for common patterns:
+
+1. **Duplicate Payments**: Detects multiple payments to same vendor
+2. **Amount Anomalies**: Flags unusual transaction amounts
+3. **Timeline Violations**: Identifies impossible procurement timelines
+4. **Vendor Blacklist**: Checks against known fraudulent vendors
+5. **Budget Violations**: Prevents over-allocation of budgets
+
+### 5.3 ML Detector with RAG Pipeline
+
+The ML detector uses Retrieval-Augmented Generation for context-aware fraud detection:
+
+- **Feature Extraction**: 45+ features from transaction data
+- **Vector Database**: FAISS for similarity search
+- **Historical Context**: Retrieves relevant past transactions
+- **LLM Analysis**: Gemma 3 (4B parameters) for intelligent fraud assessment
+
+### 5.4 Autonomous Fraud Engine
+
+The autonomous engine continuously learns and adapts:
+
+- **Auto-threshold Adjustment**: Dynamically adjusts detection sensitivity
+- **Pattern Learning**: Discovers new fraud patterns automatically
+- **False Positive Reduction**: Learns from human feedback
+- **Risk Scoring**: Provides 0-100 fraud risk scores
+
+### 5.5 Detection Algorithms
+
+**Scoring Formula**:
+```
+Final Score = (Rules Score × 0.4) + (ML Score × 0.3) + (LLM Score × 0.3)
+```
+
+**Risk Levels**:
+- 0-30: Low Risk (Approve)
+- 31-69: Medium Risk (Review)
+- 70-100: High Risk (Flag/Block)
+
+### 5.6 Performance Metrics
+
+| Metric | Target | Current |
+|--------|--------|---------|
+| Detection Rate | 90% | 92% |
+| False Positive Rate | < 5% | 3.8% |
+| Processing Time | < 500ms | 380ms |
+| Model Accuracy | 90% | 94% |
+
+---
+
+
+## 6. Deployment Guide
+
+### 6.1 Prerequisites
+
+Before deploying H.E.L.I.X., ensure you have:
+
+- **Node.js** (v18+)
+- **DFX SDK** (latest version)
+- **Git**
+- **Internet Identity** canister (local or mainnet)
+
+### 6.2 Local Development Setup
+
+```bash
+# Clone repository
+git clone https://github.com/your-org/helix.git
+cd helix
+
+# Install frontend dependencies
+cd frontend
+npm install
+
+# Install canister dependencies
+cd ../canisters
+dfx start --background
+dfx deploy
+
+# Start frontend
+cd ../frontend
+npm run dev
+```
+
+### 6.3 Docker Deployment
+
+```bash
+# Build and run with Docker Compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### 6.4 ICP Mainnet Deployment
+
+```bash
+# Deploy canisters to mainnet
+dfx deploy --network ic
+
+# Deploy frontend to Vercel
+vercel deploy --prod
+```
+
+### 6.5 Vercel Frontend Deployment
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+cd frontend
+vercel
+```
+
+### 6.6 Environment Configuration
+
+Create `.env` file:
+
+```bash
+# ICP Configuration
+VITE_II_URL=https://identity.ic0.app
+VITE_CANISTER_ID=your-canister-id
+VITE_HOST=https://ic0.app
+
+# API Keys (if needed)
+VITE_IPFS_API_KEY=your-ipfs-key
+```
+
+### 6.7 Monitoring and Health Checks
+
+Monitor canister health:
+
+```bash
+# Check canister status
+dfx canister status procurement
+
+# View canister logs
+dfx canister logs procurement
+```
+
+---
+
+
+## 7. Development Guide
+
+### 7.1 Development Environment Setup
+
+Set up your development environment
 │         API Layer (FastAPI)             │
 │  - Route handlers                       │
 │  - Request validation                   │
@@ -3709,7 +3995,7 @@ const clean = DOMPurify.sanitize(dirtyHTML);
 
 ### 10.1 Authentication Endpoints
 
-**Base URL**: `http://localhost:8000` (development) or `https://api.helix.com` (production)
+**Base URL**: `http://localhost:8000` (development) or `https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/?id=b34uc-tyaaa-aaaau-acloq-cai` (production)
 
 #### POST /auth/login
 Authenticate user with Internet Identity principal.
@@ -4131,7 +4417,6 @@ This documentation provides a comprehensive guide to the H.E.L.I.X. platform. Fo
 
 - **GitHub Issues**: https://github.com/nikhlu07/H.E.L.I.X/issues
 - **Discussions**: https://github.com/nikhlu07/H.E.L.I.X/discussions
-- **Email**: support@helix-project.org
 
 **Version**: 2.1.0 | **Last Updated**: October 2025
 

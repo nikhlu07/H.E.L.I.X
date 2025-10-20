@@ -3,6 +3,7 @@ import { Upload, DollarSign, Clock, CheckCircle, AlertTriangle, Building, Truck,
 import { useToast } from '../common/Toast';
 import { icpCanisterService } from '../../services/icpCanisterService';
 import { PDFReader } from '../common/PDFReader';
+import { IPFSService } from '../../config/ipfs';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -16,6 +17,9 @@ export function VendorDashboard() {
   const [claimAmount, setClaimAmount] = useState('');
   const [claimDescription, setClaimDescription] = useState('');
   const [uploadedDocument, setUploadedDocument] = useState<string | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const [ipfsHash, setIpfsHash] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
   const { showToast } = useToast();
   const [supplierPayment, setSupplierPayment] = useState('');
   const [supplierAddress, setSupplierAddress] = useState('');
@@ -30,11 +34,7 @@ export function VendorDashboard() {
   const dashboardRef = useRef<HTMLDivElement>(null);
   
   // Real data from canister
-  const [claims, setClaims] = useState<any[]>([
-    { id: 1, amount: 150000, description: "Medical Equipment Purchase", status: "pending", riskLevel: "low", vendorId: "vendor-001" },
-    { id: 2, amount: 75000, description: "School Furniture Supply", status: "approved", riskLevel: "medium", vendorId: "vendor-002" },
-    { id: 3, amount: 200000, description: "Road Materials", status: "under-review", riskLevel: "high", vendorId: "vendor-003" }
-  ]);
+  const [claims, setClaims] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
   const revealVariants = {
@@ -62,7 +62,24 @@ export function VendorDashboard() {
         
         // Load claims for this vendor
         const claimsData = await icpCanisterService.getAllClaims();
-        if (claimsData && claimsData.length > 0) setClaims(claimsData);
+        console.log('Initial claims data:', claimsData);
+        
+        if (claimsData && claimsData.length > 0) {
+          // Parse claims from tuple format [id, claimObject]
+          const parsedClaims = claimsData.map(([id, claim]: [any, any]) => ({
+            id: Number(id),
+            amount: Number(claim.amount),
+            description: claim.invoiceHash || 'Claim',
+            status: claim.paid ? 'paid' : (claim.flagged ? 'under-review' : 'pending'),
+            riskLevel: claim.fraudScore ? (Number(claim.fraudScore) > 70 ? 'high' : Number(claim.fraudScore) > 40 ? 'medium' : 'low') : 'low',
+            vendorId: 'current-vendor',
+            ipfsHash: claim.invoiceHash,
+            timestamp: claim.escrowTime ? Number(claim.escrowTime) : Date.now()
+          }));
+          
+          console.log('Parsed claims on load:', parsedClaims);
+          setClaims(parsedClaims);
+        }
         
         // showToast('Connected to blockchain!', 'success');
       } catch (error) {
@@ -74,9 +91,25 @@ export function VendorDashboard() {
     loadData();
   }, [showToast]);
 
-  const handleFileSelect = (file: File, content: string) => {
+  const handleFileSelect = async (file: File, content: string) => {
     setUploadedDocument(content);
-    showToast(`Document "${file.name}" uploaded and analyzed`, 'success');
+    setUploadedFile(file);
+    
+    // Upload to IPFS immediately
+    try {
+      setIsUploading(true);
+      showToast('Uploading to IPFS...', 'info');
+      const hash = await IPFSService.uploadDocument(file);
+      setIpfsHash(hash);
+      const ipfsUrl = IPFSService.getIPFSUrl(hash);
+      showToast(`Document uploaded to IPFS successfully! Hash: ${hash.substring(0, 10)}...`, 'success');
+      console.log('IPFS URL:', ipfsUrl);
+    } catch (error) {
+      console.error('IPFS upload failed:', error);
+      showToast('Failed to upload to IPFS. You can still submit the claim.', 'warning');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handlePaySupplier = () => {
@@ -135,28 +168,67 @@ export function VendorDashboard() {
       return;
     }
 
+    if (!ipfsHash) {
+      showToast('Please upload an invoice document first', 'warning');
+      return;
+    }
+
     try {
+      setLoading(true);
       const amount = parseInt(claimAmount);
-      const result = await icpCanisterService.submitClaim(amount, claimDescription, '');
+      
+      // Submit claim with IPFS hash
+      const result = await icpCanisterService.submitVendorClaim(amount, claimDescription, ipfsHash);
+      
+      console.log('Claim submission result (Claim ID):', result);
       
       if (result) {
-        showToast('Claim submitted successfully for processing', 'success');
+        const ipfsUrl = IPFSService.getIPFSUrl(ipfsHash);
+        showToast(`Claim #${result} submitted! Document: ${ipfsUrl}`, 'success');
+        console.log('Claim submitted with IPFS document:', ipfsUrl);
+        console.log('Claim ID:', result);
+        
+        // Reset form
         setClaimAmount('');
         setClaimDescription('');
         setUploadedDocument(null);
+        setUploadedFile(null);
+        setIpfsHash('');
+        
         // Reload claims
         const claimsData = await icpCanisterService.getAllClaims();
-        setClaims(claimsData);
+        console.log('Reloaded claims data:', claimsData);
+        
+        if (claimsData && claimsData.length > 0) {
+          // Parse claims from tuple format [id, claimObject]
+          const parsedClaims = claimsData.map(([id, claim]: [any, any]) => ({
+            id: Number(id),
+            amount: Number(claim.amount),
+            description: claim.invoiceHash || 'Claim',
+            status: claim.paid ? 'paid' : (claim.flagged ? 'under-review' : 'pending'),
+            riskLevel: claim.fraudScore ? (Number(claim.fraudScore) > 70 ? 'high' : Number(claim.fraudScore) > 40 ? 'medium' : 'low') : 'low',
+            vendorId: 'current-vendor',
+            ipfsHash: claim.invoiceHash,
+            timestamp: claim.escrowTime ? Number(claim.escrowTime) : Date.now()
+          }));
+          
+          console.log('Parsed claims:', parsedClaims);
+          setClaims(parsedClaims);
+        }
       } else {
         showToast('Failed to submit claim', 'error');
       }
     } catch (error) {
       console.error('Error submitting claim:', error);
-      showToast('Failed to submit claim', 'error');
+      showToast('Failed to submit claim to blockchain', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const vendorClaims = claims.filter(claim => claim.vendorId === 'vendor-001');
+  // In production, filter by authenticated vendor's principal
+  // For now, showing all claims for the current vendor
+  const vendorClaims = claims;
   const totalEarnings = vendorClaims
     .filter(claim => claim.status === 'approved')
     .reduce((sum, claim) => sum + claim.amount, 0);
@@ -204,8 +276,10 @@ export function VendorDashboard() {
               <TimelineContent as="div" animationNum={1} timelineRef={dashboardRef} customVariants={revealVariants}>
                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                   <CardHeader>
-                      <CardTitle className="text-xl font-bold">Vendor Overview</CardTitle>
-                      <CardDescription>Your real-time performance and financial snapshot.</CardDescription>
+                      <>
+                          <CardTitle className="text-xl font-bold">Vendor Overview</CardTitle>
+                          <CardDescription>Your real-time performance and financial snapshot.</CardDescription>
+                      </>
                   </CardHeader>
                   <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                       <div className="flex flex-col p-4 bg-gray-50 rounded-lg">
@@ -235,8 +309,10 @@ export function VendorDashboard() {
               <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef} customVariants={revealVariants}>
                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold">Submit New Claim</CardTitle>
-                    <CardDescription>Fill out the form to submit a new payment claim.</CardDescription>
+                    <>
+                        <CardTitle className="text-xl font-bold">Submit New Claim</CardTitle>
+                        <CardDescription>Fill out the form to submit a new payment claim.</CardDescription>
+                    </>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -279,8 +355,10 @@ export function VendorDashboard() {
               <TimelineContent as="div" animationNum={3} timelineRef={dashboardRef} customVariants={revealVariants}>
                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold">My Claims History</CardTitle>
-                    <CardDescription>Track the status of all your submitted claims.</CardDescription>
+                    <>
+                        <CardTitle className="text-xl font-bold">My Claims History</CardTitle>
+                        <CardDescription>Track the status of all your submitted claims.</CardDescription>
+                    </>
                   </CardHeader>
                   <CardContent>
                     <Table>
@@ -296,7 +374,7 @@ export function VendorDashboard() {
                       <TableBody>
                         {vendorClaims.map((claim) => (
                           <TableRow key={claim.id} className="hover:bg-gray-50/50">
-                            <TableCell className="font-mono text-xs">{claim.id.substring(0, 15)}...</TableCell>
+                            <TableCell className="font-mono text-xs">Claim #{claim.id}</TableCell>
                             <TableCell className="font-medium">${claim.amount.toLocaleString()}</TableCell>
                             <TableCell>
                               <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -330,8 +408,10 @@ export function VendorDashboard() {
               <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef} customVariants={revealVariants}>
                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold flex items-center"><Wallet className="mr-2 h-6 w-6" />Wallet (ckUSDC)</CardTitle>
-                    <CardDescription>Manage and transfer your ckUSDC funds.</CardDescription>
+                    <>
+                        <CardTitle className="text-xl font-bold flex items-center"><Wallet className="mr-2 h-6 w-6" />Wallet (ckUSDC)</CardTitle>
+                        <CardDescription>Manage and transfer your ckUSDC funds.</CardDescription>
+                    </>
                   </CardHeader>
                   <CardContent className="space-y-4">
                       <div className="flex items-center justify-between rounded-lg bg-gray-100 p-4">
@@ -381,8 +461,10 @@ export function VendorDashboard() {
               <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef} customVariants={revealVariants}>
                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                   <CardHeader>
-                    <CardTitle className="text-xl font-bold flex items-center"><Building className="mr-2 h-6 w-6" />Pay Sub-Suppliers</CardTitle>
-                    <CardDescription>Send payments to your suppliers and subcontractors.</CardDescription>
+                    <>
+                        <CardTitle className="text-xl font-bold flex items-center"><Building className="mr-2 h-6 w-6" />Pay Sub-Suppliers</CardTitle>
+                        <CardDescription>Send payments to your suppliers and subcontractors.</CardDescription>
+                    </>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="space-y-2">

@@ -9,7 +9,7 @@ Project documentation including architecture diagrams, deployment guides, and te
 Documentation provides:
 - Architecture diagrams and system design
 - Deployment guides for various environments
-- API documentation and specifications
+- ICP canister interface specifications
 - Development guidelines and best practices
 - Troubleshooting guides
 
@@ -29,16 +29,15 @@ Documentation provides:
 - Production deployment
 - ICP mainnet deployment
 
-### API Documentation
+### Canister Documentation
 
-- REST API specifications
 - ICP canister interfaces
-- Authentication flows
+- Smart contract specifications
+- Authentication flows with Internet Identity
 - Error handling
 
 ## Related Documentation
 
 - [Main README](../README.md) - Project overview
-- [Backend README](../backend/README.md) - Backend architecture
 - [Frontend README](../frontend/README.md) - Frontend architecture
 - [Canisters README](../canisters/README.md) - Smart contract documentation

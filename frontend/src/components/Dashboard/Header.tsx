@@ -123,9 +123,6 @@ export function Header({ user, onLogout }: HeaderProps) {
               <img src="/logo.svg" alt="Helix Logo" className="h-8 w-auto" />
               <span className="ml-3 text-2xl font-bold tracking-tighter text-gray-900">Helix</span>
             </Link>
-            <Link to="/pitch" className="ml-8 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors">
-              Pitch
-            </Link>
           </div>
 
           <div className="hidden md:flex items-center gap-2">

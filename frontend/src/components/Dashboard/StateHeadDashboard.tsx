@@ -203,8 +203,17 @@ export function StateHeadDashboard() {
           });
         }
         
-        // For now, deputies will be empty - we'll add getAllStateHeads to canister later
-        setDeputies([]);
+        // Hardcode demo deputy - Nikhil Sharma (Shimla)
+        setDeputies([
+          {
+            name: 'Nikhil Sharma - Shimla',
+            district: 'Shimla',
+            principal: 'rdmx6-jaaaa-aaaaa-aaadq-cai',
+            managedProjects: [],
+            performance: 85,
+            riskScore: 15
+          }
+        ]);
         
         // Load projects/allocations - using claims data for now
         const claimsData = await icpCanisterService.getAllClaims();
@@ -372,8 +381,10 @@ export function StateHeadDashboard() {
                       <TimelineContent as="div" animationNum={1} timelineRef={dashboardRef} customVariants={revealVariants}>
                           <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                               <CardHeader>
-                                  <CardTitle className="text-xl font-bold">State Overview</CardTitle>
-                                  <CardDescription>Real-time overview of the state's metrics.</CardDescription>
+                                  <>
+                                      <CardTitle className="text-xl font-bold">State Overview</CardTitle>
+                                      <CardDescription>Real-time overview of the state's metrics.</CardDescription>
+                                  </>
                               </CardHeader>
                               <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                                   <div className="flex flex-col p-4 bg-gray-50 rounded-lg">
@@ -404,8 +415,10 @@ export function StateHeadDashboard() {
                       <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef} customVariants={revealVariants}>
                         <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                           <CardHeader>
-                            <CardTitle className="text-xl font-bold">Deputy Performance Dashboard</CardTitle>
-                            <CardDescription>Monitor the performance and risk scores of your deputies.</CardDescription>
+                            <>
+                                <CardTitle className="text-xl font-bold">Deputy Performance Dashboard</CardTitle>
+                                <CardDescription>Monitor the performance and risk scores of your deputies.</CardDescription>
+                            </>
                           </CardHeader>
                           <CardContent>
                             <Table>
@@ -465,8 +478,10 @@ export function StateHeadDashboard() {
                       <TimelineContent as="div" animationNum={3} timelineRef={dashboardRef} customVariants={revealVariants}>
                         <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                           <CardHeader>
-                            <CardTitle className="text-xl font-bold">Pending Budget Allocations</CardTitle>
-                            <CardDescription>Review and approve budget requests from deputies.</CardDescription>
+                            <>
+                                <CardTitle className="text-xl font-bold">Pending Budget Allocations</CardTitle>
+                                <CardDescription>Review and approve budget requests from deputies.</CardDescription>
+                            </>
                           </CardHeader>
                           <CardContent className="space-y-4">
                             {projects.length === 0 ? (
@@ -512,8 +527,10 @@ export function StateHeadDashboard() {
                        <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef} customVariants={revealVariants}>
                           <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                             <CardHeader>
-                              <CardTitle className="text-xl font-bold">Allocate State Budget</CardTitle>
-                              <CardDescription>Distribute funds to projects and deputies.</CardDescription>
+                              <>
+                                  <CardTitle className="text-xl font-bold">Allocate State Budget</CardTitle>
+                                  <CardDescription>Distribute funds to projects and deputies.</CardDescription>
+                              </>
                             </CardHeader>
                             <CardContent className="space-y-4">
                               <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center">
@@ -567,8 +584,10 @@ export function StateHeadDashboard() {
                       <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef} customVariants={revealVariants}>
                           <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg h-fit">
                               <CardHeader>
-                                  <CardTitle className="text-xl font-bold flex items-center"><Users className="mr-2 h-6 w-6" />Deputy Management</CardTitle>
-                                  <CardDescription>Add or remove deputies from your state.</CardDescription>
+                                  <>
+                                      <CardTitle className="text-xl font-bold flex items-center"><Users className="mr-2 h-6 w-6" />Deputy Management</CardTitle>
+                                      <CardDescription>Add or remove deputies from your state.</CardDescription>
+                                  </>
                               </CardHeader>
                               <CardContent className="space-y-4">
                                 <div>
@@ -619,8 +638,10 @@ export function StateHeadDashboard() {
                       <TimelineContent as="div" animationNum={3.5} timelineRef={dashboardRef} customVariants={revealVariants}>
                         <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                           <CardHeader>
-                            <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />Regional Alerts</CardTitle>
-                            <CardDescription>Critical alerts requiring immediate attention.</CardDescription>
+                            <>
+                                <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />Regional Alerts</CardTitle>
+                                <CardDescription>Critical alerts requiring immediate attention.</CardDescription>
+                            </>
                           </CardHeader>
                           <CardContent className="space-y-4">
                             {alerts.length === 0 ? (

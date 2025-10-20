@@ -26,6 +26,19 @@ export function MainGovernmentDashboard() {
   const [isProposingStateHead, setIsProposingStateHead] = useState(false);
   const [pendingStateHeads] = useState<any[]>([]);
   
+  // Budget Planning
+  const [budgetPlan, setBudgetPlan] = useState<any[]>([]);
+  const [newAllocation, setNewAllocation] = useState({
+    state: '',
+    amount: '',
+    purpose: '',
+    deputy: '',
+    criteria: '',
+    priority: 'medium'
+  });
+  const [isPlanningMode, setIsPlanningMode] = useState(false);
+  const [allocationMethod, setAllocationMethod] = useState('manual'); // manual, population, gdp, equal
+  
   // Real data from canister
     const [budgets, setBudgets] = useState<any[]>([]);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -197,9 +210,9 @@ export function MainGovernmentDashboard() {
             console.log('Lock budget result (budget ID):', result);
             
             if (result && result > 0) {
-                showToast(`Budget of $${budgetAmount} locked for ${budgetPurpose}`, 'success');
-                setBudgetAmount('');
-                setBudgetPurpose('');
+        showToast(`Budget of $${budgetAmount} locked for ${budgetPurpose}`, 'success');
+        setBudgetAmount('');
+        setBudgetPurpose('');
                 
                 // Reload data immediately after successful lock
                 console.log('Reloading data after budget lock...');
@@ -272,15 +285,170 @@ export function MainGovernmentDashboard() {
         }
     };
 
-    const handleConfirmStateHead = async (stateHeadPrincipal: string) => {
+  const handleConfirmStateHead = async (stateHeadPrincipal: string) => {
+    try {
+      await icpCanisterService.confirmStateHead(stateHeadPrincipal);
+      showToast('State Head confirmed successfully!', 'success');
+      // TODO: Refresh pending state heads list
+    } catch (error) {
+      console.error('Error confirming state head:', error);
+      showToast(`Failed to confirm state head: ${error}`, 'error');
+    }
+  };
+
+  const handleAddAllocation = () => {
+    if (!newAllocation.state || !newAllocation.amount || !newAllocation.purpose) {
+      showToast('Please fill in all allocation details', 'warning');
+      return;
+    }
+
+    const allocation = {
+      id: Date.now(),
+      state: newAllocation.state,
+      amount: parseInt(newAllocation.amount),
+      purpose: newAllocation.purpose,
+      deputy: newAllocation.deputy || 'TBD',
+      criteria: newAllocation.criteria,
+      priority: newAllocation.priority
+    };
+
+    setBudgetPlan([...budgetPlan, allocation]);
+    setNewAllocation({ state: '', amount: '', purpose: '', deputy: '', criteria: '', priority: 'medium' });
+    showToast('Allocation added to plan', 'success');
+  };
+
+  const handleAutoAllocate = () => {
+    const totalBudget = parseInt(budgetAmount) || 0;
+    if (totalBudget === 0) {
+      showToast('Please enter total budget amount first', 'warning');
+      return;
+    }
+
+    const stateData = {
+      'Maharashtra': { population: 112374333, gdp: 400000, priority: 'high' },
+      'Karnataka': { population: 61130704, gdp: 250000, priority: 'high' },
+      'Tamil Nadu': { population: 72147030, gdp: 300000, priority: 'high' },
+      'Gujarat': { population: 60439692, gdp: 200000, priority: 'medium' },
+      'Rajasthan': { population: 68548437, gdp: 150000, priority: 'medium' }
+    };
+
+    let allocations = [];
+    
+    if (allocationMethod === 'population') {
+      const totalPopulation = Object.values(stateData).reduce((sum, state) => sum + state.population, 0);
+      allocations = Object.entries(stateData).map(([state, data]) => ({
+        id: Date.now() + Math.random(),
+        state,
+        amount: Math.round((data.population / totalPopulation) * totalBudget),
+        purpose: 'Population-based allocation',
+        deputy: 'TBD',
+        criteria: `Population: ${data.population.toLocaleString()}`,
+        priority: data.priority
+      }));
+    } else if (allocationMethod === 'gdp') {
+      const totalGDP = Object.values(stateData).reduce((sum, state) => sum + state.gdp, 0);
+      allocations = Object.entries(stateData).map(([state, data]) => ({
+        id: Date.now() + Math.random(),
+        state,
+        amount: Math.round((data.gdp / totalGDP) * totalBudget),
+        purpose: 'GDP-based allocation',
+        deputy: 'TBD',
+        criteria: `GDP: $${data.gdp.toLocaleString()}`,
+        priority: data.priority
+      }));
+    } else if (allocationMethod === 'equal') {
+      const states = Object.keys(stateData);
+      const amountPerState = Math.round(totalBudget / states.length);
+      allocations = states.map((state, index) => ({
+        id: Date.now() + Math.random(),
+        state,
+        amount: index === states.length - 1 ? totalBudget - (amountPerState * (states.length - 1)) : amountPerState,
+        purpose: 'Equal distribution',
+        deputy: 'TBD',
+        criteria: 'Equal share',
+        priority: stateData[state].priority
+      }));
+    }
+
+    setBudgetPlan(allocations);
+    showToast(`Auto-allocated budget using ${allocationMethod} method`, 'success');
+  };
+
+  const handleRemoveAllocation = (id: number) => {
+    setBudgetPlan(budgetPlan.filter(item => item.id !== id));
+    showToast('Allocation removed from plan', 'info');
+  };
+
+  const handleExecutePlan = async () => {
+    if (budgetPlan.length === 0) {
+      showToast('No allocations in plan', 'warning');
+      return;
+    }
+
+    const totalAmount = budgetPlan.reduce((sum, item) => sum + item.amount, 0);
+    const totalPurpose = `Multi-state allocation: ${budgetPlan.map(item => `${item.state} ($${item.amount.toLocaleString()})`).join(', ')}`;
+
+    try {
+      // Lock the total budget first
+      const budgetId = await icpCanisterService.lockBudget(totalAmount, totalPurpose);
+      showToast(`Budget locked! Now allocating to states...`, 'success');
+      
+      // Now allocate each part to specific states/deputies
+      // NOTE: This requires canister modification to give Main Government exclusive control
+      for (const allocation of budgetPlan) {
         try {
-            await icpCanisterService.confirmStateHead(stateHeadPrincipal);
-            showToast('State Head confirmed successfully!', 'success');
-            // TODO: Refresh pending state heads list
-        } catch (error) {
-            console.error('Error confirming state head:', error);
-            showToast(`Failed to confirm state head: ${error}`, 'error');
+          // For now, we'll use a placeholder deputy principal
+          // In a real system, you'd have actual deputy principals for each state
+          const deputyPrincipal = "rdmg5-vaaaa-aaaah-qcaiq-cai"; // Placeholder
+          
+          // WARNING: Current canister allows ANYONE to allocate budget
+          // This needs to be fixed in the canister to only allow Main Government
+          await icpCanisterService.allocateBudget(
+            Number(budgetId),
+            allocation.amount,
+            allocation.purpose,
+            deputyPrincipal
+          );
+          
+          showToast(`Allocated $${allocation.amount.toLocaleString()} to ${allocation.state}`, 'success');
+        } catch (allocationError) {
+          console.error(`Error allocating to ${allocation.state}:`, allocationError);
+          showToast(`Failed to allocate to ${allocation.state}: ${allocationError}`, 'error');
         }
+      }
+      
+      // Clear the plan
+      setBudgetPlan([]);
+      setIsPlanningMode(false);
+      
+      // Refresh data
+      const freshBudgetData = await icpCanisterService.getAllBudgets();
+      if (freshBudgetData && freshBudgetData.length > 0) {
+        const serializedBudgetData = freshBudgetData.map((budgetTuple: any, index: number) => {
+          if (Array.isArray(budgetTuple) && budgetTuple.length >= 2) {
+            const [id, budget] = budgetTuple;
+            return {
+              id: Number(id),
+              amount: Number(budget.amount),
+              purpose: budget.purpose || '',
+              locked: budget.locked || false,
+              lockTime: budget.lockTime ? Number(budget.lockTime) : 0
+            };
+          }
+          return {
+            id: index,
+            amount: budgetTuple.amount ? Number(budgetTuple.amount) : 0,
+            purpose: budgetTuple.purpose || '',
+            locked: budgetTuple.locked || false,
+            lockTime: budgetTuple.lockTime ? Number(budgetTuple.lockTime) : 0
+          };
+        });
+        setBudgets(serializedBudgetData);
+      }
+    } catch (error) {
+      console.error('Error executing plan:', error);
+      showToast(`Failed to execute plan: ${error}`, 'error');
+    }
     };
 
     const handleEmergencyPause = () => {
@@ -408,12 +576,223 @@ export function MainGovernmentDashboard() {
                                 </Card>
                             </TimelineContent>
 
-                            {/* Budget Control Panel */}
+                            {/* Budget Planning */}
                             <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
                                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                                     <CardHeader>
-                                        <CardTitle className="text-xl font-bold">Budget Control Panel</CardTitle>
-                                        <CardDescription>Allocate and manage funds securely.</CardDescription>
+                                        <div className="flex justify-between items-center">
+                                            <div>
+                                                <CardTitle className="text-xl font-bold">Budget Planning</CardTitle>
+                                                <CardDescription>Plan and specify budget allocations before locking.</CardDescription>
+                                            </div>
+                                            <Button 
+                                                onClick={() => setIsPlanningMode(!isPlanningMode)}
+                                                variant={isPlanningMode ? "destructive" : "default"}
+                                                className="px-4 py-2"
+                                            >
+                                                {isPlanningMode ? 'Cancel Planning' : 'Start Planning'}
+                                            </Button>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {isPlanningMode ? (
+                                            <div className="space-y-6">
+                                                {/* Allocation Method Selection */}
+                                                <div className="p-4 bg-blue-50 rounded-lg">
+                                                    <h4 className="font-semibold text-gray-700 mb-3">Allocation Method</h4>
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                                        <Button 
+                                                            onClick={() => setAllocationMethod('manual')}
+                                                            variant={allocationMethod === 'manual' ? 'default' : 'outline'}
+                                                            className="text-sm"
+                                                        >
+                                                            Manual
+                                                        </Button>
+                                                        <Button 
+                                                            onClick={() => setAllocationMethod('population')}
+                                                            variant={allocationMethod === 'population' ? 'default' : 'outline'}
+                                                            className="text-sm"
+                                                        >
+                                                            By Population
+                                                        </Button>
+                                                        <Button 
+                                                            onClick={() => setAllocationMethod('gdp')}
+                                                            variant={allocationMethod === 'gdp' ? 'default' : 'outline'}
+                                                            className="text-sm"
+                                                        >
+                                                            By GDP
+                                                        </Button>
+                                                        <Button 
+                                                            onClick={() => setAllocationMethod('equal')}
+                                                            variant={allocationMethod === 'equal' ? 'default' : 'outline'}
+                                                            className="text-sm"
+                                                        >
+                                                            Equal Share
+                                                        </Button>
+                                                    </div>
+                                                    {allocationMethod !== 'manual' && (
+                                                        <div className="mt-3">
+                                                            <Button 
+                                                                onClick={handleAutoAllocate}
+                                                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                                            >
+                                                                Auto-Allocate Based on {allocationMethod}
+                                                            </Button>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* Add Allocation Form */}
+                                                <div className="grid grid-cols-1 md:grid-cols-6 gap-4 p-4 bg-gray-50 rounded-lg">
+                                                    <div>
+                                                        <label className="text-sm font-medium text-gray-700">State</label>
+                                                        <select
+                                                            value={newAllocation.state}
+                                                            onChange={(e) => setNewAllocation({...newAllocation, state: e.target.value})}
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                                        >
+                                                            <option value="">Select State</option>
+                                                            <option value="Maharashtra">Maharashtra</option>
+                                                            <option value="Karnataka">Karnataka</option>
+                                                            <option value="Tamil Nadu">Tamil Nadu</option>
+                                                            <option value="Gujarat">Gujarat</option>
+                                                            <option value="Rajasthan">Rajasthan</option>
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-sm font-medium text-gray-700">Amount ($)</label>
+                                                        <input
+                                                            type="number"
+                                                            value={newAllocation.amount}
+                                                            onChange={(e) => setNewAllocation({...newAllocation, amount: e.target.value})}
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                                            placeholder="e.g., 500000"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-sm font-medium text-gray-700">Purpose</label>
+                                                        <input
+                                                            type="text"
+                                                            value={newAllocation.purpose}
+                                                            onChange={(e) => setNewAllocation({...newAllocation, purpose: e.target.value})}
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                                            placeholder="e.g., Infrastructure"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-sm font-medium text-gray-700">Deputy Principal</label>
+                                                        <input
+                                                            type="text"
+                                                            value={newAllocation.deputy}
+                                                            onChange={(e) => setNewAllocation({...newAllocation, deputy: e.target.value})}
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                                            placeholder="Deputy Principal ID"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-sm font-medium text-gray-700">Criteria</label>
+                                                        <input
+                                                            type="text"
+                                                            value={newAllocation.criteria}
+                                                            onChange={(e) => setNewAllocation({...newAllocation, criteria: e.target.value})}
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                                            placeholder="e.g., Population, GDP, Priority"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="text-sm font-medium text-gray-700">Priority</label>
+                                                        <select
+                                                            value={newAllocation.priority}
+                                                            onChange={(e) => setNewAllocation({...newAllocation, priority: e.target.value})}
+                                                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                                        >
+                                                            <option value="high">High Priority</option>
+                                                            <option value="medium">Medium Priority</option>
+                                                            <option value="low">Low Priority</option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="flex items-end">
+                                                        <Button 
+                                                            onClick={handleAddAllocation}
+                                                            className="w-full bg-green-600 hover:bg-green-700 text-white"
+                                                        >
+                                                            Add to Plan
+                                                        </Button>
+                                                    </div>
+                                                </div>
+
+                                                {/* Budget Plan Summary */}
+                                                {budgetPlan.length > 0 && (
+                                                    <div className="space-y-4">
+                                                        <h4 className="font-semibold text-gray-700">Budget Plan Summary</h4>
+                                                        <div className="space-y-2">
+                                                            {budgetPlan.map((allocation) => (
+                                                                <div key={allocation.id} className="flex items-center justify-between p-3 bg-white border rounded-lg">
+                                                                    <div className="flex-1">
+                                                                        <div className="font-medium">{allocation.state}</div>
+                                                                        <div className="text-sm text-gray-600">{allocation.purpose}</div>
+                                                                        <div className="text-xs text-blue-600">{allocation.criteria}</div>
+                                                                    </div>
+                                                                    <div className="text-right">
+                                                                        <div className="font-semibold">${allocation.amount.toLocaleString()}</div>
+                                                                        <div className="text-sm text-gray-500">{allocation.deputy}</div>
+                                                                        <div className="text-xs">
+                                                                            <span className={`px-2 py-1 rounded text-xs ${
+                                                                                allocation.priority === 'high' ? 'bg-red-100 text-red-800' :
+                                                                                allocation.priority === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                                                                'bg-green-100 text-green-800'
+                                                                            }`}>
+                                                                                {allocation.priority.toUpperCase()}
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <Button 
+                                                                        onClick={() => handleRemoveAllocation(allocation.id)}
+                                                                        variant="ghost"
+                                                                        size="sm"
+                                                                        className="ml-2 text-red-600 hover:text-red-700"
+                                                                    >
+                                                                        Remove
+                                                                    </Button>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                        
+                                                        <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
+                                                            <div>
+                                                                <div className="font-semibold">Total Budget: ${budgetPlan.reduce((sum, item) => sum + item.amount, 0).toLocaleString()}</div>
+                                                                <div className="text-sm text-gray-600">{budgetPlan.length} allocations</div>
+                                                                <div className="text-xs text-gray-500 mt-1">
+                                                                    Money will go directly to deputies, not state government
+                                                                </div>
+                                                            </div>
+                                                            <Button 
+                                                                onClick={handleExecutePlan}
+                                                                className="bg-blue-600 hover:bg-blue-700 text-white px-6"
+                                                            >
+                                                                Execute Plan
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <div className="text-center py-8 text-gray-500">
+                                                <DollarSign className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                                                <p>Click "Start Planning" to create a detailed budget allocation plan</p>
+                                                <p className="text-sm">Plan which states get what amounts and for what purposes</p>
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </TimelineContent>
+
+                            {/* Quick Budget Lock (Legacy) */}
+                            <TimelineContent as="div" animationNum={2.1} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
+                                <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                                    <CardHeader>
+                                        <CardTitle className="text-xl font-bold">Quick Budget Lock</CardTitle>
+                                        <CardDescription>Lock budget without detailed planning (legacy method).</CardDescription>
                                     </CardHeader>
                                     <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
                                         <div className="space-y-2">

@@ -18,15 +18,20 @@ export function CitizenDashboard() {
   
   // Real data from canister
   const [claims, setClaims] = useState<any[]>([
-    { id: 1, amount: 150000, description: "Medical Equipment Purchase", status: "pending", riskLevel: "low", vendorId: "vendor-001" },
-    { id: 2, amount: 75000, description: "School Furniture Supply", status: "approved", riskLevel: "medium", vendorId: "vendor-002" },
-    { id: 3, amount: 200000, description: "Road Materials", status: "under-review", riskLevel: "high", vendorId: "vendor-003" }
+    { id: 1, amount: 150000, description: "Medical Equipment Purchase", status: "pending", riskLevel: "low", vendorId: "vendor-001", submittedAt: new Date() },
+    { id: 2, amount: 75000, description: "School Furniture Supply", status: "approved", riskLevel: "medium", vendorId: "vendor-002", submittedAt: new Date() },
+    { id: 3, amount: 200000, description: "Road Materials", status: "under-review", riskLevel: "high", vendorId: "vendor-003", submittedAt: new Date() }
   ]);
   const [challenges, setChallenges] = useState<any[]>([
     { id: 1, claimId: 1, reason: "Suspicious pricing", stakeAmount: 1000, status: "active" },
     { id: 2, claimId: 2, reason: "Quality concerns", stakeAmount: 500, status: "resolved" }
   ]);
   const [loading, setLoading] = useState(false);
+  const [statistics, setStatistics] = useState({
+    corruptionPrevented: 5000000,
+    totalChallenges: 24,
+    activeCitizens: 1240
+  });
 
   const revealVariants = {
       visible: (i: number) => ({
@@ -100,8 +105,8 @@ export function CitizenDashboard() {
   };
 
   const filteredClaims = claims.filter(claim =>
-    claim.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    claim.id.toLowerCase().includes(searchTerm.toLowerCase())
+    (claim.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(claim.id).includes(searchTerm)
   );
 
 
@@ -211,23 +216,23 @@ export function CitizenDashboard() {
                                 <div key={claim.id} className="rounded-xl border p-4 hover:border-primary transition-colors cursor-pointer bg-gray-50/50">
                                   <div className="flex items-start justify-between mb-3">
                                     <div>
-                                      <h3 className="font-semibold text-gray-900">{claim.description}</h3>
+                                      <h3 className="font-semibold text-gray-900">{claim.description || 'Claim'}</h3>
                                       <p className="text-sm text-gray-600 font-mono">ID: {claim.id}</p>
                                     </div>
                                     <div className="text-right">
-                                      <div className="text-lg font-bold text-gray-900">${claim.amount.toLocaleString()}</div>
+                                      <div className="text-lg font-bold text-gray-900">${(claim.amount || 0).toLocaleString()}</div>
                                       <div className={`px-2 py-1 rounded-full text-xs font-medium ${
                                         claim.riskLevel === 'critical' ? 'bg-red-100 text-red-800' :
                                         claim.riskLevel === 'high' ? 'bg-orange-100 text-orange-800' :
                                         claim.riskLevel === 'medium' ? 'bg-amber-100 text-amber-800' :
                                         'bg-emerald-100 text-emerald-800'
                                       }`}>
-                                        {claim.riskLevel.toUpperCase()}
+                                        {(claim.riskLevel || 'low').toUpperCase()}
                                       </div>
                                     </div>
                                   </div>
                                   <div className="flex items-center justify-between text-sm text-gray-600">
-                                    <span>Submitted: {claim.submittedAt.toLocaleDateString()}</span>
+                                    <span>Submitted: {(claim.submittedAt || new Date()).toLocaleDateString()}</span>
                                     <Button
                                       variant="ghost"
                                       size="sm"
@@ -264,12 +269,12 @@ export function CitizenDashboard() {
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
-                                {mockChallenges.map((challenge) => (
+                                {challenges.map((challenge) => (
                                   <TableRow key={challenge.id} className="hover:bg-gray-50/50">
                                     <TableCell className="font-semibold font-mono">#{challenge.id}</TableCell>
                                     <TableCell className="text-gray-600 max-w-xs truncate">{challenge.reason}</TableCell>
                                     <TableCell className="font-semibold">{challenge.stakeAmount} ICP</TableCell>
-                                    <TableCell>{challenge.createdAt.toLocaleDateString()}</TableCell>
+                                    <TableCell>{new Date().toLocaleDateString()}</TableCell>
                                     <TableCell>
                                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                         challenge.status === 'resolved' ? 'bg-green-100 text-green-800' :
@@ -311,9 +316,9 @@ export function CitizenDashboard() {
                                   className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
                                 >
                                   <option value="">Choose a claim...</option>
-                                  {mockClaims.map((claim) => (
+                                  {claims.map((claim) => (
                                     <option key={claim.id} value={claim.id}>
-                                      {claim.id} - ${claim.amount.toLocaleString()}
+                                      {claim.id} - ${(claim.amount || 0).toLocaleString()}
                                     </option>
                                   ))}
                                 </select>

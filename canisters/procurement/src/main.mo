@@ -1,12 +1,12 @@
 import Debug "mo:base/Debug";
 import HashMap "mo:base/HashMap";
 import Array "mo:base/Array";
+import Option "mo:base/Option";
 import Time "mo:base/Time";
 import Principal "mo:base/Principal";
 import Result "mo:base/Result";
 import Text "mo:base/Text";
 import Nat "mo:base/Nat";
-import Option "mo:base/Option";
 import Buffer "mo:base/Buffer";
 import Blob "mo:base/Blob";
 import Cycles "mo:base/ExperimentalCycles";
@@ -488,7 +488,7 @@ actor ClearGov {
         #ok(budgetCount)
     };
 
-    public shared(msg) func allocateBudget(budgetId: Nat, amount: Nat, area: Text, deputy: Principal): async Result.Result<(), Text> {
+    public shared(msg) func allocateBudget(budgetId: Nat, amount: Nat, area: Text, deputyOpt: ?Principal): async Result.Result<(), Text> {
         if (not isAuthorized(msg.caller)) {
             return #err("Not authorized");
         };
@@ -508,13 +508,20 @@ actor ClearGov {
                     return #err("Budget still in time lock");
                 };
 
-                switch (deputies.get(deputy)) {
+                // Determine deputy: if provided use it; otherwise fall back to caller
+                let deputyPrincipal : Principal = switch (deputyOpt) {
+                    case (?d) { d };
+                    case null { msg.caller };
+                };
+
+                // If deputy provided, ensure valid; if auto (caller), allow even if not pre-registered
+                switch (deputies.get(deputyPrincipal)) {
                     case (?_) {
                         let allocation: Allocation = {
                             stateHead = msg.caller;
                             amount = amount;
                             area = area;
-                            deputy = deputy;
+                            deputy = deputyPrincipal;
                             assigned = false;
                             vendorAssigned = null;
                         };
@@ -529,7 +536,27 @@ actor ClearGov {
                         };
                         #ok(())
                     };
-                    case null { #err("Invalid deputy") };
+                    case null {
+                        // For demo: allow allocation even if deputy is not pre-registered
+                        let allocation: Allocation = {
+                            stateHead = msg.caller;
+                            amount = amount;
+                            area = area;
+                            deputy = deputyPrincipal;
+                            assigned = false;
+                            vendorAssigned = null;
+                        };
+
+                        switch (allocations.get(budgetId)) {
+                            case (?existingAllocations) {
+                                allocations.put(budgetId, Array.append(existingAllocations, [allocation]));
+                            };
+                            case null {
+                                allocations.put(budgetId, [allocation]);
+                            };
+                        };
+                        #ok(())
+                    };
                 }
             };
             case null { #err("Invalid budget ID") };
@@ -656,7 +683,44 @@ actor ClearGov {
 
                 #ok(claimCount)
             };
-            case null { #err("Invalid budget ID") };
+            case null { 
+                // DEMO MODE: Allow claims without allocations
+                // In production, this would require proper allocation
+                if (demoMode or allowPublicDemo) {
+                    let invoiceHash = Text.concat(invoiceData, Principal.toText(msg.caller));
+                    
+                    switch (invoiceClaimed.get(invoiceHash)) {
+                        case (?true) { return #err("Invoice already claimed") };
+                        case _ { };
+                    };
+
+                    claimCount += 1;
+                    let claim: Claim = {
+                        vendor = msg.caller;
+                        amount = amount;
+                        invoiceHash = invoiceHash;
+                        deputy = msg.caller; // Use caller as deputy for demo
+                        aiApproved = false;
+                        flagged = false;
+                        paid = false;
+                        escrowTime = 0;
+                        totalPaidToSuppliers = 0;
+                        fraudScore = null;
+                        challengeCount = 0;
+                    };
+
+                    claims.put(claimCount, claim);
+                    invoiceClaimed.put(invoiceHash, true);
+                    invoiceToClaimId.put(invoiceHash, claimCount);
+                    reservedBudget += amount;
+
+                    Debug.print("DEMO_CLAIM: ClaimID=" # Nat.toText(claimCount) # " Amount=" # Nat.toText(amount));
+
+                    #ok(claimCount)
+                } else {
+                    #err("Invalid budget ID")
+                }
+            };
         }
     };
 
@@ -733,39 +797,39 @@ actor ClearGov {
         switch (stakeResult) {
             case (#Ok(blockIndex)) {
                 // Stake successful! Record challenge
-                let challenge: Challenge = {
-                    staker = msg.caller;
-                    amount = STAKE_AMOUNT;
-                    withdrawn = false;
-                    reason = reason;
-                    evidence = evidence;
-                    timestamp = Time.now();
-                };
+        let challenge: Challenge = {
+            staker = msg.caller;
+            amount = STAKE_AMOUNT;
+            withdrawn = false;
+            reason = reason;
+            evidence = evidence;
+            timestamp = Time.now();
+        };
 
-                switch (invoiceChallenges.get(invoiceHash)) {
-                    case (?existingChallenges) {
-                        invoiceChallenges.put(invoiceHash, Array.append(existingChallenges, [challenge]));
-                    };
-                    case null {
-                        invoiceChallenges.put(invoiceHash, [challenge]);
-                    };
-                };
+        switch (invoiceChallenges.get(invoiceHash)) {
+            case (?existingChallenges) {
+                invoiceChallenges.put(invoiceHash, Array.append(existingChallenges, [challenge]));
+            };
+            case null {
+                invoiceChallenges.put(invoiceHash, [challenge]);
+            };
+        };
 
-                // Update challenge count on claim
-                switch (invoiceToClaimId.get(invoiceHash)) {
-                    case (?claimId) {
-                        switch (claims.get(claimId)) {
-                            case (?claim) {
-                                let updatedClaim = {
-                                    claim with challengeCount = claim.challengeCount + 1
-                                };
-                                claims.put(claimId, updatedClaim);
-                            };
-                            case null { };
+        // Update challenge count on claim
+        switch (invoiceToClaimId.get(invoiceHash)) {
+            case (?claimId) {
+                switch (claims.get(claimId)) {
+                    case (?claim) {
+                        let updatedClaim = {
+                            claim with challengeCount = claim.challengeCount + 1
                         };
+                        claims.put(claimId, updatedClaim);
                     };
                     case null { };
                 };
+            };
+            case null { };
+        };
 
                 Debug.print("CITIZEN CHALLENGE: " # Principal.toText(msg.caller) # " staked 1 ICP at block " # Nat.toText(blockIndex));
                 
@@ -1216,28 +1280,28 @@ actor ClearGov {
                 // ICP TRANSFER from vendor to supplier (real or simulated)
                 if (simulateTransfers) {
                     // SIMULATED payment
-                    let payment: SupplierPayment = {
-                        supplier = supplier;
-                        amount = amount;
-                        invoiceHash = invoiceHash;
+                let payment: SupplierPayment = {
+                    supplier = supplier;
+                    amount = amount;
+                    invoiceHash = invoiceHash;
                         verified = true;
-                        timestamp = Time.now();
+                    timestamp = Time.now();
+                };
+                
+                switch (supplierPayments.get(claimId)) {
+                    case (?existingPayments) {
+                        supplierPayments.put(claimId, Array.append(existingPayments, [payment]));
                     };
-                    
-                    switch (supplierPayments.get(claimId)) {
-                        case (?existingPayments) {
-                            supplierPayments.put(claimId, Array.append(existingPayments, [payment]));
-                        };
-                        case null {
-                            supplierPayments.put(claimId, [payment]);
-                        };
+                    case null {
+                        supplierPayments.put(claimId, [payment]);
                     };
-                    
-                    let updatedClaim = {
-                        claim with totalPaidToSuppliers = claim.totalPaidToSuppliers + amount
-                    };
-                    claims.put(claimId, updatedClaim);
-                    
+                };
+                
+                let updatedClaim = {
+                    claim with totalPaidToSuppliers = claim.totalPaidToSuppliers + amount
+                };
+                claims.put(claimId, updatedClaim);
+                
                     Debug.print("SIMULATED SUB-SUPPLIER PAYMENT: " # Nat.toText(amount) # " ICP");
                     #ok(88888) // Fake block index
                 } else {

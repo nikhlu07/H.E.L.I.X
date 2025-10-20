@@ -104,7 +104,7 @@ export function AuditorDashboard() {
                       customVariants={revealVariants}
                       className="text-gray-600 text-lg"
                   >
-                      Independent Oversight & Compliance Monitoring.
+                      Independent financial oversight and compliance verification.
                   </TimelineContent>
               </article>
 

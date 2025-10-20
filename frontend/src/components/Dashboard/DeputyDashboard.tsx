@@ -1,6 +1,8 @@
-import React, { useState, useRef } from 'react';
-import { MapPin, Users, CheckCircle, Clock, AlertTriangle, Building, Truck, FileText, FilePen, ChevronDown } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { MapPin, Users, CheckCircle, Clock, AlertTriangle, Building, Truck, FileText, FilePen, ChevronDown, Wallet } from 'lucide-react';
 import { useToast } from '../common/Toast';
+import { useContract } from '../../hooks/useContracts';
+import { icpCanisterService } from '../../services/icpCanisterService';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -16,6 +18,47 @@ export function DeputyDashboard() {
   const [selectedProjectForUpdate, setSelectedProjectForUpdate] = useState<any>(null);
   const { showToast } = useToast();
   const dashboardRef = useRef<HTMLDivElement>(null);
+  
+  // ckUSDC Wallet functionality
+  const { getCkUSDCBalance, transferCkUSDC } = useContract();
+  const [ckBalance, setCkBalance] = useState<string>('—');
+  const [paymentRecipient, setPaymentRecipient] = useState('');
+  const [paymentAmount, setPaymentAmount] = useState('');
+  const [walletBusy, setWalletBusy] = useState(false);
+  
+  // Real claims from canister
+  const [realClaims, setRealClaims] = useState<any[]>([]);
+  
+  // Load claims from canister
+  useEffect(() => {
+    const loadClaims = async () => {
+      try {
+        await icpCanisterService.init();
+        const claimsData = await icpCanisterService.getAllClaims();
+        console.log('Deputy - Loaded claims:', claimsData);
+        
+        if (claimsData && claimsData.length > 0) {
+          const parsedClaims = claimsData.map(([id, claim]: [any, any]) => ({
+            id: `claim-${id}`,
+            vendor: claim.vendor ? claim.vendor.toString().substring(0, 15) + '...' : 'Unknown Vendor',
+            project: 'Project', 
+            amount: Number(claim.amount),
+            description: JSON.parse(claim.invoiceHash || '{}').description || 'Work completed',
+            riskScore: claim.fraudScore ? Number(claim.fraudScore) : 25,
+            submittedAt: new Date(),
+            documents: 1,
+            ipfsHash: JSON.parse(claim.invoiceHash || '{}').ipfsHash || ''
+          }));
+          console.log('Deputy - Parsed claims:', parsedClaims);
+          setRealClaims(parsedClaims);
+        }
+      } catch (error) {
+        console.log('Deputy - Failed to load claims:', error);
+      }
+    };
+    
+    loadClaims();
+  }, []);
 
   const revealVariants = {
       visible: (i: number) => ({
@@ -148,10 +191,51 @@ export function DeputyDashboard() {
     setSelectedAllocation('');
   };
 
+  const handleRefreshBalance = async () => {
+    try {
+      setWalletBusy(true);
+      const res = await getCkUSDCBalance();
+      if (res) {
+        setCkBalance(res.formatted);
+        showToast('Balance refreshed', 'success');
+      } else {
+        showToast('Failed to fetch ckUSDC balance', 'error');
+      }
+    } catch (e) {
+      showToast('Failed to fetch ckUSDC balance', 'error');
+    } finally {
+      setWalletBusy(false);
+    }
+  };
+
+  const handlePayVendor = async () => {
+    if (!paymentRecipient || !paymentAmount) {
+      showToast('Please enter vendor principal and payment amount', 'warning');
+      return;
+    }
+    
+    try {
+      setWalletBusy(true);
+      const tx = await transferCkUSDC(paymentRecipient, paymentAmount);
+      if (tx !== null) {
+        showToast(`Payment sent to vendor! (Tx: ${String(tx)})`, 'success');
+        await handleRefreshBalance();
+        setPaymentAmount('');
+        setPaymentRecipient('');
+      } else {
+        showToast('Payment failed', 'error');
+      }
+    } catch (e) {
+      showToast('Payment failed', 'error');
+    } finally {
+      setWalletBusy(false);
+    }
+  };
+
   const handleReviewClaim = (claimId: string, action: 'approve' | 'reject' | 'investigate') => {
     const actionMessages = {
-      approve: `Claim ${claimId} recommended for approval`,
-      reject: `Claim ${claimId} recommended for rejection`,
+      approve: `Claim ${claimId} approved - Use wallet to send payment to vendor`,
+      reject: `Claim ${claimId} rejected`,
       investigate: `Claim ${claimId} flagged for further investigation`
     };
 
@@ -219,8 +303,10 @@ export function DeputyDashboard() {
                       <TimelineContent as="div" animationNum={1} timelineRef={dashboardRef} customVariants={revealVariants}>
                           <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                               <CardHeader>
-                                  <CardTitle className="text-xl font-bold">District Overview</CardTitle>
-                                  <CardDescription>Key metrics for {districtData.districtName}.</CardDescription>
+                                  <>
+                                      <CardTitle className="text-xl font-bold">District Overview</CardTitle>
+                                      <CardDescription>Key metrics for {districtData.districtName}.</CardDescription>
+                                  </>
                               </CardHeader>
                               <CardContent className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                                   <div className="flex flex-col p-4 bg-gray-50 rounded-lg">
@@ -251,8 +337,10 @@ export function DeputyDashboard() {
                       <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef} customVariants={revealVariants}>
                         <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                           <CardHeader>
-                            <CardTitle className="text-xl font-bold">District Project Management</CardTitle>
-                            <CardDescription>Monitor the progress of projects in your district.</CardDescription>
+                            <>
+                                <CardTitle className="text-xl font-bold">District Project Management</CardTitle>
+                                <CardDescription>Monitor the progress of projects in your district.</CardDescription>
+                            </>
                           </CardHeader>
                           <CardContent>
                             <Table>
@@ -299,8 +387,10 @@ export function DeputyDashboard() {
                       <TimelineContent as="div" animationNum={3} timelineRef={dashboardRef} customVariants={revealVariants}>
                         <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                           <CardHeader>
-                            <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />Community Reports & Feedback</CardTitle>
-                            <CardDescription>Feedback and reports from the community.</CardDescription>
+                            <>
+                                <CardTitle className="text-xl font-bold flex items-center"><AlertTriangle className="mr-2 h-6 w-6 text-red-600" />Community Reports & Feedback</CardTitle>
+                                <CardDescription>Feedback and reports from the community.</CardDescription>
+                            </>
                           </CardHeader>
                           <CardContent className="space-y-4">
                             {communityReports.map((report) => (
@@ -346,8 +436,10 @@ export function DeputyDashboard() {
                        <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef} customVariants={revealVariants}>
                           <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                             <CardHeader>
-                              <CardTitle className="text-xl font-bold">Vendor Selection</CardTitle>
-                              <CardDescription>Assign vendors to projects.</CardDescription>
+                              <>
+                                  <CardTitle className="text-xl font-bold">Vendor Selection</CardTitle>
+                                  <CardDescription>Assign vendors to projects.</CardDescription>
+                              </>
                             </CardHeader>
                             <CardContent className="space-y-4">
                               <div>
@@ -392,16 +484,73 @@ export function DeputyDashboard() {
                             </CardContent>
                           </Card>
                        </TimelineContent>
+
+                       {/* Wallet - Pay Vendors */}
+                       <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef} customVariants={revealVariants}>
+                          <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                            <CardHeader>
+                              <>
+                                  <CardTitle className="text-xl font-bold flex items-center"><Wallet className="mr-2 h-6 w-6" />Wallet (ckUSDC)</CardTitle>
+                                  <CardDescription>Pay vendors after claim approval.</CardDescription>
+                              </>
+                            </CardHeader>
+                            <CardContent className="space-y-4">
+                                <div className="flex items-center justify-between rounded-lg bg-gray-100 p-4">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">Balance</p>
+                                        <p className="text-2xl font-bold text-gray-900">{ckBalance}</p>
+                                    </div>
+                                    <Button 
+                                        onClick={handleRefreshBalance} 
+                                        disabled={walletBusy}
+                                        variant="outline"
+                                        size="sm"
+                                    >
+                                        Refresh
+                                    </Button>
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-700">Vendor Principal</label>
+                                    <input
+                                        type="text"
+                                        value={paymentRecipient}
+                                        onChange={(e) => setPaymentRecipient(e.target.value)}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                        placeholder="Enter vendor principal ID"
+                                    />
+                                </div>
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium text-gray-700">Payment Amount</label>
+                                    <input
+                                        type="number"
+                                        value={paymentAmount}
+                                        onChange={(e) => setPaymentAmount(e.target.value)}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                        placeholder="Amount in ckUSDC"
+                                    />
+                                </div>
+                                <Button
+                                    onClick={handlePayVendor}
+                                    disabled={walletBusy}
+                                    className="w-full p-3 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800"
+                                >
+                                    Send Payment to Vendor
+                                </Button>
+                            </CardContent>
+                          </Card>
+                       </TimelineContent>
                       
                       {/* Claim Processing */}
                       <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef} customVariants={revealVariants}>
                           <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg h-fit">
                               <CardHeader>
-                                  <CardTitle className="text-xl font-bold flex items-center"><FileText className="mr-2 h-6 w-6" />Review Claims</CardTitle>
-                                  <CardDescription>Approve, reject, or investigate claims.</CardDescription>
+                                  <>
+                                      <CardTitle className="text-xl font-bold flex items-center"><FileText className="mr-2 h-6 w-6" />Review Claims</CardTitle>
+                                      <CardDescription>Approve, reject, or investigate claims.</CardDescription>
+                                  </>
                               </CardHeader>
                               <CardContent className="space-y-4">
-                                {pendingClaims.map((claim) => (
+                                {(realClaims.length > 0 ? realClaims : pendingClaims).map((claim) => (
                                   <div key={claim.id} className="rounded-xl border p-4 transition-all duration-300 ease-in-out">
                                     <div 
                                       className="flex items-center justify-between cursor-pointer"

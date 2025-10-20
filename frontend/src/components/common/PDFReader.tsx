@@ -147,7 +147,7 @@ Vendor History: ${file.name.includes('suspicious') ? 'Limited' : 'Established ve
           className="hidden"
           id="pdf-upload"
         />
-        <label htmlFor="pdf-upload" className="cursor-pointer">
+        <label htmlFor="pdf-upload" className="cursor-pointer block">
           <div className="flex flex-col items-center space-y-3">
             <div className="p-3 bg-yellow-50 rounded-full">
               <Upload className="h-8 w-8 text-primary" />
@@ -160,12 +160,9 @@ Vendor History: ${file.name.includes('suspicious') ? 'Limited' : 'Established ve
                 Supported: {allowedTypes.join(', ')} (max {maxSizeMB}MB)
               </p>
             </div>
-            <button
-              type="button"
-              className="bg-yellow-500 hover:bg-primary hover:text-black text-white px-6 py-2 rounded-lg font-medium transition-colors"
-            >
+            <div className="bg-yellow-500 hover:bg-primary hover:text-black text-white px-6 py-2 rounded-lg font-medium transition-colors">
               Choose File
-            </button>
+            </div>
           </div>
         </label>
       </div>

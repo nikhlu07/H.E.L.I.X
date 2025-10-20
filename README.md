@@ -7,7 +7,6 @@
 
 [![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 [![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.x-green.svg)](https://fastapi.tiangolo.com/)
 [![Internet Computer](https://img.shields.io/badge/Internet_Computer-ICP-purple.svg)](https://internetcomputer.org/)
 [![AI Detection](https://img.shields.io/badge/AI-Gemma3-orange.svg)](#ai-fraud-detection)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Active-success.svg)](#quick-access-links)
@@ -17,7 +16,7 @@
 ## 🚀 **Quick Access Links**
 
 ### 📱 **Live Web App**
-🔗 **[h-e-l-i-x.vercel.app](https://h-e-l-i-x.vercel.app)**
+🔗 **[https://b45sw-6aaaa-aaaau-acloa-cai.icp0.io/](https://b45sw-6aaaa-aaaau-acloa-cai.icp0.io/)**
 > Experience the complete hierarchical government data flow system with real Internet Identity authentication
 
 ### 🎬 **Demo Video** 
@@ -78,14 +77,6 @@ H.E.L.I.X. uses a **hybrid fraud detection architecture** combining deterministi
 - **Production Ready**: GPT-4, Claude, and other commercial LLMs supported
 - **Flexible Architecture**: Easy model switching without code changes
 - **Fallback Strategy**: Graceful degradation to rules-only if LLM unavailable
-
-**Hybrid RAG Architecture:**
-- **Rules Engine (70% weight)**: Deterministic detection of 10 corruption patterns
-- **ML Models (30% weight)**: Isolation Forest for anomaly detection
-- **LLM Analysis**: Context-aware reasoning using historical case data via RAG
-- **Vector Database**: FAISS-powered similarity search for pattern matching
-- **Real-time Processing**: Complete analysis in under 3 seconds
-- **Autonomous Learning**: Self-improving detection from investigation outcomes
 
 **Detection Capabilities:**
 
@@ -190,13 +181,7 @@ Complete end-to-end tracking with role-based permissions:
 - Vite for optimized build performance
 - @dfinity/agent for ICP integration
 
-**Backend (FastAPI + Python)**
-- FastAPI for high-performance REST APIs
-- **Ollama + LangChain** for LLM integration (currently Gemma 3, upgradeable)
-- PostgreSQL for relational data storage
-- Role-Based Access Control (RBAC)
-
-**Blockchain (Internet Computer)**
+**Backend (ICP Canisters)**
 - Motoko smart contracts for business logic
 - Internet Identity for decentralized authentication
 - Canister-based storage for immutability
@@ -210,54 +195,6 @@ Complete end-to-end tracking with role-based permissions:
 - **Continuous Learning**: Autonomous pattern updates from investigation outcomes
 - **Multi-Model Fallback**: Graceful degradation if primary LLM unavailable
 
-### System Architecture
-
-```mermaid
-graph TB
-    subgraph Users
-        A[Citizens]
-        B[Government Officials]
-        C[Vendors]
-    end
-
-    subgraph Frontend
-        D[React Web App]
-    end
-
-    subgraph Backend
-        E[FastAPI Server]
-        F[Authentication Service]
-        G[Fraud Detection Service]
-        H[ICP Integration Service]
-        I[Database Service]
-    end
-
-    subgraph AI Engine
-        J[Rules Engine]
-        K[LLM Pipeline - Gemma3]
-        L[Vector Store - FAISS]
-    end
-
-    subgraph Storage
-        M[ICP Blockchain]
-        N[PostgreSQL Database]
-    end
-
-    A --> D
-    B --> D
-    C --> D
-    D --> E
-    E --> F
-    E --> G
-    E --> H
-    E --> I
-    G --> J
-    G --> K
-    K --> L
-    H --> M
-    I --> N
-```
-
 ---
 
 ## 🚀 Getting Started
@@ -265,7 +202,6 @@ graph TB
 ### Prerequisites
 ```bash
 node -v # v18.0.0 or higher
-python -v # 3.9 or higher
 dfx --version # Latest DFX SDK
 ```
 
@@ -278,16 +214,7 @@ Experience the complete system in minutes:
 git clone https://github.com/nikhlu07/H.E.L.I.X.git
 cd H.E.L.I.X
 
-# Setup AI Engine (Ollama)
-# Install from https://ollama.ai/
-ollama pull gemma3:4b
-ollama pull nomic-embed-text
-
-# Start backend
-cd backend
-python hierarchical_demo_api.py
-
-# Start frontend (new terminal)
+# Start frontend
 cd frontend
 npm install && npm run dev
 
@@ -324,51 +251,6 @@ dfx deploy --network ic
 dfx canister id helix_frontend --network ic
 # Live at: https://your-canister-id.ic0.app
 ```
-
-For detailed deployment guides, see:
-- `DEPLOYMENT_GUIDE.md` - Complete deployment options
-- `ICP_MAINNET_DEPLOYMENT.md` - ICP-specific instructions
-- `docker-compose.prod.yml` - Docker production setup
-
-### 🔧 Troubleshooting
-
-**Common Issues:**
-
-1. **Ollama Connection Error**
-   ```bash
-   # Ensure Ollama is running
-   ollama serve
-   # Pull required models
-   ollama pull gemma3:4b
-   ollama pull nomic-embed-text
-   ```
-
-2. **ICP Canister Connection Failed**
-   ```bash
-   # Start local dfx
-   dfx start --clean --background
-   # Deploy canisters
-   dfx deploy
-   ```
-
-3. **Frontend Build Errors**
-   ```bash
-   # Clear cache and reinstall
-   rm -rf node_modules package-lock.json
-   npm install
-   ```
-
-4. **Backend Import Errors**
-   ```bash
-   # Ensure virtual environment is activated
-   source venv/bin/activate  # or venv\Scripts\activate on Windows
-   pip install -r requirements.txt
-   ```
-
-For more help, see:
-- [Backend Troubleshooting](backend/README.md#troubleshooting)
-- [Frontend Troubleshooting](frontend/README.md#troubleshooting)
-- [Open an Issue](https://github.com/nikhlu07/H.E.L.I.X/issues)
 
 ---
 
@@ -509,29 +391,6 @@ H.E.L.I.X. has comprehensive documentation for every component:
 - **[Scripts](scripts/README.md)** - Automation and deployment scripts
 - **[Docs](docs/README.md)** - Additional documentation and guides
 
-### Quick Navigation
-
-```
-H.E.L.I.X./
-├── backend/          # FastAPI backend with fraud detection
-│   ├── app/          # Main application code
-│   │   ├── api/      # REST API endpoints
-│   │   ├── auth/     # Authentication & RBAC
-│   │   ├── fraud/    # Fraud detection logic
-│   │   ├── icp/      # ICP blockchain integration
-│   │   └── ...       # See backend/README.md
-│   └── tests/        # Test suite
-├── frontend/         # React + TypeScript frontend
-│   └── src/          # Source code
-│       ├── components/  # UI components
-│       ├── services/    # API clients
-│       ├── auth/        # Auth services
-│       └── ...          # See frontend/src/README.md
-├── canisters/        # ICP smart contracts (Motoko)
-├── scripts/          # Deployment & automation
-└── docs/             # Additional documentation
-```
-
 ---
 
 ## 🤝 Contributing
@@ -552,15 +411,6 @@ We welcome contributions from developers, security researchers, and anti-corrupt
 - Update documentation for API changes
 - Ensure blockchain integration tests pass
 - Review the relevant README files before contributing
-
-### Getting Started with Development
-
-1. **Read the Documentation**: Start with [Backend README](backend/README.md) and [Frontend README](frontend/src/README.md)
-2. **Set Up Environment**: Follow the Quick Demo guide above
-3. **Explore the Code**: Each directory has a README explaining its purpose
-4. **Run Tests**: `pytest backend/tests/` and `npm test` in frontend
-5. **Make Changes**: Follow the coding standards in each component's README
-6. **Submit PR**: Include tests and update relevant documentation
 
 ---
 
@@ -641,7 +491,7 @@ H.E.L.I.X. is more than code—it's a commitment to a future where public resour
 ### Connect With Us
 
 - **GitHub**: [github.com/nikhlu07/H.E.L.I.X](https://github.com/nikhlu07/H.E.L.I.X)
-- **Live Demo**: [h-e-l-i-x.vercel.app](https://h-e-l-i-x.vercel.app)
+- **Live Demo**: [https://b45sw-6aaaa-aaaau-acloa-cai.icp0.io/](https://b45sw-6aaaa-aaaau-acloa-cai.icp0.io/)
 - **Issues**: [Report bugs or request features](https://github.com/nikhlu07/H.E.L.I.X/issues)
 - **Discussions**: [Join the conversation](https://github.com/nikhlu07/H.E.L.I.X/discussions)
 

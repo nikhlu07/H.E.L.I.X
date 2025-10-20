@@ -44,7 +44,7 @@ const roleConfig = {
   },
   'auditor': {
     title: 'Auditor',
-    description: 'Independent Oversight & Compliance Monitoring',
+    description: 'Independent financial oversight and compliance verification',
     icon: FileSearch,
   }
 };
