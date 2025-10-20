@@ -27,17 +27,17 @@ interface Config {
 const CONFIG: Config = {
   // Internet Identity URL (use local for development)
   II_URL: process.env.NODE_ENV === 'development'
-    ? 'http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaah-qcaiq-cai'
+    ? 'https://identity.ic0.app'
     : 'https://identity.ic0.app',
 
   // CorruptGuard canister ID
-  CANISTER_ID: process.env.REACT_APP_CANISTER_ID || 'rdmx6-jaaaa-aaaah-qcaiq-cai',
+  CANISTER_ID: process.env.REACT_APP_CANISTER_ID || 'b34uc-tyaaa-aaaau-acloq-cai',
 
   // Backend API URL
   API_URL: process.env.REACT_APP_API_URL || 'http://localhost:8000/api/v1',
 
   // Host for local development
-  HOST: process.env.NODE_ENV === 'development' ? 'http://localhost:4943' : 'https://ic0.app'
+  HOST: 'https://ic0.app'
 };
 
 type AuthListener = (state: { isAuthenticated: boolean; user: User | null; principal: string | null }) => void;

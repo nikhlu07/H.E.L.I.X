@@ -66,7 +66,7 @@ class AuthService {
     return new Promise((resolve, reject) => {
       // Use local development URL for Internet Identity in development mode
       const iiUrl = import.meta.env.VITE_II_URL ||
-        (import.meta.env.DEV ? 'http://localhost:4943/?canisterId=rdmx6-jaaaa-aaaah-qcaiq-cai' : 'https://identity.ic0.app');
+        'https://identity.ic0.app';
 
       this.authClient!.login({
         identityProvider: iiUrl,
@@ -424,6 +424,38 @@ class AuthService {
   }
 
   try {
+    // Skip backend call - using ICP canister only
+    // const response = await fetch(`${API_BASE_URL}/auth/profile`, {
+    //   headers: {
+    //     'Authorization': `Bearer ${this.token}`,
+    //     'Content-Type': 'application/json',
+    //   }
+    // });
+
+    // if (!response.ok) {
+    //   throw new Error('Failed to get user profile');
+    // }
+
+    // const profile = await response.json();
+    
+    // Return current user instead of fetching from backend
+    if (!this.user) {
+      throw new Error('User is null');
+    }
+    return this.user;
+  } catch (error) {
+    // Silently ignore - backend not running
+    // console.error('Failed to get user profile:', error);
+    throw error;
+  }
+}
+
+  async _getUserProfileFromBackend(): Promise<User> {
+  if (!this.token) {
+    throw new Error('Not authenticated');
+  }
+
+  try {
     const response = await fetch(`${API_BASE_URL}/auth/profile`, {
       headers: {
         'Authorization': `Bearer ${this.token}`,
@@ -446,12 +478,9 @@ class AuthService {
     this.user = { ...this.user, ...profile };
     localStorage.setItem('auth_user', JSON.stringify(this.user));
 
-    if (!this.user) {
-      throw new Error('User is null');
-    }
     return this.user;
   } catch (error) {
-    console.error('Failed to get user profile:', error);
+    console.error('Failed to get user profile from backend:', error);
     throw error;
   }
 }

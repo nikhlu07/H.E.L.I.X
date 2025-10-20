@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, MapPin, DollarSign, AlertTriangle, UserPlus, Settings, BarChart3, Shield, LayoutDashboard, Eye, FileText, Building, Mail, Phone, TrendingUp } from 'lucide-react';
 import { useToast } from '../common/Toast';
+import { icpCanisterService } from '../../services/icpCanisterService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -173,9 +174,71 @@ export function StateHeadDashboard() {
   const [newDeputyId, setNewDeputyId] = useState('');
   const [deputyToRemove, setDeputyToRemove] = useState('');
   const [selectedAlert, setSelectedAlert] = useState(null);
+  
+  // Real data from canister
+  const [deputies, setDeputies] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [alerts, setAlerts] = useState<any[]>([]);
+  const [systemStats, setSystemStats] = useState<any>(null);
+  
   const { showToast } = useToast();
   const dashboardRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // Load real data from canister
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await icpCanisterService.init();
+        
+        // Load system stats
+        const stats = await icpCanisterService.getSystemStats();
+        if (stats) {
+          // Convert BigInt to Number to avoid mixing BigInt and other types
+          setSystemStats({
+            totalBudget: Number(stats.totalBudget || 0),
+            allocatedBudget: Number(stats.allocatedBudget || 0),
+            activeClaims: Number(stats.activeClaims || 0),
+            flaggedClaims: Number(stats.flaggedClaims || 0)
+          });
+        }
+        
+        // For now, deputies will be empty - we'll add getAllStateHeads to canister later
+        setDeputies([]);
+        
+        // Load projects/allocations - using claims data for now
+        const claimsData = await icpCanisterService.getAllClaims();
+        if (claimsData) {
+          const processedClaims = claimsData.map(([id, claim]: [number, any]) => ({
+            id: Number(id),
+            project: claim.invoiceHash?.substring(0, 20) || 'Project',
+            requestedAmount: Number(claim.amount || 0),
+            priority: claim.flagged ? 'high' : 'medium'
+          }));
+          setProjects(processedClaims || []);
+        }
+        
+        // Load alerts - using high risk claims for now
+        const highRiskClaims = await icpCanisterService.getHighRiskClaims();
+        if (highRiskClaims) {
+          const processedAlerts = highRiskClaims.map(([id, score]: [number, any]) => ({
+            id: Number(id),
+            type: 'corruption',
+            description: `High fraud score detected (${Number(score)})`,
+            severity: Number(score) > 70 ? 'high' : 'medium',
+            deputy: 'Investigation Required'
+          }));
+          setAlerts(processedAlerts || []);
+        }
+        
+      } catch (error) {
+        console.log('Canister connection failed:', error);
+        // Don't show warning toast - just log the error
+      }
+    };
+    
+    loadData();
+  }, [showToast]);
 
   const revealVariants = {
       visible: (i: number) => ({
@@ -194,63 +257,22 @@ export function StateHeadDashboard() {
       },
   };
 
-  // Mock data for state-level management
+  // Calculate state data from real canister data
+  const totalBudget = Number(systemStats?.totalBudget || 0);
+  const allocatedBudget = Number(systemStats?.allocatedBudget || 0);
+  
   const stateData = {
     stateName: "Maharashtra",
-    totalBudget: 25000000,
-    allocatedBudget: 18500000,
-    remainingBudget: 6500000,
-    activeProjects: 23,
-    deputiesCount: 8,
-    averageRiskScore: 32
+    totalBudget: totalBudget,
+    allocatedBudget: allocatedBudget,
+    remainingBudget: totalBudget - allocatedBudget,
+    activeProjects: projects?.length || 0,
+    deputiesCount: deputies?.length || 0,
+    averageRiskScore: deputies?.length > 0 ? 
+      Math.round(deputies.reduce((sum, d) => sum + (Number(d.riskScore) || 0), 0) / deputies.length) : 0
   };
 
-  const deputies = [
-    { 
-      id: 'dep-001', name: 'Rajesh Kumar', district: 'Mumbai Central', projects: 5, performance: 4.2, riskScore: 25,
-      email: 'rajesh.k@example.gov', phone: '987-654-3210',
-      performanceHistory: [ { month: 'Jan', score: 4.1 }, { month: 'Feb', score: 4.3 }, { month: 'Mar', score: 4.2 } ],
-      managedProjects: [
-        { id: 'proj-101', name: 'Coastal Road Expansion', status: 'In Progress', budget: 5000000 },
-        { id: 'proj-102', name: 'Slum Redevelopment Initiative', status: 'Planning', budget: 3500000 },
-      ]
-    },
-    { 
-      id: 'dep-002', name: 'Priya Sharma', district: 'Pune East', projects: 3, performance: 4.7, riskScore: 18,
-      email: 'priya.s@example.gov', phone: '876-543-2109',
-      performanceHistory: [ { month: 'Jan', score: 4.5 }, { month: 'Feb', score: 4.6 }, { month: 'Mar', score: 4.7 } ],
-      managedProjects: [
-        { id: 'proj-201', name: 'Metro Line 3 Construction', status: 'Completed', budget: 7000000 },
-      ]
-    },
-    { 
-      id: 'dep-003', name: 'Amit Patel', district: 'Nagpur North', projects: 4, performance: 3.9, riskScore: 45,
-      email: 'amit.p@example.gov', phone: '765-432-1098',
-      performanceHistory: [ { month: 'Jan', score: 4.0 }, { month: 'Feb', score: 3.8 }, { month: 'Mar', score: 3.9 } ],
-      managedProjects: [
-        { id: 'proj-301', name: 'Industrial Zone Development', status: 'Delayed', budget: 4500000 },
-        { id: 'proj-302', name: 'Water Supply Network Upgrade', status: 'In Progress', budget: 2000000 },
-      ]
-    },
-    { 
-      id: 'dep-004', name: 'Sunita Desai', district: 'Nashik South', projects: 6, performance: 4.5, riskScore: 22,
-      email: 'sunita.d@example.gov', phone: '654-321-0987',
-      performanceHistory: [ { month: 'Jan', score: 4.4 }, { month: 'Feb', score: 4.5 }, { month: 'Mar', score: 4.5 } ],
-      managedProjects: []
-    }
-  ];
-
-  const pendingAllocations = [
-    { id: 'alloc-001', project: 'Highway Extension Phase 2', requestedAmount: 2500000, priority: 'high' },
-    { id: 'alloc-002', project: 'School Infrastructure Upgrade', requestedAmount: 800000, priority: 'medium' },
-    { id: 'alloc-003', project: 'Hospital Equipment Purchase', requestedAmount: 1200000, priority: 'high' }
-  ];
-
-  const regionalAlerts = [
-    { id: 'alert-001', type: 'corruption', description: 'Unusual vendor pattern in Mumbai Central', severity: 'high', deputy: 'Rajesh Kumar' },
-    { id: 'alert-002', type: 'budget', description: 'Budget utilization above 90% in Pune East', severity: 'medium', deputy: 'Priya Sharma' },
-    { id: 'alert-003', type: 'timeline', description: 'Project delays reported in Nagpur North', severity: 'low', deputy: 'Amit Patel' }
-  ];
+  // Mock data removed - now using real canister data
 
   const handleAllocateBudget = () => {
     if (!budgetAmount || !projectArea || !selectedDeputy) {
@@ -398,17 +420,24 @@ export function StateHeadDashboard() {
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
-                                {deputies.map((deputy) => (
-                                  <TableRow key={deputy.id} className="hover:bg-gray-50/50">
-                                    <TableCell className="font-semibold">{deputy.name}</TableCell>
-                                    <TableCell className="text-gray-600">{deputy.district}</TableCell>
-                                    <TableCell className="text-center">{deputy.projects}</TableCell>
-                                    <TableCell>
-                                      <div className="flex items-center space-x-1">
-                                        <span className="font-medium">{deputy.performance}</span>
-                                        <span className="text-yellow-500">★</span>
-                                      </div>
+                                {deputies.length === 0 ? (
+                                  <TableRow>
+                                    <TableCell colSpan={5} className="text-center text-gray-500 py-8">
+                                      No deputies assigned yet
                                     </TableCell>
+                                  </TableRow>
+                                ) : (
+                                  deputies.map((deputy) => (
+                                    <TableRow key={deputy.id} className="hover:bg-gray-50/50">
+                                      <TableCell className="font-semibold">{deputy.name}</TableCell>
+                                      <TableCell className="text-gray-600">{deputy.district}</TableCell>
+                                      <TableCell className="text-center">{deputy.projects}</TableCell>
+                                      <TableCell>
+                                        <div className="flex items-center space-x-1">
+                                          <span className="font-medium">{deputy.performance}</span>
+                                          <span className="text-yellow-500">★</span>
+                                        </div>
+                                      </TableCell>
                                     <TableCell>
                                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                         deputy.riskScore < 30 ? 'bg-green-100 text-green-800' :
@@ -424,7 +453,8 @@ export function StateHeadDashboard() {
                                       </Button>
                                     </TableCell>
                                   </TableRow>
-                                ))}
+                                  ))
+                                )}
                               </TableBody>
                             </Table>
                           </CardContent>
@@ -439,7 +469,12 @@ export function StateHeadDashboard() {
                             <CardDescription>Review and approve budget requests from deputies.</CardDescription>
                           </CardHeader>
                           <CardContent className="space-y-4">
-                            {pendingAllocations.map((allocation) => (
+                            {projects.length === 0 ? (
+                              <div className="text-center text-gray-500 py-8">
+                                No pending allocations
+                              </div>
+                            ) : (
+                              projects.map((allocation) => (
                               <div key={allocation.id} className="rounded-xl border p-4 space-y-3 hover:border-black transition-colors cursor-pointer bg-gray-50/50">
                                 <div className="flex items-start justify-between">
                                   <div>
@@ -464,7 +499,8 @@ export function StateHeadDashboard() {
                                   </div>
                                 </div>
                               </div>
-                            ))}
+                              ))
+                            )}
                           </CardContent>
                         </Card>
                       </TimelineContent>
@@ -587,7 +623,12 @@ export function StateHeadDashboard() {
                             <CardDescription>Critical alerts requiring immediate attention.</CardDescription>
                           </CardHeader>
                           <CardContent className="space-y-4">
-                            {regionalAlerts.map((alert) => (
+                            {alerts.length === 0 ? (
+                              <div className="text-center text-gray-500 py-8">
+                                No alerts at this time
+                              </div>
+                            ) : (
+                              alerts.map((alert) => (
                               <div key={alert.id} onClick={() => handleOpenAlert(alert)} className="rounded-xl border p-4 space-y-3 hover:border-red-500 transition-colors cursor-pointer bg-red-50/50">
                                 <div className="flex items-start justify-between">
                                   <div>
@@ -603,7 +644,8 @@ export function StateHeadDashboard() {
                                   </span>
                                 </div>
                               </div>
-                            ))}
+                              ))
+                            )}
                           </CardContent>
                         </Card>
                       </TimelineContent>

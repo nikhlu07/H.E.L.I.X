@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { DollarSign, Users, Shield, AlertTriangle, TrendingUp, Building, LayoutDashboard, Eye, Mail, Star, BarChart2, FileText } from 'lucide-react';
-import { mockBudgets, mockClaims, mockVendors } from '../../data/mockData';
+import { useState, useRef, useEffect } from 'react';
+import { DollarSign, Users, Shield, AlertTriangle, TrendingUp, Building, Eye, Mail, Star, BarChart2, FileText } from 'lucide-react';
 import { useToast } from '../common/Toast';
+import { icpCanisterService } from '../../services/icpCanisterService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '../ui/dialog';
 import { Vendor, Claim } from '../../types';
@@ -18,8 +19,100 @@ export function MainGovernmentDashboard() {
     const [isEmergencyPaused, setIsEmergencyPaused] = useState(false);
     const [isPauseConfirmationOpen, setIsPauseConfirmationOpen] = useState(false);
     const [isDisableConfirmationOpen, setIsDisableConfirmationOpen] = useState(false);
+  const [isLockingBudget, setIsLockingBudget] = useState(false);
+  
+  // State Head Management
+  const [newStateHeadPrincipal, setNewStateHeadPrincipal] = useState('');
+  const [isProposingStateHead, setIsProposingStateHead] = useState(false);
+  const [pendingStateHeads] = useState<any[]>([]);
+  
+  // Real data from canister
+    const [budgets, setBudgets] = useState<any[]>([]);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const [claims, setClaims] = useState<any[]>([]);
+    const [vendors] = useState<any[]>([
+        { id: "vendor-001", name: "MedTech Solutions", businessType: "Medical Equipment", status: "approved" },
+        { id: "vendor-002", name: "EduFurniture Co.", businessType: "Educational Supplies", status: "pending" },
+        { id: "vendor-003", name: "RoadBuild Ltd.", businessType: "Construction", status: "approved" },
+        { id: "vendor-004", name: "GreenEnergy Corp", businessType: "Renewable Energy", status: "approved" }
+    ]);
+    const [systemStats, setSystemStats] = useState<any>(null);
     const { showToast } = useToast();
     const dashboardRef = useRef<HTMLDivElement>(null);
+
+    // Load real data from canister
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                // Force clear all data first
+                setBudgets([]);
+                setClaims([]);
+                setSystemStats(null);
+                
+                // Small delay to ensure state is cleared
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                await icpCanisterService.init();
+                
+                // Load system stats
+                const stats = await icpCanisterService.getSystemStats();
+                if (stats) setSystemStats(stats);
+                
+                // Load budgets
+                const budgetData = await icpCanisterService.getAllBudgets();
+                console.log('Raw budget data from canister:', budgetData);
+                
+                // Budget data comes as tuples: [(id, Budget)] where Budget = {amount, purpose, locked, lockTime}
+                const serializedBudgetData = budgetData?.map((budgetTuple: any, index: number) => {
+                    console.log(`Budget ${index}:`, budgetTuple);
+                    console.log(`Budget ${index} type:`, typeof budgetTuple);
+                    console.log(`Budget ${index} isArray:`, Array.isArray(budgetTuple));
+                    
+                    // Check if it's a tuple format [id, budget]
+                    if (Array.isArray(budgetTuple) && budgetTuple.length >= 2) {
+                        const [id, budget] = budgetTuple;
+                        console.log(`Budget ${index} - id:`, id, 'type:', typeof id);
+                        console.log(`Budget ${index} - budget:`, budget);
+                        
+                        return {
+                            id: Number(id),
+                            amount: Number(budget.amount),
+                            purpose: budget.purpose || '',
+                            locked: budget.locked || false,
+                            lockTime: budget.lockTime ? Number(budget.lockTime) : 0
+                        };
+                    }
+                    // Fallback: try to use as-is with conversion
+                    console.log(`Budget ${index} - fallback processing`);
+                    return {
+                        id: index,
+                        amount: budgetTuple.amount ? Number(budgetTuple.amount) : 0,
+                        purpose: budgetTuple.purpose || '',
+                        locked: budgetTuple.locked || false,
+                        lockTime: budgetTuple.lockTime ? Number(budgetTuple.lockTime) : 0
+                    };
+                });
+                
+                console.log('Processed budget data:', serializedBudgetData);
+                console.log('First processed budget:', serializedBudgetData?.[0]);
+                setBudgets(serializedBudgetData || []);
+                
+                // Load claims
+                const claimsData = await icpCanisterService.getAllClaims();
+                if (claimsData && claimsData.length > 0) setClaims(claimsData);
+                
+                // Keep demo vendors - don't overwrite them
+                // setVendors([]);
+                
+                // showToast('Connected to blockchain!', 'success');
+            } catch (error) {
+                console.log('Canister connection failed:', error);
+                // Don't show warning toast - just log the error
+            }
+        };
+        
+        loadData();
+    }, [showToast]);
 
     const revealVariants = {
         visible: (i: number) => ({
@@ -38,14 +131,156 @@ export function MainGovernmentDashboard() {
         },
     };
 
-    const handleLockBudget = () => {
+    const _reloadData = async () => {
+        try {
+            console.log('Starting reloadData...');
+            await icpCanisterService.init();
+            
+            // Load system stats
+            const stats = await icpCanisterService.getSystemStats();
+            if (stats) setSystemStats(stats);
+            console.log('System stats loaded:', stats);
+            
+            // Load budgets
+            const budgetData = await icpCanisterService.getAllBudgets();
+            console.log('Raw budget data from reload:', budgetData);
+            
+            // Budget data comes as tuples: [(id, Budget)] where Budget = {amount, purpose, locked, lockTime}
+            const serializedBudgetData = budgetData?.map((budgetTuple: any, index: number) => {
+                // Check if it's a tuple format [id, budget]
+                if (Array.isArray(budgetTuple) && budgetTuple.length >= 2) {
+                    const [id, budget] = budgetTuple;
+                    return {
+                        id: Number(id),
+                        amount: Number(budget.amount),
+                        purpose: budget.purpose || '',
+                        locked: budget.locked || false,
+                        lockTime: budget.lockTime ? Number(budget.lockTime) : 0
+                    };
+                }
+                // Fallback: try to use as-is with conversion
+                return {
+                    id: index,
+                    amount: budgetTuple.amount ? Number(budgetTuple.amount) : 0,
+                    purpose: budgetTuple.purpose || '',
+                    locked: budgetTuple.locked || false,
+                    lockTime: budgetTuple.lockTime ? Number(budgetTuple.lockTime) : 0
+                };
+            });
+            
+            console.log('Processed budget data for reload:', serializedBudgetData);
+            setBudgets(serializedBudgetData || []);
+            console.log('Budgets state updated');
+            
+            // Load claims
+            const claimsData = await icpCanisterService.getAllClaims();
+            if (claimsData && claimsData.length > 0) setClaims(claimsData);
+            
+        } catch (error) {
+            console.log('Failed to reload data:', error);
+        }
+    };
+
+    const handleLockBudget = async () => {
         if (!budgetAmount || !budgetPurpose) {
             showToast('Please fill in all budget details', 'warning');
             return;
         }
-        showToast(`Budget of $${budgetAmount} locked for ${budgetPurpose}`, 'success');
-        setBudgetAmount('');
-        setBudgetPurpose('');
+        
+        setIsLockingBudget(true);
+        
+        try {
+            const amount = parseInt(budgetAmount);
+            console.log('Attempting to lock budget:', { amount, purpose: budgetPurpose });
+            
+            const result = await icpCanisterService.lockBudget(amount, budgetPurpose);
+            console.log('Lock budget result (budget ID):', result);
+            
+            if (result && result > 0) {
+                showToast(`Budget of $${budgetAmount} locked for ${budgetPurpose}`, 'success');
+                setBudgetAmount('');
+                setBudgetPurpose('');
+                
+                // Reload data immediately after successful lock
+                console.log('Reloading data after budget lock...');
+                
+                try {
+                    // Fetch fresh data from canister
+                    const freshBudgetData = await icpCanisterService.getAllBudgets();
+                    console.log('Fresh budget data:', freshBudgetData);
+                    
+                    // Process the data
+                    const processedBudgets = freshBudgetData?.map((budgetTuple: any) => {
+                        if (Array.isArray(budgetTuple) && budgetTuple.length >= 2) {
+                            const [id, budget] = budgetTuple;
+                            return {
+                                id: Number(id),
+                                amount: Number(budget.amount),
+                                purpose: budget.purpose || '',
+                                locked: budget.locked || false,
+                                lockTime: budget.lockTime ? Number(budget.lockTime) : 0
+                            };
+                        }
+                        return {
+                            id: 0,
+                            amount: budgetTuple.amount ? Number(budgetTuple.amount) : 0,
+                            purpose: budgetTuple.purpose || '',
+                            locked: budgetTuple.locked || false,
+                            lockTime: budgetTuple.lockTime ? Number(budgetTuple.lockTime) : 0
+                        };
+                    });
+                    
+                    console.log('Processed fresh budgets:', processedBudgets);
+                    setBudgets(processedBudgets || []);
+                    
+                    // Update system stats
+                    const stats = await icpCanisterService.getSystemStats();
+                    if (stats) setSystemStats(stats);
+                    
+                    console.log('UI updated with fresh data');
+                } catch (error) {
+                    console.error('Failed to reload data:', error);
+                }
+            } else {
+                showToast('Failed to lock budget', 'error');
+            }
+        } catch (error) {
+            console.error('Error locking budget:', error);
+            showToast('Failed to lock budget', 'error');
+        } finally {
+            setIsLockingBudget(false);
+        }
+    };
+
+    const handleProposeStateHead = async () => {
+        if (!newStateHeadPrincipal.trim()) {
+            showToast('Please enter a valid Principal ID', 'warning');
+            return;
+        }
+
+        setIsProposingStateHead(true);
+        try {
+            await icpCanisterService.proposeStateHead(newStateHeadPrincipal.trim());
+            showToast('State Head proposed successfully!', 'success');
+            setNewStateHeadPrincipal('');
+            // TODO: Refresh pending state heads list
+        } catch (error) {
+            console.error('Error proposing state head:', error);
+            showToast(`Failed to propose state head: ${error}`, 'error');
+        } finally {
+            setIsProposingStateHead(false);
+        }
+    };
+
+    const handleConfirmStateHead = async (stateHeadPrincipal: string) => {
+        try {
+            await icpCanisterService.confirmStateHead(stateHeadPrincipal);
+            showToast('State Head confirmed successfully!', 'success');
+            // TODO: Refresh pending state heads list
+        } catch (error) {
+            console.error('Error confirming state head:', error);
+            showToast(`Failed to confirm state head: ${error}`, 'error');
+        }
     };
 
     const handleEmergencyPause = () => {
@@ -68,14 +303,29 @@ export function MainGovernmentDashboard() {
         showToast('Emergency pause disabled - System back to normal', 'success');
     };
 
-    const handleApproveVendor = (vendorId: string) => {
+    const handleApproveVendor = () => {
         showToast('Vendor approved and added to registry', 'success');
     };
 
-    const totalBudget = mockBudgets.reduce((sum, budget) => sum + budget.totalAmount, 0);
-    const allocatedBudget = mockBudgets.reduce((sum, budget) => sum + budget.allocatedAmount, 0);
-    const criticalClaims = mockClaims.filter(claim => claim.riskLevel === 'critical').length;
-    const pendingVendors = mockVendors.filter(vendor => vendor.status === 'pending').length;
+    // Calculate stats from real data
+    console.log('Calculating stats with budgets:', budgets);
+    console.log('First budget amount:', budgets[0]?.amount);
+    
+    const totalBudget = budgets.reduce((sum, budget) => {
+        console.log('Adding budget amount:', budget.amount, 'to sum:', sum);
+        return sum + (budget.amount || 0);
+    }, 0);
+    const allocatedBudget = budgets.reduce((sum, budget) => sum + (budget.amount || 0), 0); // For now, same as total
+    const criticalClaims = claims.filter(claim => claim.riskLevel === 'critical').length;
+    const pendingVendors = vendors.filter(vendor => vendor.status === 'pending').length;
+
+    console.log('Stats calculation:', {
+        budgetsCount: budgets.length,
+        totalBudget,
+        allocatedBudget,
+        criticalClaims,
+        pendingVendors
+    });
 
     const stats = {
         totalBudget: `$${(totalBudget / 1000000).toFixed(1)}M`,
@@ -83,6 +333,7 @@ export function MainGovernmentDashboard() {
         criticalAlerts: criticalClaims,
         pendingVendors: pendingVendors,
     };
+
 
     return (
         <>
@@ -114,7 +365,7 @@ export function MainGovernmentDashboard() {
                         <TimelineContent
                             as="p"
                             animationNum={0}
-                            timelineRef={dashboardRef}
+                            timelineRef={dashboardRef as React.RefObject<HTMLElement>}
                             customVariants={revealVariants}
                             className="text-gray-600 text-lg"
                         >
@@ -126,7 +377,7 @@ export function MainGovernmentDashboard() {
                         {/* Left Column */}
                         <div className="lg:col-span-2 space-y-8">
                             {/* Key Metrics */}
-                            <TimelineContent as="div" animationNum={1} timelineRef={dashboardRef} customVariants={revealVariants}>
+                            <TimelineContent as="div" animationNum={1} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
                                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                                     <CardHeader>
                                         <CardTitle className="text-xl font-bold">Key Metrics</CardTitle>
@@ -158,7 +409,7 @@ export function MainGovernmentDashboard() {
                             </TimelineContent>
 
                             {/* Budget Control Panel */}
-                            <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef} customVariants={revealVariants}>
+                            <TimelineContent as="div" animationNum={2} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
                                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                                     <CardHeader>
                                         <CardTitle className="text-xl font-bold">Budget Control Panel</CardTitle>
@@ -185,16 +436,157 @@ export function MainGovernmentDashboard() {
                                                 placeholder="e.g., Infrastructure 2024"
                                             />
                                         </div>
-                                        <Button onClick={handleLockBudget} className="w-full md:col-span-2 p-3 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800">
+                                        <Button 
+                                            onClick={handleLockBudget} 
+                                            disabled={isLockingBudget}
+                                            className="w-full md:col-span-2 p-3 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800 disabled:opacity-50"
+                                        >
                                             <Shield className="mr-2 h-5 w-5" />
-                                            Lock Budget
+                                            {isLockingBudget ? 'Locking Budget...' : 'Lock Budget'}
                                         </Button>
                                     </CardContent>
                                 </Card>
                             </TimelineContent>
 
+                            {/* State Head Management */}
+                            <TimelineContent as="div" animationNum={2.3} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
+                                <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                                    <CardHeader>
+                                        <CardTitle className="text-xl font-bold">State Head Management</CardTitle>
+                                        <CardDescription>Propose and confirm state heads for different states.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                        <div className="space-y-2">
+                                            <label className="text-sm font-medium text-gray-700">State Head Principal ID</label>
+                                            <input
+                                                type="text"
+                                                value={newStateHeadPrincipal}
+                                                onChange={(e) => setNewStateHeadPrincipal(e.target.value)}
+                                                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                                                placeholder="e.g., rdmg5-vaaaa-aaaah-qcaiq-cai"
+                                            />
+                                        </div>
+                                        <Button 
+                                            onClick={handleProposeStateHead} 
+                                            disabled={isProposingStateHead}
+                                            className="w-full p-3 border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800 disabled:opacity-50"
+                                        >
+                                            <Users className="mr-2 h-5 w-5" />
+                                            {isProposingStateHead ? 'Proposing...' : 'Propose State Head'}
+                                        </Button>
+                                        
+                                        {/* Pending State Heads */}
+                                        {pendingStateHeads.length > 0 && (
+                                            <div className="space-y-2">
+                                                <h4 className="font-semibold text-gray-700">Pending State Heads</h4>
+                                                {pendingStateHeads.map((stateHead, index) => (
+                                                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                                        <span className="text-sm font-mono">{stateHead.principal}</span>
+                                                        <Button 
+                                                            onClick={() => handleConfirmStateHead(stateHead.principal)}
+                                                            size="sm"
+                                                            className="bg-green-600 hover:bg-green-700 text-white"
+                                                        >
+                                                            Confirm
+                                                        </Button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </TimelineContent>
+
+                            {/* Locked Budgets Display */}
+                            <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
+                                <Card key={refreshKey} className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
+                                    <CardHeader>
+                                        <div className="flex justify-between items-center">
+                                        <div>
+                                            <CardTitle className="text-xl font-bold">Locked Budgets</CardTitle>
+                                            <CardDescription>View all locked budget allocations and their purposes.</CardDescription>
+                                        </div>
+                                            <div className="flex gap-2">
+                                                <Button 
+                                                    onClick={() => {
+                                                        console.log('=== BUDGET DEBUG ===');
+                                                        console.log('Budgets array:', budgets);
+                                                        console.log('Budgets length:', budgets.length);
+                                                        console.log('First budget:', budgets[0]);
+                                                        console.log('Budget fields:', budgets[0] ? Object.keys(budgets[0]) : 'none');
+                                                        alert(`Budget count: ${budgets.length}\nFirst budget: ${JSON.stringify(budgets[0], null, 2)}`);
+                                                    }}
+                                                    variant="outline" 
+                                                    size="sm"
+                                                >
+                                                    Debug
+                                                </Button>
+                                                <Button 
+                                                    onClick={async () => {
+                                                        console.log('Clearing all budgets...');
+                                                        setBudgets([]);
+                                                        setSystemStats(null);
+                                                        setRefreshKey(prev => prev + 1);
+                                                        console.log('All budgets cleared');
+                                                    }}
+                                                    variant="outline" 
+                                                    size="sm"
+                                                >
+                                                    Clear All
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </CardHeader>
+                                    <CardContent>
+                                        {budgets.length === 0 ? (
+                                            <div className="text-center py-8 text-gray-500">
+                                                <DollarSign className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                                                <p>No budgets locked yet</p>
+                                                <p className="text-sm">Lock a budget to see it here</p>
+                                            </div>
+                                        ) : (
+                                            <div className="space-y-4">
+                                                {budgets.map((budget, index) => (
+                                                    <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
+                                                        <div className="flex-1">
+                                                            <div className="flex items-center gap-3">
+                                                                <div className="p-2 bg-green-100 rounded-lg">
+                                                                    <Shield className="h-5 w-5 text-green-600" />
+                                                                </div>
+                                                                <div>
+                                                                    <p className="font-semibold text-lg">
+                                                                        {budget.amount >= 1000000 
+                                                                            ? `$${((budget.amount || 0) / 1000000).toFixed(1)}M`
+                                                                            : budget.amount >= 1000
+                                                                            ? `$${((budget.amount || 0) / 1000).toFixed(1)}K`
+                                                                            : `$${(budget.amount || 0).toLocaleString()}`
+                                                                        }
+                                                                    </p>
+                                                                    <p className="text-sm text-gray-600">{budget.purpose || 'No purpose specified'}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-right">
+                                                            <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                                                Locked
+                                                            </Badge>
+                                                            <p className="text-xs text-gray-500 mt-1">
+                                                                {budget.lockTime && budget.lockTime > 0 
+                                                                    ? new Date(Number(budget.lockTime) / 1000000).toLocaleDateString() 
+                                                                    : 'Just locked'
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </TimelineContent>
+
                             {/* Recent Claims Table */}
-                            <TimelineContent as="div" animationNum={3} timelineRef={dashboardRef} customVariants={revealVariants}>
+                            <TimelineContent as="div" animationNum={3} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
                                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg">
                                     <CardHeader>
                                         <CardTitle className="text-xl font-bold">Recent Claims & Corruption Alerts</CardTitle>
@@ -212,7 +604,7 @@ export function MainGovernmentDashboard() {
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
-                                                {mockClaims.slice(0, 5).map((claim) => (
+                                                {claims.slice(0, 5).map((claim) => (
                                                     <TableRow key={claim.id} className="hover:bg-gray-50/50">
                                                         <TableCell className="font-mono text-sm">{claim.id}</TableCell>
                                                         <TableCell className="font-medium">${claim.amount.toLocaleString()}</TableCell>
@@ -251,7 +643,7 @@ export function MainGovernmentDashboard() {
                         {/* Right Column */}
                         <div className="space-y-8">
                              {/* Emergency Pause */}
-                             <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef} customVariants={revealVariants}>
+                             <TimelineContent as="div" animationNum={1.5} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
                                 <Card className="bg-red-50 border-red-200 shadow-lg">
                                     <CardHeader className="text-center">
                                         <CardTitle className="text-xl font-bold text-red-800">Emergency Control</CardTitle>
@@ -266,14 +658,14 @@ export function MainGovernmentDashboard() {
                             </TimelineContent>
                             
                             {/* Vendor Registry */}
-                            <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef} customVariants={revealVariants}>
+                            <TimelineContent as="div" animationNum={2.5} timelineRef={dashboardRef as React.RefObject<HTMLElement>} customVariants={revealVariants}>
                                 <Card className="bg-white/80 backdrop-blur-sm border-neutral-200 shadow-lg h-fit">
                                     <CardHeader>
                                         <CardTitle className="text-xl font-bold flex items-center"><Building className="mr-2 h-6 w-6" />Vendor Registry</CardTitle>
                                         <CardDescription>Manage and approve vendors.</CardDescription>
                                     </CardHeader>
                                     <CardContent className="space-y-4">
-                                        {mockVendors.slice(0, 4).map((vendor) => (
+                                        {vendors.slice(0, 4).map((vendor) => (
                                             <div key={vendor.id} className="rounded-xl border p-4 space-y-3 hover:border-black transition-colors cursor-pointer bg-gray-50/50" onClick={() => setSelectedVendor(vendor)}>
                                                 <div className="flex items-start justify-between">
                                                     <div>
@@ -289,7 +681,7 @@ export function MainGovernmentDashboard() {
                                                     </span>
                                                 </div>
                                                 {vendor.status === 'pending' && (
-                                                    <Button onClick={(e) => { e.stopPropagation(); handleApproveVendor(vendor.id);}} className="w-full p-2 h-auto border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800">
+                                                    <Button onClick={(e) => { e.stopPropagation(); handleApproveVendor();}} className="w-full p-2 h-auto border border-gray-800 shadow-lg shadow-black/20 font-semibold rounded-xl bg-black text-white hover:bg-gray-800">
                                                         Approve
                                                     </Button>
                                                 )}

@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LogOut, Bell, Settings, ChevronDown, Menu, X, User as UserIcon, Presentation } from 'lucide-react';
+import { LogOut, Bell, Menu, X, User as UserIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '../ui/dropdown-menu';
 import { useAuth } from '../../contexts/AuthContext';
@@ -35,7 +34,7 @@ interface HeaderProps {
   sector?: string;
 }
 
-export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
+export function Header({ user, onLogout }: HeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -60,6 +59,24 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
 
   const currentUser = ctxUser || user || { role: 'citizen', sector: 'government', isAuthenticated: false };
   const currentRoleName = (roleDisplay[currentUser.role] || roleDisplay.default).name;
+  
+  // Determine role based on current route
+  const getRoleFromPath = () => {
+    if (location.pathname.includes('/state-head')) {
+      return { name: 'State Government', role: 'state_head' };
+    } else if (location.pathname.includes('/deputy')) {
+      return { name: 'Deputy Officer', role: 'deputy' };
+    } else if (location.pathname.includes('/vendor')) {
+      return { name: 'Vendor', role: 'vendor' };
+    } else if (location.pathname.includes('/citizen')) {
+      return { name: 'Citizen', role: 'citizen' };
+    } else if (location.pathname.includes('/government')) {
+      return { name: 'Main Government', role: 'main_government' };
+    }
+    return { name: currentRoleName, role: currentUser.role };
+  };
+  
+  const displayRole = getRoleFromPath();
 
   const roleRoutes: Record<string, string> = {
     main_government: '/dashboard/government',
@@ -93,9 +110,9 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
     setMobileMenuOpen(false);
   };
 
-  if (location.pathname === '/' || location.pathname === '/pitch') {
-    return null;
-  }
+  // if (location.pathname === '/' || location.pathname === '/pitch') {
+  //   return null;
+  // }
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 transition-all bg-white duration-300" id="app-header">
@@ -112,24 +129,6 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
           </div>
 
           <div className="hidden md:flex items-center gap-2">
-            <DropdownMenu>
-             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="flex items-center gap-2 bg-white border-primary border-2">
-                  <span>{currentRoleName}</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 mt-2 bg-white shadow-lg rounded-lg border">
-                <DropdownMenuLabel>Switch Demo Role</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {availableRoles.map((role) => (
-                  <DropdownMenuItem key={role} onClick={() => handleRoleSwitch(role)} disabled={currentUser.role === role}>
-                    {roleDisplay[role].name}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>
@@ -143,8 +142,8 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center gap-2 px-2">
                   <div className="text-right">
-                    <div className="font-semibold text-sm">{currentRoleName}</div>
-                    <div className="text-xs text-gray-500">{currentUser.role}</div>
+                    <div className="font-semibold text-sm">{displayRole.name}</div>
+                    <div className="text-xs text-gray-500">{displayRole.role}</div>
                   </div>
                   <UserIcon className="h-8 w-8 rounded-full bg-gray-100 p-1 text-gray-600" />
                 </Button>
@@ -192,12 +191,12 @@ export function Header({ user, onLogout, sector = 'government' }: HeaderProps) {
             <div className="border-t border-gray-200" />
 
             <div className="flex flex-col gap-1">
-              <Button variant="ghost" asChild className="justify-start gap-2">
+              {/* <Button variant="ghost" asChild className="justify-start gap-2">
                 <Link to="/pitch" onClick={() => setMobileMenuOpen(false)}>
                   <Presentation className="h-5 w-5" />
                   <span>Pitch</span>
                 </Link>
-              </Button>
+              </Button> */}
               <Button variant="ghost" className="justify-start gap-2" onClick={() => setMobileMenuOpen(false)}>
                 <Bell className="h-5 w-5" />
                 <span>Notifications</span>

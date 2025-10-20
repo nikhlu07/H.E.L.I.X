@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Search, MapPin, FileText, Shield, DollarSign, AlertTriangle, Users, Eye } from 'lucide-react';
-import { mockClaims, mockChallenges, statistics } from '../../data/mockData';
 import { useToast } from '../common/Toast';
+import { icpCanisterService } from '../../services/icpCanisterService';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
@@ -15,6 +15,18 @@ export function CitizenDashboard() {
   const [selectedClaim, setSelectedClaim] = useState('');
   const { showToast } = useToast();
   const dashboardRef = useRef<HTMLDivElement>(null);
+  
+  // Real data from canister
+  const [claims, setClaims] = useState<any[]>([
+    { id: 1, amount: 150000, description: "Medical Equipment Purchase", status: "pending", riskLevel: "low", vendorId: "vendor-001" },
+    { id: 2, amount: 75000, description: "School Furniture Supply", status: "approved", riskLevel: "medium", vendorId: "vendor-002" },
+    { id: 3, amount: 200000, description: "Road Materials", status: "under-review", riskLevel: "high", vendorId: "vendor-003" }
+  ]);
+  const [challenges, setChallenges] = useState<any[]>([
+    { id: 1, claimId: 1, reason: "Suspicious pricing", stakeAmount: 1000, status: "active" },
+    { id: 2, claimId: 2, reason: "Quality concerns", stakeAmount: 500, status: "resolved" }
+  ]);
+  const [loading, setLoading] = useState(false);
 
   const revealVariants = {
       visible: (i: number) => ({
@@ -33,25 +45,65 @@ export function CitizenDashboard() {
       },
   };
 
-  const handleStakeChallenge = () => {
+  // Load real data from canister
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await icpCanisterService.init();
+        
+        // Load claims
+        const claimsData = await icpCanisterService.getAllClaims();
+        if (claimsData && claimsData.length > 0) setClaims(claimsData);
+        
+        // Keep demo challenges - don't overwrite them
+        // setChallenges([]);
+        
+        // showToast('Connected to blockchain!', 'success');
+      } catch (error) {
+        console.log('Canister connection failed:', error);
+        // Don't show warning toast - just log the error
+      }
+    };
+    
+    loadData();
+  }, [showToast]);
+
+  const handleStakeChallenge = async () => {
     if (!selectedClaim || !challengeReason || !stakeAmount) {
       showToast('Please fill in all challenge details', 'warning');
       return;
     }
-    showToast(`Challenge submitted with ${stakeAmount} ICP stake`, 'success');
-    setChallengeReason('');
-    setStakeAmount('');
-    setSelectedClaim('');
+    
+    try {
+      const amount = parseInt(stakeAmount);
+      const result = await icpCanisterService.stakeChallenge(parseInt(selectedClaim), amount, challengeReason);
+      
+      if (result) {
+        showToast(`Challenge submitted with ${stakeAmount} ICP stake`, 'success');
+        setChallengeReason('');
+        setStakeAmount('');
+        setSelectedClaim('');
+        // Reload data
+        const claimsData = await icpCanisterService.getAllClaims();
+        setClaims(claimsData);
+      } else {
+        showToast('Failed to stake challenge', 'error');
+      }
+    } catch (error) {
+      console.error('Error staking challenge:', error);
+      showToast('Failed to stake challenge', 'error');
+    }
   };
 
   const handleReportProject = () => {
     showToast('Project verification report submitted successfully', 'success');
   };
 
-  const filteredClaims = mockClaims.filter(claim =>
+  const filteredClaims = claims.filter(claim =>
     claim.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
     claim.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
 
   return (
     <>

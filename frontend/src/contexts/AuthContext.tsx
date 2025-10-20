@@ -49,8 +49,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
           await authService.getUserProfile();
           setUser(authService.getUser());
         } catch (profileError) {
-          console.warn('Failed to refresh profile:', profileError);
-          // Don't logout on profile fetch failure
+          // Silently ignore profile fetch errors (backend not running)
+          // console.warn('Failed to refresh profile:', profileError);
         }
       }
     } catch (initError) {

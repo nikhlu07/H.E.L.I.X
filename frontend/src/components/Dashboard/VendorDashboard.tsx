@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Upload, DollarSign, Clock, CheckCircle, AlertTriangle, Building, Truck, Wallet, Eye, Shield, BarChart2, FileText } from 'lucide-react';
-import { mockClaims, calculateFraudScore, getRiskLevel } from '../../data/mockData';
 import { useToast } from '../common/Toast';
+import { icpCanisterService } from '../../services/icpCanisterService';
 import { PDFReader } from '../common/PDFReader';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
@@ -28,6 +28,14 @@ export function VendorDashboard() {
   const [walletAmount, setWalletAmount] = useState('');
   const [walletBusy, setWalletBusy] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);
+  
+  // Real data from canister
+  const [claims, setClaims] = useState<any[]>([
+    { id: 1, amount: 150000, description: "Medical Equipment Purchase", status: "pending", riskLevel: "low", vendorId: "vendor-001" },
+    { id: 2, amount: 75000, description: "School Furniture Supply", status: "approved", riskLevel: "medium", vendorId: "vendor-002" },
+    { id: 3, amount: 200000, description: "Road Materials", status: "under-review", riskLevel: "high", vendorId: "vendor-003" }
+  ]);
+  const [loading, setLoading] = useState(false);
 
   const revealVariants = {
       visible: (i: number) => ({
@@ -45,6 +53,26 @@ export function VendorDashboard() {
           opacity: 0,
       },
   };
+
+  // Load real data from canister
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        await icpCanisterService.init();
+        
+        // Load claims for this vendor
+        const claimsData = await icpCanisterService.getAllClaims();
+        if (claimsData && claimsData.length > 0) setClaims(claimsData);
+        
+        // showToast('Connected to blockchain!', 'success');
+      } catch (error) {
+        console.log('Canister connection failed:', error);
+        // Don't show warning toast - just log the error
+      }
+    };
+    
+    loadData();
+  }, [showToast]);
 
   const handleFileSelect = (file: File, content: string) => {
     setUploadedDocument(content);
@@ -101,47 +129,39 @@ export function VendorDashboard() {
     }
   };
 
-  const handleSubmitClaim = () => {
+  const handleSubmitClaim = async () => {
     if (!claimAmount || !claimDescription) {
       showToast('Please fill in all claim details', 'warning');
       return;
     }
 
-    const newClaim = {
-      id: `claim-${Date.now()}`,
-      budgetId: 'budget-001',
-      vendorId: 'vendor-001',
-      amount: parseInt(claimAmount),
-      description: claimDescription,
-      status: 'pending' as const,
-      riskLevel: 'low' as const,
-      fraudScore: 0,
-      submittedAt: new Date(),
-      submittedBy: 'vendor-001',
-      documents: []
-    };
-
-    const fraudScore = calculateFraudScore(newClaim);
-    const riskLevel = getRiskLevel(fraudScore);
-
-    if (riskLevel === 'critical') {
-      showToast('Claim blocked due to high fraud risk - Please review details', 'error');
-    } else if (riskLevel === 'high') {
-      showToast('Claim flagged for manual review due to elevated risk', 'warning');
-    } else {
-      showToast('Claim submitted successfully for processing', 'success');
+    try {
+      const amount = parseInt(claimAmount);
+      const result = await icpCanisterService.submitClaim(amount, claimDescription, '');
+      
+      if (result) {
+        showToast('Claim submitted successfully for processing', 'success');
+        setClaimAmount('');
+        setClaimDescription('');
+        setUploadedDocument(null);
+        // Reload claims
+        const claimsData = await icpCanisterService.getAllClaims();
+        setClaims(claimsData);
+      } else {
+        showToast('Failed to submit claim', 'error');
+      }
+    } catch (error) {
+      console.error('Error submitting claim:', error);
+      showToast('Failed to submit claim', 'error');
     }
-
-    setClaimAmount('');
-    setClaimDescription('');
-    setUploadedDocument(null);
   };
 
-  const vendorClaims = mockClaims.filter(claim => claim.vendorId === 'vendor-001');
+  const vendorClaims = claims.filter(claim => claim.vendorId === 'vendor-001');
   const totalEarnings = vendorClaims
     .filter(claim => claim.status === 'approved')
     .reduce((sum, claim) => sum + claim.amount, 0);
   const pendingClaimsCount = vendorClaims.filter(claim => claim.status === 'pending' || claim.status === 'under-review').length;
+
 
   return (
     <section

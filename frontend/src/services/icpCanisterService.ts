@@ -3,6 +3,11 @@
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { Principal } from '@dfinity/principal';
 
+// Polyfill for global object in browser
+if (typeof global === 'undefined') {
+  (window as any).global = window;
+}
+
 // Define the IDL interface based on your Motoko contract
 const idlFactory = ({ IDL }: { IDL: any }) => {
   // Remove unused variable assignments
@@ -47,12 +52,23 @@ const idlFactory = ({ IDL }: { IDL: any }) => {
 
   const Result = (T: unknown) => IDL.Variant({ ok: T, err: IDL.Text });
 
+  const Budget = IDL.Record({
+    amount: IDL.Nat,
+    purpose: IDL.Text,
+    locked: IDL.Bool,
+    lockTime: IDL.Int,
+  });
+
   return IDL.Service({
     // Government functions
     proposeStateHead: IDL.Func([IDL.Principal], [Result(IDL.Null)], []),
     confirmStateHead: IDL.Func([IDL.Principal], [Result(IDL.Null)], []),
     lockBudget: IDL.Func([IDL.Nat, IDL.Text], [Result(IDL.Nat)], []),
     allocateBudget: IDL.Func([IDL.Nat, IDL.Nat, IDL.Text, IDL.Principal], [Result(IDL.Null)], []),
+    
+    // Deputy management
+    proposeDeputy: IDL.Func([IDL.Principal, IDL.Principal], [Result(IDL.Null)], []),
+    confirmDeputy: IDL.Func([IDL.Principal, IDL.Principal], [Result(IDL.Null)], []),
     
     // Vendor functions
     proposeVendor: IDL.Func([IDL.Principal], [Result(IDL.Null)], []),
@@ -96,6 +112,7 @@ const idlFactory = ({ IDL }: { IDL: any }) => {
       allocated: IDL.Nat,
       remaining: IDL.Nat,
     })))], ['query']),
+    getAllBudgets: IDL.Func([], [IDL.Vec(IDL.Tuple(IDL.Nat, Budget))], ['query']),
     
     getSystemStats: IDL.Func([], [IDL.Record({
       totalBudget: IDL.Nat,
@@ -181,12 +198,12 @@ class ICPCanisterService {
   private canisterId: string;
 
   constructor() {
-    this.canisterId = (import.meta.env.VITE_CANISTER_ID as string) || 'rdmx6-jaaaa-aaaah-qcaiq-cai';
+    this.canisterId = (import.meta.env.VITE_CANISTER_ID as string) || 'b34uc-tyaaa-aaaau-acloq-cai';
   }
 
   async init(): Promise<void> {
     try {
-      const host = (import.meta.env.VITE_IC_HOST as string) || 'http://127.0.0.1:4943';
+      const host = (import.meta.env.VITE_IC_HOST as string) || 'https://ic0.app';
       
       this.agent = new HttpAgent({ host });
       
@@ -240,8 +257,11 @@ class ICPCanisterService {
 
   async lockBudget(amount: number, purpose: string): Promise<number> {
     await this.ensureActor();
+    console.log('Calling canister lockBudget with:', { amount: BigInt(amount), purpose });
     const result = await (this.actor as any).lockBudget(BigInt(amount), purpose);
+    console.log('Raw canister result:', result);
     const budgetId = this.handleResult(result);
+    console.log('Processed budget ID:', budgetId);
     return Number(budgetId);
   }
 
@@ -259,6 +279,36 @@ class ICPCanisterService {
       area,
       deputyPrincipal
     );
+    return this.handleResult(result);
+  }
+
+  async proposeStateHead(stateHeadPrincipal: string): Promise<void> {
+    await this.ensureActor();
+    const principal = Principal.fromText(stateHeadPrincipal);
+    const result = await (this.actor as any).proposeStateHead(principal);
+    return this.handleResult(result);
+  }
+
+  async confirmStateHead(stateHeadPrincipal: string): Promise<void> {
+    await this.ensureActor();
+    const principal = Principal.fromText(stateHeadPrincipal);
+    const result = await (this.actor as any).confirmStateHead(principal);
+    return this.handleResult(result);
+  }
+
+  async proposeDeputy(deputyPrincipal: string, stateHeadPrincipal: string): Promise<void> {
+    await this.ensureActor();
+    const deputy = Principal.fromText(deputyPrincipal);
+    const stateHead = Principal.fromText(stateHeadPrincipal);
+    const result = await (this.actor as any).proposeDeputy(deputy, stateHead);
+    return this.handleResult(result);
+  }
+
+  async confirmDeputy(deputyPrincipal: string, stateHeadPrincipal: string): Promise<void> {
+    await this.ensureActor();
+    const deputy = Principal.fromText(deputyPrincipal);
+    const stateHead = Principal.fromText(stateHeadPrincipal);
+    const result = await (this.actor as any).confirmDeputy(deputy, stateHead);
     return this.handleResult(result);
   }
 
@@ -366,6 +416,12 @@ class ICPCanisterService {
     return result.map(([id, budget]: [bigint, BudgetTransparency]) => [Number(id), budget]);
   }
 
+  async getAllBudgets(): Promise<Array<[number, Budget]>> {
+    await this.ensureActor();
+    const result = await (this.actor as any).getAllBudgets();
+    return result.map(([id, budget]: [bigint, Budget]) => [Number(id), budget]);
+  }
+
   async getSystemStats(): Promise<SystemStats> {
     await this.ensureActor();
     const result = await (this.actor as any).getSystemStats();
@@ -444,6 +500,10 @@ export const useICP = () => {
     lockBudget: icpCanisterService.lockBudget.bind(icpCanisterService),
     allocateBudget: icpCanisterService.allocateBudget.bind(icpCanisterService),
     
+    // Deputy management
+    proposeDeputy: icpCanisterService.proposeDeputy.bind(icpCanisterService),
+    confirmDeputy: icpCanisterService.confirmDeputy.bind(icpCanisterService),
+    
     // Vendor operations
     proposeVendor: icpCanisterService.proposeVendor.bind(icpCanisterService),
     approveVendor: icpCanisterService.approveVendor.bind(icpCanisterService),
@@ -464,6 +524,7 @@ export const useICP = () => {
     getHighRiskClaims: icpCanisterService.getHighRiskClaims.bind(icpCanisterService),
     getFraudAlerts: icpCanisterService.getFraudAlerts.bind(icpCanisterService),
     getBudgetTransparency: icpCanisterService.getBudgetTransparency.bind(icpCanisterService),
+    getAllBudgets: icpCanisterService.getAllBudgets.bind(icpCanisterService),
     getSystemStats: icpCanisterService.getSystemStats.bind(icpCanisterService),
     
     // Auditor operations

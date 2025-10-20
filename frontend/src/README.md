@@ -204,7 +204,7 @@ VITE_API_URL=http://localhost:8000
 
 # ICP Configuration
 VITE_ICP_NETWORK=local
-VITE_CANISTER_ID=rdmx6-jaaaa-aaaah-qcaiq-cai
+VITE_CANISTER_ID=b34uc-tyaaa-aaaau-acloq-cai
 VITE_II_URL=https://identity.ic0.app
 
 # Feature Flags
