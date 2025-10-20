@@ -20,15 +20,15 @@
 > Experience the complete hierarchical government data flow system with real Internet Identity authentication
 
 ### 🎬 **Demo Video** 
-🔗 **[System Walkthrough](https://youtu.be/a3yCnXNPwdQ?si=_wN5xEL6jpQSyGiF)**
+🔗 **[System Walkthrough](https://b45sw-6aaaa-aaaau-acloa-cai.icp0.io/docs)**
 > Complete demonstration of hierarchical data flow and AI-powered fraud detection
 
 ### 🎯 **Pitch Video**
-🔗 **[Watch on YouTube](https://youtu.be/0UBLoz_86ds)**
+🔗 **[Watch on YouTube](https://www.youtube.com/watch?v=naoYaFFIbGM&feature=youtu.be)**
 > Project overview, problem statement, and solution architecture
 
 ### 📊 **Pitch Deck**
-🔗 **[View Presentation](https://drive.google.com/file/d/1v2i2EHywrPNiXXWuvsf_nko_78V1Klie/view)**
+🔗 **[View Presentation](https://drive.google.com/file/d/1BGytleZ_mN-OXzyEzUDhoIWE4_e10F6I/view)**
 > Comprehensive project overview, market analysis, and technical architecture
 
 ---
