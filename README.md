@@ -68,7 +68,7 @@ H.E.L.I.X. uses a **hybrid fraud detection architecture** combining deterministi
 
 **Multi-Model LLM/SLM Support:**
 - **Current MVP**: Gemma 3 (4B parameters) via Ollama for local deployment
-- **Production Ready**: GPT-4, Claude, and other commercial LLMs supported
+- **Production Ready**: Gemini-2.5 Pro, Claude, and other commercial LLMs supported
 - **Flexible Architecture**: Easy model switching without code changes
 - **Fallback Strategy**: Graceful degradation to rules-only if LLM unavailable
 
